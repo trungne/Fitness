@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="User"
+        android:id="@+id/bottom_nav_user"
+        />
+    <item android:title="Gym"
+        android:id="@+id/bottom_nav_gym"
+        />
+    <item android:title="Running"
+        android:id="@+id/bottom_nav_running"
+        />
+</menu>
