@@ -14,6 +14,7 @@ public class UserViewModel extends AndroidViewModel {
     private final Application application;
     private final FirebaseFirestore db;
     private final FirebaseAuth mAuth;
+
     public UserViewModel(@NonNull Application application) {
         super(application);
         this.application = application;
