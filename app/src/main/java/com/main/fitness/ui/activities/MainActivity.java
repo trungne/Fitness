@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
             // redirect to dashboard
             startActivity(new Intent(MainActivity.this, DashboardActivity.class));
             finish();
+            return;
         } else {
             //redirect to login activity
             createSignInIntent();
@@ -65,8 +66,8 @@ public class MainActivity extends AppCompatActivity {
             // response.getError().getErrorCode() and handle the error.
             if (response == null) {
                 finish();
+                return;
             }
-            assert response != null;
             if (Objects.requireNonNull(response.getError()).getErrorCode() == ErrorCodes.NO_NETWORK) {
                 Toast.makeText(this, "No internet", Toast.LENGTH_SHORT).show();
             } else if (response.getError().getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
