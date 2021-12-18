@@ -7,12 +7,14 @@
     tools:context=".ui.activities.MainActivity">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/MainActivityBottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:id="@+id/MainActivityBottomNavigationView"
-        app:menu="@menu/bottom_navigation_menu"
+        app:itemIconTint="@android:color/holo_green_dark"
+        app:itemTextColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/bottom_navigation_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
