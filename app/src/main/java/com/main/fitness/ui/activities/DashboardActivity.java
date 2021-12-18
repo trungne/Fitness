@@ -20,8 +20,8 @@ public class DashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        ImageView imgDashboardGym = findViewById(R.id.imgDashboardGym);
-        ImageView imgDashboardRunning = findViewById(R.id.imgDashboardRunning);
+//        ImageView imgDashboardGym = findViewById(R.id.imgDashboardGym);
+//        ImageView imgDashboardRunning = findViewById(R.id.imgDashboardRunning);
 
 //        imgDashboardGym.setOnClickListener(view ->
 //                startActivity(new Intent(DashboardActivity.this, GymActivity.class)));
