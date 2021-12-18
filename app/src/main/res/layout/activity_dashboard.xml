@@ -25,12 +25,11 @@
         app:layout_constraintEnd_toEndOf="@+id/textView"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/textView"/>
+        <!--
+        line "app:srcCompat="@drawable/dashboard_gym_icon" />" caused linked failed on project
         app:srcCompat="@drawable/dashboard_gym_icon" />
-
-    <!--
-    line "app:srcCompat="@drawable/dashboard_gym_icon" />" caused linked failed on project
-    -->
+        -->
 
     <ImageView
         android:id="@+id/imgDashboardRunning"
