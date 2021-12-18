@@ -28,6 +28,10 @@
         app:layout_constraintTop_toBottomOf="@+id/textView"
         app:srcCompat="@drawable/dashboard_gym_icon" />
 
+    <!--
+    line "app:srcCompat="@drawable/dashboard_gym_icon" />" caused linked failed on project
+    -->
+
     <ImageView
         android:id="@+id/imgDashboardRunning"
         android:layout_width="124dp"
