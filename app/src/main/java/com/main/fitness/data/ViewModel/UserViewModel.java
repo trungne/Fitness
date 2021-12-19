@@ -31,7 +31,7 @@ public class UserViewModel extends AndroidViewModel {
     public static final String PHOTO_URL_FIELD = "photoUrl";
     public static final String DISPLAY_NAME_FIELD = "displayName";
     public static final String WORKOUT_SCORE_FIELD = "workoutScore";
-    public static final String USER_EXPERIENCE_FIELD = "userLevel";
+    public static final String USER_LEVEL_FIELD = "userLevel";
 
     private final Application application;
     private final FirebaseFirestore db;

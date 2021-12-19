@@ -90,7 +90,6 @@ public class RequireSignInFragment extends Fragment {
                 // handle;
                 return;
             }
-            // asycn
             this.userViewModel
                     .syncAuthenticationDataWithFirestore(firebaseUser)
                     .addOnCompleteListener(requireActivity(), task -> {
