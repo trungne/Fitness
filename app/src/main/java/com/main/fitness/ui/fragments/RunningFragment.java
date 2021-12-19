@@ -4,9 +4,13 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.main.fitness.R;
 
@@ -35,10 +39,30 @@ public class RunningFragment extends Fragment {
         }
     }
 
+    private View view;
+    private EditText fragmentRunningDistance;
+    private Button fragmentRunningRun;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_running, container, false);
+        View view = inflater.inflate(R.layout.fragment_running, container, false);
+        fragmentRunningDistance = view.findViewById(R.id.fragmentRunningDistance);
+        fragmentRunningRun = view.findViewById(R.id.fragmentRunningRun);
+
+        fragmentRunningRun.setOnClickListener(this::run);
+
+        return view;
+    }
+
+    private void run(View view) {
+        //User enter or not?
+        if (TextUtils.isEmpty(fragmentRunningDistance.getText().toString())) {
+            Toast.makeText(requireActivity(), "Please enter the distance you want to run first!", Toast.LENGTH_SHORT).show();
+        } else if (Double.parseDouble(fragmentRunningDistance.getText().toString()) <= 0) {
+            Toast.makeText(requireActivity(), "The distance must be bigger than 0", Toast.LENGTH_SHORT).show();
+        } else {
+            //direct to map
+        }
     }
 }
