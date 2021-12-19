@@ -131,7 +131,7 @@ public class RequireSignInFragment extends Fragment {
                 .createSignInIntentBuilder()
                 .setAvailableProviders(providers)
                 .setTheme(R.style.LoginTheme)
-                .setLogo(R.drawable.login_logo)
+                .setLogo(R.drawable.ic_logo_splash)
                 .build();
         signInLauncher.launch(signInIntent);
     }
