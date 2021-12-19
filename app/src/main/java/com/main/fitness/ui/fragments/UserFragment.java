@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,7 +52,8 @@ public class UserFragment extends Fragment {
 
     private Button signOutButton;
     private UserViewModel userViewModel;
-    private TextView setLevelTextView, userDisplayName;
+    private TextView setLevelTextView, userScore;
+    private EditText userDisplayName,userEmail,userPhone;
     private View rootView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,7 +67,11 @@ public class UserFragment extends Fragment {
         this.setLevelTextView = this.rootView.findViewById(R.id.fragmentUserSetLevelTextView);
         this.setLevelTextView.setOnClickListener(this::setUserLevel);
 
+        this.userScore = this.rootView.findViewById(R.id.fragmentUserScoreValue);
         this.userDisplayName = this.rootView.findViewById(R.id.fragmentUserDisplayNameValue);
+        this.userEmail = this.rootView.findViewById(R.id.fragmentUserEmailValue);
+        this.userPhone = this.rootView.findViewById(R.id.fragmentUserPhoneValue);
+
 
 
 
@@ -79,6 +85,12 @@ public class UserFragment extends Fragment {
 
                     AppUser appUser = task.getResult();
                     this.userDisplayName.setText(appUser.getDisplayName());
+                    this.userEmail.setText(appUser.getEmail());
+                    this.userPhone.setText(appUser.getPhoneNumber());
+                    if(appUser.getWorkoutScore() != null){
+                        this.userScore.setText(appUser.getWorkoutScore().toString());
+                    }
+
                     // set other attributes
                 });
 
