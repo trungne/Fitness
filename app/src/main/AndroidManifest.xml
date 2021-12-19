@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.main.fitness">
+    <!--
+    Added on uses-permission (INTERNET + FINE_LOCATION + COARSE_LOCATION + BACKGROUND) on 19-12-2021
+    -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -9,6 +16,14 @@
         android:roundIcon="@drawable/app_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.Fitness">
+
+        <!--
+        added meta-data for google maps api on 19-12-2021
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBZ13WD2ZzlECeDD6nBERP2rhqV8gLizLg"/>
+
         <activity
             android:name=".ui.activities.SplashActivity"
             android:exported="true" >
