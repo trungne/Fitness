@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.main.fitness.R;
+import com.main.fitness.data.ViewModel.UserViewModel;
 
 
 public class UserFragment extends Fragment {
@@ -39,13 +41,16 @@ public class UserFragment extends Fragment {
     }
 
     private Button signOutButton;
-
+    private UserViewModel userViewModel;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user, container, false);
         this.signOutButton = view.findViewById(R.id.UserFragmentSignoutButton);
         this.signOutButton.setOnClickListener(this::signOut);
+        this.userViewModel = new ViewModelProvider(this)
+                .get(UserViewModel .class);
+
         return view;
     }
 

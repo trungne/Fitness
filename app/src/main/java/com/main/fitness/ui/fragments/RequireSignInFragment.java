@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,7 +22,11 @@ import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseUser;
 import com.main.fitness.R;
+import com.main.fitness.data.ViewModel.UserViewModel;
 import com.main.fitness.ui.activities.DashboardActivity;
 import com.main.fitness.ui.activities.MainActivity;
 
@@ -57,6 +63,7 @@ public class RequireSignInFragment extends Fragment {
     }
 
     private Button signInButton;
+    private UserViewModel userViewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,6 +73,9 @@ public class RequireSignInFragment extends Fragment {
         this.signInButton.setOnClickListener(v -> {
             createSignInIntent();
         });
+
+        this.userViewModel = new ViewModelProvider(this)
+                .get(UserViewModel .class);
         return view;
     }
 
@@ -75,11 +85,27 @@ public class RequireSignInFragment extends Fragment {
         IdpResponse response = result.getIdpResponse();
         if (result.getResultCode() == RESULT_OK) {
             // Successfully signed in
-            getParentFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.MainActivityFragmentContainer,
-                            UserFragment.newInstance())
-                    .commit();
+            FirebaseUser firebaseUser = this.userViewModel.getFirebaseUser();
+            if (firebaseUser == null) {
+                // handle;
+                return;
+            }
+            // asycn
+            this.userViewModel
+                    .syncAuthenticationDataWithFirestore(firebaseUser)
+                    .addOnCompleteListener(requireActivity(), task -> {
+                        if (!task.isSuccessful()){
+                            // handle
+                            return;
+                        }
+
+                        getParentFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.MainActivityFragmentContainer,
+                                        UserFragment.newInstance())
+                                .commit();
+
+                    });
             return;
         } else {
             // Sign in failed. If response is null the user canceled the

@@ -83,7 +83,7 @@ public class UserViewModel extends AndroidViewModel {
         });
     }
 
-    public Task<Void> syncFirebaseUserDataWithFirestore(@NonNull FirebaseUser firebaseUser){
+    public Task<Void> syncAuthenticationDataWithFirestore(@NonNull FirebaseUser firebaseUser){
         HashMap<String, Object> userData = new HashMap<>();
 
         userData.put(UID_FIELD, firebaseUser.getUid());
