@@ -79,7 +79,6 @@ public class UserViewModel extends AndroidViewModel {
                 throw new Exception("Cannot get AppUser from Firestore");
             }
             return task.getResult().toObject(AppUser.class);
-//            return convertDocumentSnapshotToAppUser(task.getResult());
         });
     }
 
@@ -106,10 +105,6 @@ public class UserViewModel extends AndroidViewModel {
             }
         }
         return this.db.collection(USER_COLLECTION).document(firebaseUser.getUid()).set(userData, SetOptions.merge());
-    }
-
-    public void signOut(){
-        this.mAuth.signOut();
     }
 
     public FirebaseUser getFirebaseUser(){

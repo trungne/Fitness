@@ -52,7 +52,7 @@ public class UserFragment extends Fragment {
 
     private Button signOutButton;
     private UserViewModel userViewModel;
-    private TextView setLevelTextView, userScore;
+    private TextView userScore;
     private EditText userDisplayName,userEmail,userPhone;
     private View rootView;
     @Override
@@ -64,8 +64,7 @@ public class UserFragment extends Fragment {
         this.userViewModel = new ViewModelProvider(this)
                 .get(UserViewModel .class);
 
-        this.setLevelTextView = this.rootView.findViewById(R.id.fragmentUserSetLevelTextView);
-        this.setLevelTextView.setOnClickListener(this::setUserLevel);
+
 
         this.userScore = this.rootView.findViewById(R.id.fragmentUserScoreValue);
         this.userDisplayName = this.rootView.findViewById(R.id.fragmentUserDisplayNameValue);
@@ -94,58 +93,9 @@ public class UserFragment extends Fragment {
                     // set other attributes
                 });
 
-        setMainLayout();
         return this.rootView;
     }
 
-    public void setMainLayout(){
-        String uid = this.userViewModel.getFirebaseUser().getUid();
-        this.userViewModel.getUser(uid).addOnCompleteListener(requireActivity(), task -> {
-            if (!task.isSuccessful() || task.getResult() == null){
-                // handle
-                return;
-            }
-            AppUser appUser = task.getResult();
-
-            if (appUser.getUserLevel() == null){
-                this.rootView.findViewById(R.id.fragmentUserDashboard)
-                        .setVisibility(View.GONE);
-                this.rootView.findViewById(R.id.fragmentUserSetLevelLayout)
-                        .setVisibility(View.VISIBLE);
-            }
-            else{
-                this.rootView.findViewById(R.id.fragmentUserDashboard)
-                        .setVisibility(View.VISIBLE);
-                this.rootView.findViewById(R.id.fragmentUserSetLevelLayout)
-                        .setVisibility(View.GONE);
-            }
-        });
-    }
-
-    public void setUserLevel(View v){
-        ChooseUserLevelDialog dialog = ChooseUserLevelDialog.newInstance();
-        // callback: reactive function
-        dialog.setOnUserLevelChangedListener((d, newUserLevel) -> {
-            String uid = this.userViewModel.getFirebaseUser().getUid();
-            HashMap<String, Object> newData = new HashMap<>();
-            newData.put(UserViewModel.USER_LEVEL_FIELD, newUserLevel);
-
-            this.userViewModel.updateAppUser(uid, newData).addOnCompleteListener(requireActivity(), new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if (!task.isSuccessful()){
-                        // handle
-                        return;
-                    }
-
-                    d.dismiss();
-                    setMainLayout();
-                }
-            });
-        });
-
-        dialog.show(getParentFragmentManager(), TAG);
-    }
 
     public void signOut(View v){
         AuthUI.getInstance()

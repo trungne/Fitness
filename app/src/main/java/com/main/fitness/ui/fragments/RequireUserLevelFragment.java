@@ -20,17 +20,17 @@ import java.util.HashMap;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link GymFragment#newInstance} factory method to
+ * Use the {@link RequireUserLevelFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class GymFragment extends Fragment {
+public class RequireUserLevelFragment extends Fragment {
     private static final String TAG = "GymFragment";
-    public GymFragment() {
+    public RequireUserLevelFragment() {
         // Required empty public constructor
     }
 
-    public static GymFragment newInstance() {
-        GymFragment fragment = new GymFragment();
+    public static RequireUserLevelFragment newInstance() {
+        RequireUserLevelFragment fragment = new RequireUserLevelFragment();
         Bundle args = new Bundle();
 
         fragment.setArguments(args);
@@ -61,20 +61,38 @@ public class GymFragment extends Fragment {
             AppUser appUser = task.getResult();
             this.uid = appUser.getUid();
             if (appUser.getUserLevel() == null){
-                getParentFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.MainActivityFragmentContainer, RequireUserLevelFragment.newInstance())
-                        .commit();
+                askUserToUpdateLevel();
             }
         });
     }
 
+    private void askUserToUpdateLevel(){
+        ChooseUserLevelDialog chooseUserLevelDialog = ChooseUserLevelDialog.newInstance();
+        chooseUserLevelDialog.setOnUserLevelChangedListener((dialog, newUserLevel) -> {
+            HashMap<String, Object> newData = new HashMap<>();
+            newData.put(UserViewModel.USER_LEVEL_FIELD, newUserLevel);
+            this.userViewModel.updateAppUser(this.uid, newData).addOnCompleteListener(requireActivity(), updateTask -> {
+                if (updateTask.isSuccessful()){
+                    getParentFragmentManager().beginTransaction().replace(R.id.MainActivityFragmentContainer, GymFragment.newInstance()).commit();
+                    dialog.dismiss();
+                    Toast.makeText(requireActivity(), "Level updated successfully", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(requireActivity(), "Failed to update!", Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+        chooseUserLevelDialog.show(getParentFragmentManager(), TAG);
+    }
 
+    private Button chooseLevelButton;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_gym, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_require_user_level, container, false);
+        this.chooseLevelButton = rootView.findViewById(R.id.RequireUserLevelFragmentChooseLevelButton);
+        this.chooseLevelButton.setOnClickListener(v -> {askUserToUpdateLevel();});
         return rootView;
     }
 }
