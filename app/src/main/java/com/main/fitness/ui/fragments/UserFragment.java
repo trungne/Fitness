@@ -24,6 +24,7 @@ import com.main.fitness.data.ViewModel.UserViewModel;
 import com.main.fitness.ui.dialogs.ChooseUserLevelDialog;
 
 import java.util.HashMap;
+import java.util.Map;
 
 
 public class UserFragment extends Fragment {
@@ -47,20 +48,26 @@ public class UserFragment extends Fragment {
 
         }
 
-
     }
 
-    private Button signOutButton;
+    private Button signOutButton, updateProfileButton;
     private UserViewModel userViewModel;
-    private TextView userScore;
-    private EditText userDisplayName,userEmail,userPhone;
+
+    private TextView  userScore,userEmail, userDifficultyLevel;
+    private EditText userDisplayName,userPhone;
+
     private View rootView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         this.rootView = inflater.inflate(R.layout.fragment_user, container, false);
+
+        //Button wire
         this.signOutButton = this.rootView.findViewById(R.id.UserFragmentSignoutButton);
         this.signOutButton.setOnClickListener(this::signOut);
+        this.updateProfileButton = this.rootView.findViewById(R.id.UserFragmentUpdateButton);
+        this.updateProfileButton.setOnClickListener(this::updateUserProfile);
+
         this.userViewModel = new ViewModelProvider(this)
                 .get(UserViewModel .class);
 
@@ -70,10 +77,11 @@ public class UserFragment extends Fragment {
         this.userDisplayName = this.rootView.findViewById(R.id.fragmentUserDisplayNameValue);
         this.userEmail = this.rootView.findViewById(R.id.fragmentUserEmailValue);
         this.userPhone = this.rootView.findViewById(R.id.fragmentUserPhoneValue);
+        this.userDifficultyLevel = this.rootView.findViewById(R.id.fragmentUserDifficultyValue);
 
 
 
-
+        //Get All information of the current user
         String uid = this.userViewModel.getFirebaseUser().getUid();
         this.userViewModel.getUser(uid)
                 .addOnCompleteListener(requireActivity(), task -> {
@@ -86,6 +94,9 @@ public class UserFragment extends Fragment {
                     this.userDisplayName.setText(appUser.getDisplayName());
                     this.userEmail.setText(appUser.getEmail());
                     this.userPhone.setText(appUser.getPhoneNumber());
+                    if(appUser.getUserLevel()!= null){
+                        this.userDifficultyLevel.setText(appUser.getUserLevel().getLevel());
+                    }
                     if(appUser.getWorkoutScore() != null){
                         this.userScore.setText(appUser.getWorkoutScore().toString());
                     }
@@ -96,7 +107,33 @@ public class UserFragment extends Fragment {
         return this.rootView;
     }
 
+    // Update User Profile
+    private void updateUserProfile(View view) {
+        if(userDisplayName.getText().length() < 1){
+            Toast.makeText(requireActivity(), "Please insert a name.", Toast.LENGTH_SHORT).show();
+        } else if( userPhone.getText().length() != 10){
+            Toast.makeText(requireActivity(), "Please insert 10-digit phone number.", Toast.LENGTH_SHORT).show();
+        } else {
+            HashMap<String, Object> newUser = new HashMap<>();
+            newUser.put( UserViewModel.DISPLAY_NAME_FIELD , userDisplayName.getText().toString());
+            newUser.put( UserViewModel.PHONE_NUMBER_FIELD , userPhone.getText().toString());
+            String uid = this.userViewModel.getFirebaseUser().getUid();
+            //Update User information
+            this.userViewModel.updateAppUser(uid, newUser).addOnCompleteListener(requireActivity(), new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (!task.isSuccessful()){
+                        // handle
+                        return;
+                    }
+                    Toast.makeText(requireActivity(), "Update User's profile successful!", Toast.LENGTH_SHORT).show();
+                }
+            });
 
+        }
+    }
+
+    //Sign Out of the current accout
     public void signOut(View v){
         AuthUI.getInstance()
                 .signOut(requireActivity())
