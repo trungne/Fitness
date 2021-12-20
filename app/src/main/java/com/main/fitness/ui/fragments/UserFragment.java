@@ -53,7 +53,7 @@ public class UserFragment extends Fragment {
     private Button signOutButton, updateProfileButton;
     private UserViewModel userViewModel;
 
-    private TextView setLevelTextView, userScore,userEmail, userDifficultyLevel;
+    private TextView  userScore,userEmail, userDifficultyLevel;
     private EditText userDisplayName,userPhone;
 
     private View rootView;
@@ -94,7 +94,9 @@ public class UserFragment extends Fragment {
                     this.userDisplayName.setText(appUser.getDisplayName());
                     this.userEmail.setText(appUser.getEmail());
                     this.userPhone.setText(appUser.getPhoneNumber());
-                    this.userDifficultyLevel.setText(appUser.getUserLevel().getLevel());
+                    if(appUser.getUserLevel()!= null){
+                        this.userDifficultyLevel.setText(appUser.getUserLevel().getLevel());
+                    }
                     if(appUser.getWorkoutScore() != null){
                         this.userScore.setText(appUser.getWorkoutScore().toString());
                     }
@@ -105,56 +107,6 @@ public class UserFragment extends Fragment {
         return this.rootView;
     }
 
-    // Switch between UserDashboard fragment and UserSetLevel fragment
-    public void setMainLayout(){
-        String uid = this.userViewModel.getFirebaseUser().getUid();
-        this.userViewModel.getUser(uid).addOnCompleteListener(requireActivity(), task -> {
-            if (!task.isSuccessful() || task.getResult() == null){
-                // handle
-                return;
-            }
-            AppUser appUser = task.getResult();
-
-            if (appUser.getUserLevel() == null){
-                this.rootView.findViewById(R.id.fragmentUserDashboard)
-                        .setVisibility(View.GONE);
-                this.rootView.findViewById(R.id.fragmentUserSetLevelLayout)
-                        .setVisibility(View.VISIBLE);
-            }
-            else{
-                this.rootView.findViewById(R.id.fragmentUserDashboard)
-                        .setVisibility(View.VISIBLE);
-                this.rootView.findViewById(R.id.fragmentUserSetLevelLayout)
-                        .setVisibility(View.GONE);
-            }
-        });
-    }
-
-    //Let the User choose the level in the app for Gym activity
-    public void setUserLevel(View v){
-        ChooseUserLevelDialog dialog = ChooseUserLevelDialog.newInstance();
-        // callback: reactive function
-        dialog.setOnUserLevelChangedListener((d, newUserLevel) -> {
-            String uid = this.userViewModel.getFirebaseUser().getUid();
-            HashMap<String, Object> newData = new HashMap<>();
-            newData.put(UserViewModel.USER_LEVEL_FIELD, newUserLevel);
-
-            this.userViewModel.updateAppUser(uid, newData).addOnCompleteListener(requireActivity(), new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if (!task.isSuccessful()){
-                        // handle
-                        return;
-                    }
-
-                    d.dismiss();
-                    setMainLayout();
-                }
-            });
-        });
-
-        dialog.show(getParentFragmentManager(), TAG);
-    }
     // Update User Profile
     private void updateUserProfile(View view) {
         if(userDisplayName.getText().length() < 1){

@@ -136,7 +136,7 @@
                     android:layout_marginEnd="10dp"
                     android:layout_weight="1"
                     android:hint="difficulty ..."
-                    android:text="Gym level"
+                    android:text="Not Selected"
                     tools:ignore="HardcodedText" />
 
             </TableRow>
