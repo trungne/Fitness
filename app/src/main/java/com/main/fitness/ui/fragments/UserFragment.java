@@ -48,7 +48,6 @@ public class UserFragment extends Fragment {
 
         }
 
-
     }
 
     private Button signOutButton, updateProfileButton;
@@ -56,8 +55,6 @@ public class UserFragment extends Fragment {
 
     private TextView setLevelTextView, userScore,userEmail, userDifficultyLevel;
     private EditText userDisplayName,userPhone;
-
-
 
     private View rootView;
     @Override
@@ -74,8 +71,7 @@ public class UserFragment extends Fragment {
         this.userViewModel = new ViewModelProvider(this)
                 .get(UserViewModel .class);
 
-        this.setLevelTextView = this.rootView.findViewById(R.id.fragmentUserSetLevelTextView);
-        this.setLevelTextView.setOnClickListener(this::setUserLevel);
+
 
         this.userScore = this.rootView.findViewById(R.id.fragmentUserScoreValue);
         this.userDisplayName = this.rootView.findViewById(R.id.fragmentUserDisplayNameValue);
@@ -106,9 +102,9 @@ public class UserFragment extends Fragment {
                     // set other attributes
                 });
 
-        setMainLayout();
         return this.rootView;
     }
+
     // Switch between UserDashboard fragment and UserSetLevel fragment
     public void setMainLayout(){
         String uid = this.userViewModel.getFirebaseUser().getUid();
