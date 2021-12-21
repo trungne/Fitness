@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
         this.userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
 
-
         this.bottomNavigationView = findViewById(R.id.MainActivityBottomNavigationView);
         this.bottomNavigationView.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
