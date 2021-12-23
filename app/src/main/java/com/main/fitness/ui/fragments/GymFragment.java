@@ -1,5 +1,7 @@
 package com.main.fitness.ui.fragments;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -14,6 +16,9 @@ import android.widget.Toast;
 import com.main.fitness.R;
 import com.main.fitness.data.Model.AppUser;
 import com.main.fitness.data.ViewModel.UserViewModel;
+import com.main.fitness.ui.activities.gym.CardioTrainingActivity;
+import com.main.fitness.ui.activities.gym.FAQAndTerminologyActivity;
+import com.main.fitness.ui.activities.gym.StrengthTrainingActivity;
 import com.main.fitness.ui.dialogs.ChooseUserLevelDialog;
 
 import java.util.HashMap;
@@ -69,12 +74,28 @@ public class GymFragment extends Fragment {
         });
     }
 
-
+    Button strengthButton, cardioButton, faqAndTermButton;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_gym, container, false);
+        this.strengthButton = rootView.findViewById(R.id.gymStrength);
+        this.cardioButton = rootView.findViewById(R.id.gymCardio);
+        this.faqAndTermButton = rootView.findViewById(R.id.gymFAQAndTerminology);
+
+        this.strengthButton.setOnClickListener(v -> {
+            startActivity(new Intent(requireActivity(), StrengthTrainingActivity.class));
+        });
+
+        this.cardioButton.setOnClickListener(v -> {
+            startActivity(new Intent(requireActivity(), CardioTrainingActivity.class));
+        });
+
+        this.faqAndTermButton.setOnClickListener(v -> {
+            startActivity(new Intent(requireActivity(), FAQAndTerminologyActivity.class));
+        });
+
         return rootView;
     }
 }
