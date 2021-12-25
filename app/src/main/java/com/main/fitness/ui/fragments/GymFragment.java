@@ -17,6 +17,7 @@ import com.main.fitness.R;
 import com.main.fitness.data.Model.AppUser;
 import com.main.fitness.data.ViewModel.UserViewModel;
 import com.main.fitness.ui.activities.gym.CardioTrainingActivity;
+import com.main.fitness.ui.activities.gym.ExerciseBankActivity;
 import com.main.fitness.ui.activities.gym.FAQAndTerminologyActivity;
 import com.main.fitness.ui.activities.gym.StrengthTrainingActivity;
 import com.main.fitness.ui.dialogs.ChooseUserLevelDialog;
@@ -74,7 +75,7 @@ public class GymFragment extends Fragment {
         });
     }
 
-    Button strengthButton, cardioButton, faqAndTermButton;
+    Button strengthButton, cardioButton, faqAndTermButton, exerciseBankButton;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -83,6 +84,7 @@ public class GymFragment extends Fragment {
         this.strengthButton = rootView.findViewById(R.id.gymStrength);
         this.cardioButton = rootView.findViewById(R.id.gymCardio);
         this.faqAndTermButton = rootView.findViewById(R.id.gymFAQAndTerminology);
+        this.exerciseBankButton = rootView.findViewById(R.id.gymExerciseBank);
 
         this.strengthButton.setOnClickListener(v -> {
             startActivity(new Intent(requireActivity(), StrengthTrainingActivity.class));
@@ -94,6 +96,10 @@ public class GymFragment extends Fragment {
 
         this.faqAndTermButton.setOnClickListener(v -> {
             startActivity(new Intent(requireActivity(), FAQAndTerminologyActivity.class));
+        });
+
+        this.exerciseBankButton.setOnClickListener(v -> {
+            startActivity(new Intent(requireActivity(), ExerciseBankActivity.class));
         });
 
         return rootView;

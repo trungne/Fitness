@@ -21,6 +21,12 @@
         android:text="Cardio"/>
 
     <Button
+        android:id="@+id/gymExerciseBank"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Exercise Bank"/>
+
+    <Button
         android:id="@+id/gymFAQAndTerminology"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
