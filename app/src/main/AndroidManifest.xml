@@ -19,6 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Fitness">
         <activity
+            android:name=".ui.activities.gym.ProgramListActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activities.gym.ExerciseBankActivity"
             android:exported="false" />
         <activity
