@@ -1,5 +1,7 @@
 package com.main.fitness.ui.activities.gym;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -14,7 +16,7 @@ import com.main.fitness.ui.fragments.WeightExerciseFragment;
 
 import java.util.Arrays;
 
-public class ExerciseBankActivity extends FragmentActivity {
+public class ExerciseBankActivity extends AppCompatActivity {
 
     private TabLayout tabLayout;
     private ViewPager2 viewPager;

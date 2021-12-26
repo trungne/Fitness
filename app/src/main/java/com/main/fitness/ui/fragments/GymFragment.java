@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -75,7 +76,7 @@ public class GymFragment extends Fragment {
         });
     }
 
-    Button strengthButton, cardioButton, faqAndTermButton, exerciseBankButton;
+    CardView strengthButton, cardioButton, faqAndTermButton, exerciseBankButton;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
