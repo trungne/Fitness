@@ -3,6 +3,7 @@ package com.main.fitness.data.Model;
 import java.util.List;
 
 public class Program {
+    private String name;
     private String goal;
     private String overview;
     private List<UserLevel> levels;
@@ -10,6 +11,10 @@ public class Program {
     private Integer daysPerWeek;
 
     public Program() {}
+
+    public String getName() {
+        return name;
+    }
 
     public Integer getDaysPerWeek() {
         return daysPerWeek;
@@ -29,6 +34,10 @@ public class Program {
 
     public String getOverview() {
         return overview;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setDaysPerWeek(Integer daysPerWeek) {

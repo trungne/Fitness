@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.main.fitness.data.Model.Program;
 
 public class ProgramViewModel extends AndroidViewModel {
@@ -23,4 +24,8 @@ public class ProgramViewModel extends AndroidViewModel {
 //    public Task<Program> getProgram(@NonNull String name){
 //
 //    }
+
+    public Query getBaseQuery(){
+        return this.db.collection(PROGRAMS_COLLECTION);
+    }
 }

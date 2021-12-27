@@ -20,6 +20,7 @@ import com.main.fitness.data.ViewModel.UserViewModel;
 import com.main.fitness.ui.activities.gym.CardioTrainingActivity;
 import com.main.fitness.ui.activities.gym.ExerciseBankActivity;
 import com.main.fitness.ui.activities.gym.FAQAndTerminologyActivity;
+import com.main.fitness.ui.activities.gym.ProgramListActivity;
 import com.main.fitness.ui.activities.gym.StrengthTrainingActivity;
 import com.main.fitness.ui.dialogs.ChooseUserLevelDialog;
 
@@ -88,7 +89,7 @@ public class GymFragment extends Fragment {
         this.exerciseBankButton = rootView.findViewById(R.id.gymExerciseBank);
 
         this.strengthButton.setOnClickListener(v -> {
-            startActivity(new Intent(requireActivity(), StrengthTrainingActivity.class));
+            startActivity(new Intent(requireActivity(), ProgramListActivity.class));
         });
 
         this.cardioButton.setOnClickListener(v -> {
