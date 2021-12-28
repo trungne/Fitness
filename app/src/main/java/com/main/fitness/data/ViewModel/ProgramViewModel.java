@@ -19,7 +19,10 @@ import java.util.List;
 import java.util.concurrent.Executors;
 
 public class ProgramViewModel extends AndroidViewModel {
-    public static final String PROGRAMS_COLLECTION = "programs";
+    private static final String PROGRAMS_COLLECTION = "programs";
+    private static final String REP_MAX_COLLECTION = "repMax";
+    private static final String USER_PROGRAM_COLLECTION = "usersAndPrograms";
+    private static final String REP_MAX_FIELD = "max";
 
     private final Application application;
     private final FirebaseFirestore db;
@@ -30,26 +33,54 @@ public class ProgramViewModel extends AndroidViewModel {
         this.db = FirebaseFirestore.getInstance();
     }
 
-    public Task<Program> getProgram(String id){
-        return this.db.collection(PROGRAMS_COLLECTION).document(id).get().continueWith(Executors.newSingleThreadExecutor(), new Continuation<DocumentSnapshot, Program>() {
-            @NonNull
-            @Override
-            public Program then(@NonNull Task<DocumentSnapshot> task) throws Exception {
-                if (!task.isSuccessful() || task.getResult() == null){
-                    throw new Exception("Cannot find program!");
-                }
-
-                Program program = task.getResult().toObject(Program.class);
-
-                if (program == null){
-                    throw new Exception("Cannot find program!");
-                }
-
-                return program;
+    public Task<Program> getProgram(@NonNull String id){
+        return this.db.collection(PROGRAMS_COLLECTION).document(id).get().continueWith(Executors.newSingleThreadExecutor(), task -> {
+            if (!task.isSuccessful() || task.getResult() == null){
+                throw new Exception("Cannot find program!");
             }
+
+            Program program = task.getResult().toObject(Program.class);
+
+            if (program == null){
+                throw new Exception("Cannot find program!");
+            }
+
+            return program;
         });
     }
 
+
+
+    public Task<Void> unregisterProgram(String userId, String programId){
+        return this.db.collection(USER_PROGRAM_COLLECTION).document(userId).delete();
+    }
+
+    public Task<Void> registerProgram(String userId, String programId){
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("programId", programId);
+
+        return this.db.collection(USER_PROGRAM_COLLECTION).document(userId).set(data, SetOptions.merge());
+    }
+
+    public Task<Void> setRepMax(@NonNull String userId, int repMax){
+        HashMap<String, Object> data = new HashMap<>();
+        data.put(REP_MAX_FIELD, repMax);
+        return this.db.collection(REP_MAX_COLLECTION).document(userId).set(data, SetOptions.merge());
+    }
+
+    public Task<Integer> getRepMax(@NonNull String userId){
+        return this.db.collection(REP_MAX_COLLECTION).document(userId).get().continueWith(Executors.newSingleThreadExecutor(), task -> {
+            if (!task.isSuccessful() || !task.getResult().exists() || task.getResult() == null){
+                throw new Exception("Cannot get rep max of the user");
+            }
+            Integer max = task.getResult().get(REP_MAX_FIELD, Integer.class);
+            if (max == null){
+                throw new Exception("Cannot get rep max of the user");
+            }
+
+            return max;
+        });
+    }
 
     public Query getBaseQueryForStrengthPrograms(){
         return this.db.collection(PROGRAMS_COLLECTION).whereEqualTo("type", "strength");

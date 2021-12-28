@@ -6,4 +6,77 @@
     android:layout_height="match_parent"
     tools:context=".ui.activities.gym.ProgramDetailActivity">
 
+    <TextView
+        android:id="@+id/programDetailName"
+        android:text="Name"
+        android:gravity="center"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/programDetailGoal"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:text="Goal"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/programDetailName" />
+
+    <TextView
+        android:id="@+id/programDetailDuration"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:text="Duration"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/programDetailGoal" />
+
+    <TextView
+        android:id="@+id/programDetailDaysPerWeek"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:text="Days per week"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/programDetailDuration" />
+
+    <TextView
+        android:id="@+id/programDetailLevels"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:gravity="center"
+        android:text="Levels"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/programDetailDaysPerWeek" />
+
+    <TextView
+        android:id="@+id/programDetailOverview"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:gravity="center"
+        android:text="Overview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/programDetailLevels" />
+
+    <Button
+        android:id="@+id/programDetailTrainButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="Start"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

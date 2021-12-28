@@ -71,9 +71,9 @@ public class ProgramListActivity extends AppCompatActivity {
         FirestorePagingAdapter<Program, ProgramViewHolder> adapter =
                 new FirestorePagingAdapter<Program, ProgramViewHolder>(options) {
                     @Override
-                    protected void onBindViewHolder(@NonNull ProgramViewHolder holder, int position, @NonNull Program model) {
-                        holder.programName.setText(model.getName());
-                        String imagePath = model.getImagePath();
+                    protected void onBindViewHolder(@NonNull ProgramViewHolder holder, int position, @NonNull Program program) {
+                        holder.programName.setText(program.getName());
+                        String imagePath = program.getImagePath();
                         Log.i("ProgramListActivity", imagePath);
                         if (!TextUtils.isEmpty(imagePath)){
                             StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(imagePath);
@@ -82,7 +82,7 @@ public class ProgramListActivity extends AppCompatActivity {
 
                         holder.banner.setOnClickListener(v -> {
                             Intent intent = new Intent(getApplicationContext(), ProgramDetailActivity.class);
-                            intent.putExtra(ProgramDetailActivity.PROGRAM_ID_KEY, model.getId());
+                            intent.putExtra(ProgramDetailActivity.PROGRAM_ID_KEY, program.getId());
 
                             startActivity(intent);
                         });
