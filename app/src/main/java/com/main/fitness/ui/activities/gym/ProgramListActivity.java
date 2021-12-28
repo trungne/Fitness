@@ -79,6 +79,13 @@ public class ProgramListActivity extends AppCompatActivity {
                             StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(imagePath);
                             GlideApp.with(getApplicationContext()).load(storageReference).into(holder.banner);
                         }
+
+                        holder.banner.setOnClickListener(v -> {
+                            Intent intent = new Intent(getApplicationContext(), ProgramDetailActivity.class);
+                            intent.putExtra(ProgramDetailActivity.PROGRAM_ID_KEY, model.getId());
+
+                            startActivity(intent);
+                        });
                     }
 
                     @NonNull
