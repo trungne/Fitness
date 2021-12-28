@@ -11,7 +11,9 @@ import com.google.firebase.firestore.Query;
 import com.main.fitness.data.Model.Program;
 
 public class ProgramViewModel extends AndroidViewModel {
-    private static final String PROGRAMS_COLLECTION = "programs";
+    private static final String STRENGTH_PROGRAMS_COLLECTION = "strengthPrograms";
+    private static final String CARDIO_PROGRAMS_COLLECTION = "cardioPrograms";
+
     private final Application application;
     private final FirebaseFirestore db;
 
@@ -21,11 +23,12 @@ public class ProgramViewModel extends AndroidViewModel {
         this.db = FirebaseFirestore.getInstance();
     }
 
-//    public Task<Program> getProgram(@NonNull String name){
-//
-//    }
 
-    public Query getBaseQuery(){
-        return this.db.collection(PROGRAMS_COLLECTION);
+    public Query getBaseQueryForStrengthPrograms(){
+        return this.db.collection(STRENGTH_PROGRAMS_COLLECTION).orderBy("name");
+    }
+
+    public Query getBaseQueryForCardioPrograms() {
+        return this.db.collection(CARDIO_PROGRAMS_COLLECTION).orderBy("name");
     }
 }

@@ -7,7 +7,9 @@ import androidx.paging.PagingConfig;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,11 @@ import com.main.fitness.data.Model.Program;
 import com.main.fitness.data.ViewModel.ProgramViewModel;
 
 public class ProgramListActivity extends AppCompatActivity {
+    // this key is used to indicate whether user has selected to view strength or cardio programs
+    public static final String PROGRAMS_KEY = "com.main.fitness.ui.activities.gym.ProgramListActivity.programKey";
+
+    public static final String STRENGTH_PROGRAMS = "STRENGTH_PROGRAMS";
+    public static final String CARDIO_PROGRAMS = "CARDIO_PROGRAMS";
 
     private RecyclerView programListRecycleView;
     private ProgramViewModel programViewModel;
@@ -31,17 +38,36 @@ public class ProgramListActivity extends AppCompatActivity {
         this.programListRecycleView = findViewById(R.id.ProgramListRecycleView);
         this.programViewModel = new ViewModelProvider(this).get(ProgramViewModel.class);
 
-        PagingConfig config = new PagingConfig(20, 10, false);
+        Intent intent = getIntent();
+        if (intent == null || TextUtils.isEmpty(intent.getStringExtra(PROGRAMS_KEY))){
+            finish();
+            return;
+        }
+
+        Query baseQuery;
+        if (intent.getStringExtra(PROGRAMS_KEY).equals(CARDIO_PROGRAMS)){
+            baseQuery = this.programViewModel.getBaseQueryForCardioPrograms();
+        }
+        else if (intent.getStringExtra(PROGRAMS_KEY).equals(STRENGTH_PROGRAMS)){
+            baseQuery = this.programViewModel.getBaseQueryForStrengthPrograms();
+        }
+        else{
+            finish();
+            return;
+        }
+
+
+        PagingConfig config = new PagingConfig(5, 10, false);
         FirestorePagingOptions<Program> options = new FirestorePagingOptions.Builder<Program>()
                 .setLifecycleOwner(this)
-                .setQuery(this.programViewModel.getBaseQuery(), config, Program.class)
+                .setQuery(baseQuery, config, Program.class)
                 .build();
 
         FirestorePagingAdapter<Program, ProgramViewHolder> adapter =
                 new FirestorePagingAdapter<Program, ProgramViewHolder>(options) {
                     @Override
                     protected void onBindViewHolder(@NonNull ProgramViewHolder holder, int position, @NonNull Program model) {
-                        holder.programName.setText(model.getOverview());
+                        holder.programName.setText(model.getName());
                     }
 
                     @NonNull
