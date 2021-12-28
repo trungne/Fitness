@@ -9,8 +9,13 @@ public class Program {
     private List<UserLevel> levels;
     private String duration;
     private Integer daysPerWeek;
+    private String imagePath;
 
     public Program() {}
+
+    public String getImagePath() {
+        return imagePath;
+    }
 
     public String getName() {
         return name;
@@ -30,6 +35,10 @@ public class Program {
 
     public String getGoal() {
         return goal;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     public String getOverview() {
