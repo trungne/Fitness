@@ -67,7 +67,9 @@ public class ProgramListActivity extends AppCompatActivity {
                 .setLifecycleOwner(this)
                 .setQuery(baseQuery, config, Program.class)
                 .build();
-
+        // recycle view:
+        // 1. Adapter (firebase)
+        // 2. ViewHolder (inner class of Adapter)
         FirestorePagingAdapter<Program, ProgramViewHolder> adapter =
                 new FirestorePagingAdapter<Program, ProgramViewHolder>(options) {
                     @Override
