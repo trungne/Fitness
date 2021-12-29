@@ -1,72 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+
     android:gravity="center"
+    android:layout_margin="15dp"
     tools:context=".ui.fragments.GymFragment">
 
-    <com.google.android.material.card.MaterialCardView
-        android:layout_marginBottom="20dp"
+    <Button
         android:id="@+id/gymStrength"
-
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:textSize="20sp"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Strength"/>
-    </com.google.android.material.card.MaterialCardView>
+        android:layout_height="60dp"
+        android:background="@drawable/button_1"
+        android:layout_marginTop="15dp"
+        android:textColor="@color/white"
+        android:text="Strength"
 
-    <com.google.android.material.card.MaterialCardView
-        android:layout_marginBottom="20dp"
+        />
+
+    <Button
         android:id="@+id/gymCardio"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:textSize="20sp"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Cardio"/>
+        android:layout_height="60dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/button_1"
+        android:textColor="@color/white"
+        android:text="Cardio"
+        />
 
-    </com.google.android.material.card.MaterialCardView>
-
-    <com.google.android.material.card.MaterialCardView
-        android:layout_marginBottom="20dp"
+    <Button
         android:id="@+id/gymExerciseBank"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="60dp"
+        android:background="@drawable/button_1"
+        android:layout_marginTop="15dp"
+        android:textColor="@color/white"
+        android:text="Exercise Bank"
+        />
 
-        <TextView
-            android:textSize="20sp"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Exercise Bank"/>
 
-    </com.google.android.material.card.MaterialCardView>
-
-    <com.google.android.material.card.MaterialCardView
-        android:layout_marginBottom="20dp"
+    <Button
         android:id="@+id/gymFAQAndTerminology"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="FAQ and Terminology">
-
-        <TextView
-            android:textSize="20sp"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="FAQ and Terminology"/>
-
-    </com.google.android.material.card.MaterialCardView>
+        android:layout_height="60dp"
+        android:background="@drawable/button_1"
+        android:text="FAQ and Terminology"
+        android:layout_marginTop="15dp"
+        android:textColor="@color/white" />
 
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+
+
+</LinearLayout>
