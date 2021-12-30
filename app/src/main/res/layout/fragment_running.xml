@@ -27,14 +27,15 @@
             android:gravity="center"
             android:hint="Enter the distance you want to run"
             android:inputType="numberDecimal"
-            android:textColorHint="@color/black" />
+            android:textColorHint="@color/grey_100" />
 
         <Button
             android:id="@+id/fragmentRunningRun"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="208dp"
-            android:backgroundTint="@color/green_main"
+            android:background="@drawable/button_1"
+            android:textColor="@color/white"
             android:text="Let's run" />
     </LinearLayout>
 

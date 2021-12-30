@@ -1,6 +1,5 @@
 package com.main.fitness.ui.fragments;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -17,14 +16,9 @@ import android.widget.Toast;
 import com.main.fitness.R;
 import com.main.fitness.data.Model.AppUser;
 import com.main.fitness.data.ViewModel.UserViewModel;
-import com.main.fitness.ui.activities.gym.CardioTrainingActivity;
 import com.main.fitness.ui.activities.gym.ExerciseBankActivity;
 import com.main.fitness.ui.activities.gym.FAQAndTerminologyActivity;
-//import com.main.fitness.ui.activities.gym.ProgramListActivity;
-import com.main.fitness.ui.activities.gym.StrengthTrainingActivity;
-import com.main.fitness.ui.dialogs.ChooseUserLevelDialog;
-
-import java.util.HashMap;
+import com.main.fitness.ui.activities.gym.ProgramListActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -77,7 +71,7 @@ public class GymFragment extends Fragment {
         });
     }
 
-    CardView strengthButton, cardioButton, faqAndTermButton, exerciseBankButton;
+    Button strengthButton, cardioButton, faqAndTermButton, exerciseBankButton;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -87,13 +81,15 @@ public class GymFragment extends Fragment {
         this.cardioButton = rootView.findViewById(R.id.gymCardio);
         this.faqAndTermButton = rootView.findViewById(R.id.gymFAQAndTerminology);
         this.exerciseBankButton = rootView.findViewById(R.id.gymExerciseBank);
-
-//        this.strengthButton.setOnClickListener(v -> {
-//            startActivity(new Intent(requireActivity(), ProgramListActivity.class));
-//        });
+        Intent programListActivityIntent = new Intent(requireActivity(), ProgramListActivity.class);
+        this.strengthButton.setOnClickListener(v -> {
+            programListActivityIntent.putExtra(ProgramListActivity.PROGRAMS_KEY, ProgramListActivity.STRENGTH_PROGRAMS);
+            startActivity(programListActivityIntent);
+        });
 
         this.cardioButton.setOnClickListener(v -> {
-            startActivity(new Intent(requireActivity(), CardioTrainingActivity.class));
+            programListActivityIntent.putExtra(ProgramListActivity.PROGRAMS_KEY, ProgramListActivity.CARDIO_PROGRAMS);
+            startActivity(programListActivityIntent);
         });
 
         this.faqAndTermButton.setOnClickListener(v -> {

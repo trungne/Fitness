@@ -21,15 +21,12 @@
         <activity
             android:name=".ui.activities.gym.ProgramDetailActivity"
             android:exported="false" />
-<!--        <activity-->
-<!--            android:name=".ui.activities.gym.ProgramListActivity"-->
-<!--            android:exported="false" />-->
+        <activity
+            android:name=".ui.activities.gym.ProgramListActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.activities.gym.ExerciseBankActivity"
             android:exported="false" />
-<!--        <activity-->
-<!--            android:name=".ui.activities.gym.ExerciseBankActivity"-->
-<!--            android:exported="false" />-->
         <activity
             android:name=".ui.activities.gym.FAQAndTerminologyActivity"
             android:exported="false" />
