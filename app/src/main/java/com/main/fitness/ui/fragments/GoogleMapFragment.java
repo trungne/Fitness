@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.AlarmManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -26,28 +25,30 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-
-
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.main.fitness.R;
+import com.main.fitness.ui.activities.MainActivity;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class GoogleMapFragment extends Fragment implements SensorEventListener {
 
@@ -55,7 +56,6 @@ public class GoogleMapFragment extends Fragment implements SensorEventListener {
     private static final int FASTEST_INTERVAL = 2*1000; // 2 seconds
     private static final int MAX_WAIT_TIME = 1000;
     private static final int my_request_permission_code = 99;
-    private final static long SAVE_OFFSET_TIME = AlarmManager.INTERVAL_HOUR;
     private final static int SAVE_OFFSET_STEPS = 500;
     private static int steps = 0;
     private static long lastSaveSteps;
@@ -212,8 +212,7 @@ public class GoogleMapFragment extends Fragment implements SensorEventListener {
     }
 
     private void updateIfNecessary() {
-        if (steps > lastSaveSteps + SAVE_OFFSET_STEPS ||
-                (steps > 0 && System.currentTimeMillis() > lastSaveTime + SAVE_OFFSET_TIME)) {
+        if (steps > lastSaveSteps + SAVE_OFFSET_STEPS) {
             lastSaveSteps = steps;
             lastSaveTime = System.currentTimeMillis();
         }
@@ -243,7 +242,7 @@ public class GoogleMapFragment extends Fragment implements SensorEventListener {
                 .setMessage("Steps: " + steps + "\nDo you want to stop running?")
                 .setNegativeButton("Keep Running", (dialog, id) -> dialog.cancel())
                 .setPositiveButton("Accept", (dialog, id) ->
-                        startActivity(new Intent(getActivity(), GymFragment.class)));
+                        startActivity(new Intent(getActivity(), MainActivity.class)));
         final AlertDialog alert = builder.create();
         alert.show();
     }

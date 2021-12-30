@@ -19,19 +19,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Fitness">
         <activity
-            android:name=".ui.activities.gym.ProgramListActivity"
+            android:name=".ui.activities.gym.ProgramDetailActivity"
             android:exported="false" />
+<!--        <activity-->
+<!--            android:name=".ui.activities.gym.ProgramListActivity"-->
+<!--            android:exported="false" />-->
         <activity
             android:name=".ui.activities.gym.ExerciseBankActivity"
             android:exported="false" />
+<!--        <activity-->
+<!--            android:name=".ui.activities.gym.ExerciseBankActivity"-->
+<!--            android:exported="false" />-->
         <activity
             android:name=".ui.activities.gym.FAQAndTerminologyActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.activities.gym.CardioTrainingActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.activities.gym.StrengthTrainingActivity"
             android:exported="false" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
