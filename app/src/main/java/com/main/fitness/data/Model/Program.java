@@ -3,14 +3,29 @@ package com.main.fitness.data.Model;
 import java.util.List;
 
 public class Program {
+    private String id;
     private String name;
     private String goal;
     private String overview;
     private List<UserLevel> levels;
-    private String duration;
+    private Integer duration;
     private Integer daysPerWeek;
+    private String imagePath;
+    private String type;
 
     public Program() {}
+
+    public String getId() {
+        return id;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
 
     public String getName() {
         return name;
@@ -24,7 +39,7 @@ public class Program {
         return levels;
     }
 
-    public String getDuration() {
+    public Integer getDuration() {
         return duration;
     }
 
@@ -32,8 +47,20 @@ public class Program {
         return goal;
     }
 
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
     public String getOverview() {
         return overview;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public void setName(String name) {
@@ -44,7 +71,7 @@ public class Program {
         this.daysPerWeek = daysPerWeek;
     }
 
-    public void setDuration(String duration) {
+    public void setDuration(Integer duration) {
         this.duration = duration;
     }
 

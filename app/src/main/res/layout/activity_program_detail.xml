@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.activities.gym.ProgramDetailActivity">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:background="@drawable/custom_form">
+
+        <TableRow>
+
+            <TextView
+                android:id="@+id/activityProgramDetailNameLabel"
+                style="@style/titleText1"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="30dp"
+                android:text="Name: "
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/programDetailName"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="30dp"
+                android:text="Name" />
+
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:id="@+id/activityProgramDetailGoalLabel"
+                style="@style/titleText1"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginStart="20dp"
+                android:text="Goal: "
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/programDetailGoal"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginStart="20dp"
+                android:text="Goal"
+
+                />
+
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:id="@+id/activityProgramDetailDurationLabel"
+                style="@style/titleText1"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginStart="20dp"
+                android:text="Duration: "
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+
+
+            <TextView
+                android:id="@+id/programDetailDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginStart="20dp"
+                android:text="Duration"
+
+                />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:id="@+id/activityProgramDetailModerationLabel"
+                style="@style/titleText1"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginStart="20dp"
+                android:text="Days /Week: "
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+
+
+            <TextView
+                android:id="@+id/programDetailDaysPerWeek"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginStart="20dp"
+                android:text="Days per week"
+
+
+                />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:id="@+id/activityProgramDetailLevelLabel"
+                style="@style/titleText1"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginStart="20dp"
+                android:text="Level:"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+
+
+            <TextView
+                android:id="@+id/programDetailLevels"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginStart="20dp"
+                android:text="Levels" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:id="@+id/activityProgramDetaiOverViewLabel"
+                style="@style/titleText1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_marginStart="20dp"
+                android:text="Overview:"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+
+
+        </TableRow>
+        <TextView
+            android:id="@+id/programDetailOverview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:paddingBottom="30dp"
+            android:text="Overview" />
+
+
+    </TableLayout>
+
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_horizontal|bottom">
+
+        <Button
+            android:id="@+id/programDetailTrainButton"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/button_1"
+            android:text="Start"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+
+</LinearLayout>
