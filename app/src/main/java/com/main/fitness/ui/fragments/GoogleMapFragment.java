@@ -173,7 +173,7 @@ public class GoogleMapFragment extends Fragment implements SensorEventListener, 
             value = (int) values[0];
         }
         if (sensor.getType() == Sensor.TYPE_STEP_DETECTOR) {
-            steps = value;
+            steps++;
             updateIfNecessary();
         }
     }
@@ -229,25 +229,22 @@ public class GoogleMapFragment extends Fragment implements SensorEventListener, 
         final AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         builder.setMessage("Steps: " + steps + "\nDo you want to stop running?")
                 .setNegativeButton("Keep Running", (dialog, id) -> dialog.cancel())
-                .setPositiveButton("Accept", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        try{
-                            //Stop updating user location
-                            stopLocationUpdates();
+                .setPositiveButton("Accept", (dialog, which) -> {
+                    try{
+                        //Stop updating user location
+                        stopLocationUpdates();
 
-                            //Process the removal
-                            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                            //Remove this fragment
-                            fragmentTransaction.remove(GoogleMapFragment.this);
-                            fragmentTransaction.commit();
-                            fragmentManager.popBackStack();
-                        }
-                        //Catch null value
-                        catch (NullPointerException e){
-                            Toast.makeText(requireActivity(), "Null Pointer Exception occurred !", Toast.LENGTH_SHORT).show();
-                        }
+                        //Process the removal
+                        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        //Remove this fragment
+                        fragmentTransaction.remove(GoogleMapFragment.this);
+                        fragmentTransaction.commit();
+                        fragmentManager.popBackStack();
+                    }
+                    //Catch null value
+                    catch (NullPointerException e){
+                        Toast.makeText(requireActivity(), "Null Pointer Exception occurred !", Toast.LENGTH_SHORT).show();
                     }
                 });
         final AlertDialog alert = builder.create();
@@ -293,6 +290,7 @@ public class GoogleMapFragment extends Fragment implements SensorEventListener, 
         },null);
     }
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     public void onLocationChanged(Location lastLocation){
 
