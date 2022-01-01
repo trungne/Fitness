@@ -1,7 +1,9 @@
 package com.main.fitness.ui.fragments;
 
+import android.Manifest;
 import android.os.Bundle;
 
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -50,6 +52,11 @@ public class RunningFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        //Request permission from the user
+        requestPermission();
+
+        //Set up the view
         View view = inflater.inflate(R.layout.fragment_running, container, false);
         fragmentRunningDistance = view.findViewById(R.id.fragmentRunningDistance);
         fragmentRunningRun = view.findViewById(R.id.fragmentRunningRun);
@@ -94,5 +101,13 @@ public class RunningFragment extends Fragment {
             }
 
         }
+    }
+
+    //Request phone permission for location
+    public void requestPermission() {
+        ActivityCompat.requestPermissions(requireActivity(), new String[]{
+                Manifest.permission.ACCESS_FINE_LOCATION
+        }, 1);
+
     }
 }

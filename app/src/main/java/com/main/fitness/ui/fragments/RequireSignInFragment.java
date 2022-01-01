@@ -27,7 +27,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.main.fitness.R;
 import com.main.fitness.data.ViewModel.UserViewModel;
-import com.main.fitness.ui.activities.DashboardActivity;
 import com.main.fitness.ui.activities.MainActivity;
 
 import java.util.Arrays;
