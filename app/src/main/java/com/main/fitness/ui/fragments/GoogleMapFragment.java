@@ -1,16 +1,6 @@
 package com.main.fitness.ui.fragments;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,8 +15,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,6 +24,13 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -51,25 +46,18 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.main.fitness.R;
-import com.main.fitness.ui.activities.MainActivity;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
-public class GoogleMapFragment extends Fragment implements SensorEventListener, LocationListener {
+public class GoogleMapFragment extends Fragment implements LocationListener {
 
     //Fields for location updates
     private static final int UPDATE_INTERVAL = 10*1000; // 10 seconds
     private static final int FASTEST_INTERVAL = 2*1000; // 2 seconds
     private static final int MAX_WAIT_TIME = 1000;
-    private static final int PARTIAL_WAKE_LOCK = 1;
     private Integer steps;
     private boolean allowUpdates = false;
-    private PowerManager.WakeLock wakeLock = null;
 
     //Used for location operations
     protected FusedLocationProviderClient client;
@@ -116,7 +104,7 @@ public class GoogleMapFragment extends Fragment implements SensorEventListener, 
         }
     };
 
-    @SuppressLint({"SetTextI18n", "WakelockTimeout"})
+    @SuppressLint("SetTextI18n")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -132,13 +120,7 @@ public class GoogleMapFragment extends Fragment implements SensorEventListener, 
         mapFragmentButtonStop = v.findViewById(R.id.map_fragment_button_stop_run);
         mapFragmentButtonGetCurrentLocation = v.findViewById(R.id.map_fragment_button_current_location);
 
-        Context mContext = getContext();
-        PowerManager powerManager = null;
-        if (mContext != null) {
-            powerManager = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
-        }
-        wakeLock = Objects.requireNonNull(powerManager).newWakeLock(PARTIAL_WAKE_LOCK,"motionDetection:keepAwake");
-        wakeLock.acquire();
+
 
         //Actions for the buttons
         mapFragmentButtonRun.setOnClickListener(this::startRunningButton);
@@ -186,10 +168,6 @@ public class GoogleMapFragment extends Fragment implements SensorEventListener, 
                 .setPositiveButton("Accept", (dialog, which) -> {
                     try{
 
-                        //Turn off the boolean
-                        stepDetectorSensorIsActivated = false;
-
-
                         //Stop updating user location
                         stopLocationUpdates();
 
@@ -197,7 +175,9 @@ public class GoogleMapFragment extends Fragment implements SensorEventListener, 
                         steps = 0;
                         //We only unregister this listener when the sensor has been activated
                         if(stepDetectorSensorIsActivated){
-                            sensorManager.unregisterListener(stepDetectorEventListener,stepDetectorSensor);
+                            sensorManager.unregisterListener(stepDetectorSensorEventListener,stepDetectorSensor);
+                            //Turn off the boolean
+                            stepDetectorSensorIsActivated = false;
                         }
 
                         //Process the fragment removal
@@ -218,7 +198,7 @@ public class GoogleMapFragment extends Fragment implements SensorEventListener, 
         alert.show();
     }
 
-    //Start running button, we will also initialize the step counter
+    //Start running button, we will also initialize the step counter sensor
     @SuppressLint("SetTextI18n")
     private void startRunningButton(View v){
         //Change the zoom in a-bit for closer look on the street
@@ -227,10 +207,11 @@ public class GoogleMapFragment extends Fragment implements SensorEventListener, 
 
         //initialize the step DETECTOR SENSOR and the STEP counter global variable
         steps = 0;
-        sensorManager = (SensorManager) requireContext().getSystemService(Context.SENSOR_SERVICE);
+        sensorManager = (SensorManager) requireContext().getSystemService(Context.SENSOR_SERVICE); //Can be Context.SENSOR_SERVICE or AppCombatActivity.SENSOR_SERVICE
         stepDetectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
         if(stepDetectorSensor != null){
-            sensorManager.registerListener(stepDetectorEventListener,stepDetectorSensor,10);
+            sensorManager.registerListener(stepDetectorSensorEventListener,stepDetectorSensor,10);
+            //sensorManager.requestTriggerSensor(stepDetectorTriggerEventListener,stepDetectorSensor);
             //Boolean is now true
             stepDetectorSensorIsActivated = true;
         }
@@ -241,7 +222,6 @@ public class GoogleMapFragment extends Fragment implements SensorEventListener, 
 
     @SuppressLint("SetTextI18n")
     private void stopRunningButton(View v) {
-        wakeLock.release();
         showStopDialog();
     }
 
@@ -297,11 +277,6 @@ public class GoogleMapFragment extends Fragment implements SensorEventListener, 
             Toast.makeText(requireContext(), "Updated", Toast.LENGTH_SHORT).show();
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         }
-
-    }
-
-    @Override
-    public void onLocationChanged(@NonNull List<Location> locations) {
 
     }
 
@@ -432,27 +407,21 @@ public class GoogleMapFragment extends Fragment implements SensorEventListener, 
     /**
      * Listener that handles sensor events for STEP DETECTOR
      */
-    private final SensorEventListener stepDetectorEventListener = new SensorEventListener() {
+
+    private final SensorEventListener stepDetectorSensorEventListener = new SensorEventListener() {
         @Override
-
         public void onSensorChanged(SensorEvent event) {
-
-            if (event.sensor.getType() == Sensor.TYPE_STEP_DETECTOR) {
-                // Do work
-                steps += 1;
-                //Avoid fragment not attached to context
-                Toast.makeText(requireContext(), "STEP DETECTOR INVOKED !", Toast.LENGTH_LONG).show();
-            }
+            // Do work
+            steps += 1;
+            //Avoid fragment not attached to context
+            Toast.makeText(requireContext(), "STEP DETECTOR INVOKED !", Toast.LENGTH_LONG).show();
         }
 
         @Override
-        public void onAccuracyChanged(Sensor sensor, int i) {
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
         }
     };
 
-    @Override
-    public void onSensorChanged(SensorEvent event) { }
 
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) { }
 }
