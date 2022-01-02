@@ -170,6 +170,7 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
     private void showStopDialog() {
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+        if (steps == null) steps = 0;
         builder.setMessage("Steps: " + steps + "\nDo you want to stop running?")
                 .setNegativeButton("Keep Running", (dialog, id) -> dialog.cancel())
                 .setPositiveButton("Accept", (dialog, which) -> {
@@ -229,7 +230,7 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
 
     @SuppressLint("SetTextI18n")
     private void stopRunningButton(View v) {
-        wakeLock.release();
+        if (wakeLock.isHeld()) wakeLock.release();
         showStopDialog();
     }
 
