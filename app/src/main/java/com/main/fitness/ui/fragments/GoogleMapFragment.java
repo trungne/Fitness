@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,6 +25,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -54,6 +57,8 @@ import com.main.fitness.ui.activities.MainActivity;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class GoogleMapFragment extends Fragment implements SensorEventListener, LocationListener {
 
@@ -61,8 +66,10 @@ public class GoogleMapFragment extends Fragment implements SensorEventListener, 
     private static final int UPDATE_INTERVAL = 10*1000; // 10 seconds
     private static final int FASTEST_INTERVAL = 2*1000; // 2 seconds
     private static final int MAX_WAIT_TIME = 1000;
+    private static final int PARTIAL_WAKE_LOCK = 1;
     private Integer steps;
     private boolean allowUpdates = false;
+    private PowerManager.WakeLock wakeLock = null;
 
     //Used for location operations
     protected FusedLocationProviderClient client;
@@ -109,7 +116,7 @@ public class GoogleMapFragment extends Fragment implements SensorEventListener, 
         }
     };
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "WakelockTimeout"})
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -125,7 +132,13 @@ public class GoogleMapFragment extends Fragment implements SensorEventListener, 
         mapFragmentButtonStop = v.findViewById(R.id.map_fragment_button_stop_run);
         mapFragmentButtonGetCurrentLocation = v.findViewById(R.id.map_fragment_button_current_location);
 
-
+        Context mContext = getContext();
+        PowerManager powerManager = null;
+        if (mContext != null) {
+            powerManager = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
+        }
+        wakeLock = Objects.requireNonNull(powerManager).newWakeLock(PARTIAL_WAKE_LOCK,"motionDetection:keepAwake");
+        wakeLock.acquire();
 
         //Actions for the buttons
         mapFragmentButtonRun.setOnClickListener(this::startRunningButton);
@@ -228,6 +241,7 @@ public class GoogleMapFragment extends Fragment implements SensorEventListener, 
 
     @SuppressLint("SetTextI18n")
     private void stopRunningButton(View v) {
+        wakeLock.release();
         showStopDialog();
     }
 
@@ -283,6 +297,11 @@ public class GoogleMapFragment extends Fragment implements SensorEventListener, 
             Toast.makeText(requireContext(), "Updated", Toast.LENGTH_SHORT).show();
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         }
+
+    }
+
+    @Override
+    public void onLocationChanged(@NonNull List<Location> locations) {
 
     }
 
