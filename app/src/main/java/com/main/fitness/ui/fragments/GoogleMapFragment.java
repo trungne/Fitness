@@ -61,22 +61,20 @@ public class GoogleMapFragment extends Fragment implements SensorEventListener, 
     private static final int UPDATE_INTERVAL = 10*1000; // 10 seconds
     private static final int FASTEST_INTERVAL = 2*1000; // 2 seconds
     private static final int MAX_WAIT_TIME = 1000;
-    private static final int my_request_permission_code = 99;
-    private final static int SAVE_OFFSET_STEPS = 500;
-    private static int steps = 0;
+    private Integer steps;
     private boolean allowUpdates = false;
-    private static long lastSaveSteps;
-    private static long lastSaveTime;
 
     //Used for location operations
     protected FusedLocationProviderClient client;
     private GoogleMap mMap;
     private LocationRequest locationRequest;
-    private Sensor sensor;
+
+    //For step counter running features
     private SensorManager sensorManager;
+    private Sensor stepDetectorSensor;
+    private boolean stepDetectorSensorIsActivated;
 
     //Container for markers
-    ArrayList<LatLng> locationArrayList;
     private double mapFragmentUserTravelledDistance;
     private Location prev;
     private Location current;
@@ -101,8 +99,6 @@ public class GoogleMapFragment extends Fragment implements SensorEventListener, 
             //Location monitor
             client = LocationServices.getFusedLocationProviderClient(requireActivity());
             mMap = googleMap;
-            sensorManager = (SensorManager) requireActivity().getSystemService(Context.SENSOR_SERVICE);
-            sensor= sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
 
             //Add function to zoom in and out on the map
             googleMap.getUiSettings().setZoomControlsEnabled(true);
@@ -113,6 +109,7 @@ public class GoogleMapFragment extends Fragment implements SensorEventListener, 
         }
     };
 
+    @SuppressLint("SetTextI18n")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -129,6 +126,7 @@ public class GoogleMapFragment extends Fragment implements SensorEventListener, 
         mapFragmentButtonGetCurrentLocation = v.findViewById(R.id.map_fragment_button_current_location);
 
 
+
         //Actions for the buttons
         mapFragmentButtonRun.setOnClickListener(this::startRunningButton);
         mapFragmentButtonStop.setOnClickListener(this::stopRunningButton);
@@ -143,6 +141,9 @@ public class GoogleMapFragment extends Fragment implements SensorEventListener, 
             //Because we just start running, we need to set the value as 0
             mapFragmentUserTravelledDistance = 0;
             mapFragmentTravelledDistanceTextView.setText("" + mapFragmentUserTravelledDistance);
+
+            //Because we have not run yet, so we set the run boolean as false
+            stepDetectorSensorIsActivated = false;
 
         }
         catch(NullPointerException e){
@@ -163,66 +164,6 @@ public class GoogleMapFragment extends Fragment implements SensorEventListener, 
 
     }
 
-    @Override
-    public void onSensorChanged(SensorEvent sensorEvent) {
-        Sensor sensor = sensorEvent.sensor;
-        float[] values = sensorEvent.values;
-        int value = -1;
-
-        if (values.length > 0) {
-            value = (int) values[0];
-        }
-        if (sensor.getType() == Sensor.TYPE_STEP_DETECTOR) {
-            steps++;
-            updateIfNecessary();
-        }
-    }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int i) {
-
-    }
-
-
-    @SuppressLint("MissingPermission")
-    public void setCurrentLocationWithCustomLogo(){
-        client.getLastLocation().addOnSuccessListener(location -> {
-
-            try {
-                //Add the custom marker on the location
-                LatLng lastLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(lastLocation));
-                mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)).position(lastLocation));
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lastLocation, 17));
-                Toast.makeText(requireActivity(), "You are here", Toast.LENGTH_SHORT).show();
-            }
-            //If user does not enable GPS settings, they will get null result
-            catch (NullPointerException e) {
-                showErrorNoGPS();
-            }
-        }).addOnFailureListener(e -> Toast.makeText(requireActivity(), "Custom Logo Something Wrong ! FAILURE LISTENER ", Toast.LENGTH_LONG).show());
-    }
-
-
-    //Function to update the steps on the system
-    private void updateIfNecessary() {
-        if (steps > lastSaveSteps + SAVE_OFFSET_STEPS) {
-            lastSaveSteps = steps;
-            lastSaveTime = System.currentTimeMillis();
-        }
-    }
-
-    //Guide user to settings to enable GPS
-    public void showErrorNoGPS() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-        builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
-                .setCancelable(false)
-                .setPositiveButton("No", (dialog, id) -> dialog.cancel())
-                .setNegativeButton("Yes", (dialog, id) -> startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)));
-        final AlertDialog alert = builder.create();
-        alert.show();
-    }
-
     //Show Stop dialog when user pressed the STOP button on the map screen
     private void showStopDialog() {
 
@@ -231,10 +172,22 @@ public class GoogleMapFragment extends Fragment implements SensorEventListener, 
                 .setNegativeButton("Keep Running", (dialog, id) -> dialog.cancel())
                 .setPositiveButton("Accept", (dialog, which) -> {
                     try{
+
+                        //Turn off the boolean
+                        stepDetectorSensorIsActivated = false;
+
+
                         //Stop updating user location
                         stopLocationUpdates();
 
-                        //Process the removal
+                        //Remove the Step Detector listener and reset the counter to 0
+                        steps = 0;
+                        //We only unregister this listener when the sensor has been activated
+                        if(stepDetectorSensorIsActivated){
+                            sensorManager.unregisterListener(stepDetectorEventListener,stepDetectorSensor);
+                        }
+
+                        //Process the fragment removal
                         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                         //Remove this fragment
@@ -244,6 +197,7 @@ public class GoogleMapFragment extends Fragment implements SensorEventListener, 
                     }
                     //Catch null value
                     catch (NullPointerException e){
+                        e.printStackTrace();
                         Toast.makeText(requireActivity(), "Null Pointer Exception occurred !", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -251,12 +205,22 @@ public class GoogleMapFragment extends Fragment implements SensorEventListener, 
         alert.show();
     }
 
-    //Start running button
+    //Start running button, we will also initialize the step counter
     @SuppressLint("SetTextI18n")
     private void startRunningButton(View v){
         //Change the zoom in a-bit for closer look on the street
         mapFragmentButtonRun.setEnabled(false);
         mapFragmentButtonRun.setText("Running");
+
+        //initialize the step DETECTOR SENSOR and the STEP counter global variable
+        steps = 0;
+        sensorManager = (SensorManager) requireContext().getSystemService(Context.SENSOR_SERVICE);
+        stepDetectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+        if(stepDetectorSensor != null){
+            sensorManager.registerListener(stepDetectorEventListener,stepDetectorSensor,10);
+            //Boolean is now true
+            stepDetectorSensorIsActivated = true;
+        }
 
         //Start updating location
         startLocationUpdate();
@@ -290,11 +254,9 @@ public class GoogleMapFragment extends Fragment implements SensorEventListener, 
         },null);
     }
 
-    @SuppressLint("SourceLockedOrientationActivity")
+    @SuppressLint({"SourceLockedOrientationActivity", "SetTextI18n"})
     @Override
     public void onLocationChanged(Location lastLocation){
-
-        //Hey, a non null location! Sweet!
 
         //open the map:
         LatLng latLng = new LatLng(lastLocation.getLatitude(),lastLocation.getLongitude());
@@ -313,8 +275,8 @@ public class GoogleMapFragment extends Fragment implements SensorEventListener, 
         //Draw the polyline
         Polyline line = mMap.addPolyline(new PolylineOptions()
                 .add(new LatLng(prev.getLatitude(),prev.getLongitude()), new LatLng(current.getLatitude(),current.getLongitude()))
-                .width(5)
-                .color(Color.RED));
+                .width(10)
+                .color(Color.CYAN));
 
         //Move the camera to the new location point
         if(getActivity() != null){
@@ -358,18 +320,20 @@ public class GoogleMapFragment extends Fragment implements SensorEventListener, 
         });
     }
 
+    //Function to check if the GPS Location is enabled in the settings
     public boolean isLocationEnabled(Context context){
         LocationManager lm = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
         boolean gps_enabled = false;
         boolean network_enabled = false;
         try {
             gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        } catch(Exception ex) {}
-
-        try {
             network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        } catch(Exception ex) {}
+        }
+        catch(Exception ex) {
+            ex.printStackTrace();
+        }
 
+        //If both boolean is returned with false
         if(!gps_enabled && !network_enabled) {
             // notify user
             Toast.makeText(requireActivity(), "Location is currently off :(", Toast.LENGTH_SHORT).show();
@@ -390,6 +354,7 @@ public class GoogleMapFragment extends Fragment implements SensorEventListener, 
         return true;
     }
 
+    //Function to move the user camera to their current location
     @SuppressLint("MissingPermission")
     public void getLocation(){
         if (isLocationEnabled(requireActivity())) {
@@ -416,20 +381,59 @@ public class GoogleMapFragment extends Fragment implements SensorEventListener, 
                 Toast.makeText(requireActivity(), "latitude:" + latitude + " longitude:" + longitude, Toast.LENGTH_SHORT).show();
 
             }
-            else{
-                //This is what you need:
-                locationManager.requestLocationUpdates(bestProvider,1000,0,this::onLocationChanged);
+            else {
+                //Request location updates then move the camera
+                locationManager.requestLocationUpdates(bestProvider, 1000, 0, this::onLocationChanged);
+
+                //Move the camera
+                try {
+                    double latitude = location.getLatitude();
+                    double longitude = location.getLongitude();
+                    LatLng latLng = new LatLng(latitude, longitude);
+
+                    //Update the previous and current location global variables, IMPORTANT !!!
+                    prev = location;
+                    current = location;
+
+                    //Adjust the camera
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                    mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker()).position(latLng));
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17));
+
+                }
+
+                catch(NullPointerException e){
+                    e.printStackTrace();
+                }
+
             }
-        }
-        else
-        {
-            //prompt user to enable location....
-            //.................
         }
     }
 
+    /**
+     * Listener that handles sensor events for STEP DETECTOR
+     */
+    private final SensorEventListener stepDetectorEventListener = new SensorEventListener() {
+        @Override
 
+        public void onSensorChanged(SensorEvent event) {
 
+            if (event.sensor.getType() == Sensor.TYPE_STEP_DETECTOR) {
+                // Do work
+                steps += 1;
+                //Avoid fragment not attached to context
+                Toast.makeText(requireContext(), "STEP DETECTOR INVOKED !", Toast.LENGTH_LONG).show();
+            }
+        }
 
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int i) {
+        }
+    };
 
+    @Override
+    public void onSensorChanged(SensorEvent event) { }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) { }
 }
