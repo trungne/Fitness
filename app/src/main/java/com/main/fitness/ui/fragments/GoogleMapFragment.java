@@ -15,6 +15,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -56,8 +57,10 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
     private static final int UPDATE_INTERVAL = 10*1000; // 10 seconds
     private static final int FASTEST_INTERVAL = 2*1000; // 2 seconds
     private static final int MAX_WAIT_TIME = 1000;
+    private static final int PARTIAL_WAKE_LOCK = 1;
     private Integer steps;
     private boolean allowUpdates = false;
+    private PowerManager.WakeLock wakeLock;
 
     //Used for location operations
     protected FusedLocationProviderClient client;
@@ -119,6 +122,10 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
         mapFragmentButtonRun = v.findViewById(R.id.map_fragment_button_run);
         mapFragmentButtonStop = v.findViewById(R.id.map_fragment_button_stop_run);
         mapFragmentButtonGetCurrentLocation = v.findViewById(R.id.map_fragment_button_current_location);
+        Context mContext = getContext();
+        PowerManager powerManager = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
+        wakeLock =  powerManager.newWakeLock(PARTIAL_WAKE_LOCK,"motionDetection:keepAwake");
+        wakeLock.acquire();
 
 
 
@@ -222,6 +229,7 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
 
     @SuppressLint("SetTextI18n")
     private void stopRunningButton(View v) {
+        wakeLock.release();
         showStopDialog();
     }
 
