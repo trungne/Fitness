@@ -1,16 +1,25 @@
 package com.main.fitness.ui.fragments;
 
+import android.content.res.AssetManager;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
 import com.main.fitness.R;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.Collator;
+import java.util.Arrays;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,12 +38,16 @@ public class WeightExerciseFragment extends Fragment {
         return fragment;
     }
 
+    AssetManager mAssetManager;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
 
         }
+
+        this.mAssetManager = requireContext().getAssets();
     }
 
     AutoCompleteTextView autoCompleteTextView;
@@ -45,10 +58,35 @@ public class WeightExerciseFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_weight_exercise, container, false);
         this.autoCompleteTextView = view.findViewById(R.id.WeightExerciseAutoCompleteTextView);
-        String[] options = {"Shoulder", "Chest", "Abs", "Legs", "Back", "Arms"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.option_exercise_body_part, options);
-        this.autoCompleteTextView.setText(adapter.getItem(0).toString(), false);
-        this.autoCompleteTextView.setAdapter(adapter);
+        this.autoCompleteTextView.setInputType(InputType.TYPE_NULL);
+        loadOptionsForBodyParts();
+
         return view;
+    }
+
+    private void loadOptionsForBodyParts(){
+        try {
+
+
+
+
+
+            String[] options = this.mAssetManager.list("exercise_bank");
+            Arrays.sort(options);
+            for (String str: options){
+                Log.i("WeightExerciseFragment", str);
+            }
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.option_exercise_body_part, options);
+            this.autoCompleteTextView.setText(adapter.getItem(0).toString(), false);
+            this.autoCompleteTextView.setAdapter(adapter);
+            this.autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Log.i("WeightExerciseFragment", (String) parent.getItemAtPosition(position));
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

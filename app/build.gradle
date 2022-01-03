@@ -26,6 +26,13 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    sourceSets {
+        main {
+            assets {
+                srcDirs 'src\\main\\assets', 'src\\main\\assets\\exercise_bank', 'src\\main\\assets\\Shoulders', 'src\\main\\assets\\exercise_bank\\Shoulders', 'src\\main\\assets\\shoulders', 'src\\main\\assets\\exercise_bank\\Chest'
+            }
+        }
+    }
 }
 
 dependencies {
