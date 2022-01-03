@@ -1,7 +1,9 @@
 package com.main.fitness.ui.fragments;
 
+import android.Manifest;
 import android.os.Bundle;
 
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -50,6 +52,11 @@ public class RunningFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        //Request permission from the user
+        requestPermission();
+
+        //Set up the view
         View view = inflater.inflate(R.layout.fragment_running, container, false);
         fragmentRunningDistance = view.findViewById(R.id.fragmentRunningDistance);
         fragmentRunningRun = view.findViewById(R.id.fragmentRunningRun);
@@ -64,15 +71,43 @@ public class RunningFragment extends Fragment {
         //User enter or not?
         if (TextUtils.isEmpty(fragmentRunningDistance.getText().toString())) {
             Toast.makeText(requireActivity(), "Please enter the distance you want to run first!", Toast.LENGTH_SHORT).show();
-        } else if (Double.parseDouble(fragmentRunningDistance.getText().toString()) <= 0) {
-            Toast.makeText(requireActivity(), "The distance must be bigger than 0", Toast.LENGTH_SHORT).show();
-        } else {
-            //direct to map
-            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.MainActivityFragmentContainer, new GoogleMapFragment());
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
         }
+
+        else if (Double.parseDouble(fragmentRunningDistance.getText().toString()) <= 0) {
+            Toast.makeText(requireActivity(), "The distance must be bigger than 0", Toast.LENGTH_SHORT).show();
+        }
+
+        else {
+            //direct to map fragment
+            try{
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                //Add data to the bundle for the map fragment
+                String userSelectedRunningDistance = fragmentRunningDistance.getText().toString();
+                Bundle bundle = new Bundle();
+                bundle.putString("selectedRunningDistance",userSelectedRunningDistance);
+                GoogleMapFragment mapFragment = new GoogleMapFragment();
+                mapFragment.setArguments(bundle);
+
+                //Switch to Map Fragment
+                fragmentTransaction.replace(R.id.MainActivityFragmentContainer, mapFragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+            //Catch null value
+            catch (NullPointerException e){
+                Toast.makeText(requireActivity(), "Null Pointer Exception occurred !", Toast.LENGTH_SHORT).show();
+            }
+
+        }
+    }
+
+    //Request phone permission for location
+    public void requestPermission() {
+        ActivityCompat.requestPermissions(requireActivity(), new String[]{
+                Manifest.permission.ACCESS_FINE_LOCATION
+        }, 1);
+
     }
 }
