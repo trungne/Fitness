@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.Fitness" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="Theme.Fitness" parent="Theme.MaterialComponents.DayNight.NoActionBar.Bridge">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/blue_200</item>
         <item name="colorPrimaryVariant">@color/blue_100</item>

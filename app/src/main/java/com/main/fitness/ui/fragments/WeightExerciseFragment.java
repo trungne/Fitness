@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 
 import com.main.fitness.R;
 
@@ -35,10 +37,18 @@ public class WeightExerciseFragment extends Fragment {
         }
     }
 
+    AutoCompleteTextView autoCompleteTextView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_weight_exercise, container, false);
+        View view = inflater.inflate(R.layout.fragment_weight_exercise, container, false);
+        this.autoCompleteTextView = view.findViewById(R.id.WeightExerciseAutoCompleteTextView);
+        String[] options = {"Shoulder", "Chest", "Abs", "Legs", "Back", "Arms"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.option_exercise_body_part, options);
+        this.autoCompleteTextView.setText(adapter.getItem(0).toString(), false);
+        this.autoCompleteTextView.setAdapter(adapter);
+        return view;
     }
 }

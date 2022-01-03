@@ -5,9 +5,21 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragments.WeightExerciseFragment">
 
-    <TextView
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/WeightExerciseMenu"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="weight exercise fragment" />
+        android:layout_height="wrap_content"
+        android:hint="Pick a part you want to work on">
+
+        <AutoCompleteTextView
+            android:id="@+id/WeightExerciseAutoCompleteTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
 </FrameLayout>
