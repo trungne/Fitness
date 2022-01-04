@@ -65,8 +65,6 @@ public class ExerciseViewModel extends AndroidViewModel {
             if (exerciseFiles.length != 2){
                 return null;
             }
-            Log.i(TAG, "Path: " + path);
-            Log.i(TAG, "Filename" + getFilename(path));
             String name = toTitleCase(getFilename(path));
             String illustrationFileName = "";
             String descriptionFileName = "";
@@ -96,7 +94,7 @@ public class ExerciseViewModel extends AndroidViewModel {
                 Log.i("Exercise View Model", "fail");
             }
 
-            return new Exercise(name, description, drawable);
+            return new Exercise(path, name, description, drawable);
         } catch (IOException e) {
             return null;
         }
@@ -109,8 +107,8 @@ public class ExerciseViewModel extends AndroidViewModel {
         try {
             String[] folders = this.mAssetManager.list(pathToExerciseTypeFolder);
             for (String folder: folders){
-                String path = pathToExerciseTypeFolder + File.separator + folder;
-                Exercise e = getExercise(path);
+                String exerciseFolder = pathToExerciseTypeFolder + File.separator + folder;
+                Exercise e = getExercise(exerciseFolder);
                 if (e != null){
                     exerciseList.add(e);
                 }

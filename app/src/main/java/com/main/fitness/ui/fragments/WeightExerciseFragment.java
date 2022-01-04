@@ -1,5 +1,6 @@
 package com.main.fitness.ui.fragments;
 
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 
@@ -21,6 +22,7 @@ import android.widget.LinearLayout;
 import com.main.fitness.R;
 import com.main.fitness.data.Model.Exercise;
 import com.main.fitness.data.ViewModel.ExerciseViewModel;
+import com.main.fitness.ui.activities.gym.ExerciseDetailActivity;
 import com.main.fitness.ui.adapters.ExerciseAdapter;
 import com.main.fitness.ui.menu.CustomDropdownMenu;
 
@@ -76,6 +78,11 @@ public class WeightExerciseFragment extends Fragment {
         this.recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
         this.exerciseAdapter = new ExerciseAdapter(new ArrayList<>());
+        this.exerciseAdapter.setOnExerciseClickListener(folderPath -> {
+            Intent intent = new Intent(requireActivity(), ExerciseDetailActivity.class);
+            intent.putExtra(ExerciseDetailActivity.PATH_KEY, folderPath);
+            startActivity(intent);
+        });
 
         loadOptionsForBodyParts();
         return view;
@@ -93,13 +100,15 @@ public class WeightExerciseFragment extends Fragment {
         this.autoCompleteTextView.setAdapter(adapter);
         this.autoCompleteTextView.setOnItemClickListener((parent, view, position, id) -> {
             String exerciseType = (String) parent.getItemAtPosition(position);
+            Log.i(TAG, "exerciseType: " + exerciseType);
             List<Exercise> exerciseList = this.exerciseViewModel.getExercises(exerciseType);
             this.exerciseAdapter.updateExerciseList(exerciseList);
             this.recyclerView.setAdapter(this.exerciseAdapter);
 //            this.exerciseAdapter.notifyDataSetChanged();
         });
 
-        this.autoCompleteTextView.setText(adapter.getItem(0).toString(), false);
+//        this.autoCompleteTextView.setText(adapter.getItem(0).toString(), false);
+        this.autoCompleteTextView.setSelection(0);
 
     }
 }
