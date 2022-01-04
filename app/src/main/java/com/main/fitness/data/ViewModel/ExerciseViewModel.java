@@ -6,18 +6,27 @@ import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.Log;
 
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 
+import com.google.common.io.Files;
 import com.main.fitness.data.Model.Exercise;
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ExerciseViewModel extends AndroidViewModel {
+    private static final String TAG = "ExerciseViewModel";
+    private static final Set<String> VALID_IMAGE_FILE_EXTENSIONS = new HashSet<>(Arrays.asList(".png", ".jpg", ".jpeg"));
+    private static final Set<String> VALID_TEXT_FILE_EXTENSIONS = new HashSet<>(Arrays.asList(".txt", ".md"));
     private static final String EXERCISE_BANK_FOLDER_PATH = "exercise_bank"; // relative path
     private final Application application;
     private final AssetManager mAssetManager;
@@ -37,47 +46,83 @@ public class ExerciseViewModel extends AndroidViewModel {
         }
     }
 
-    public List<Exercise> getExercises(String type){
-        String path = EXERCISE_BANK_FOLDER_PATH + "/" + type;
+    private String getFilename(String path){
+        if (TextUtils.isEmpty(path)){
+            return "";
+        }
+        int lastIndexOfFileSeparator = path.lastIndexOf(File.separator);
+
+        if (lastIndexOfFileSeparator == -1){
+            return "";
+        }
+        return path.substring(lastIndexOfFileSeparator + 1);
+
+    }
+
+    public Exercise getExercise(String path){
+        try {
+            String[] exerciseFiles = this.mAssetManager.list(path);
+            if (exerciseFiles.length != 2){
+                return null;
+            }
+            Log.i(TAG, "Path: " + path);
+            Log.i(TAG, "Filename" + getFilename(path));
+            String name = toTitleCase(getFilename(path));
+            String illustrationFileName = "";
+            String descriptionFileName = "";
+
+            if (VALID_IMAGE_FILE_EXTENSIONS.contains(getExtension(exerciseFiles[0]))) {
+                illustrationFileName = path + File.separator + exerciseFiles[0];
+            }
+            else if (VALID_IMAGE_FILE_EXTENSIONS.contains(getExtension(exerciseFiles[1]))){
+                illustrationFileName = path + File.separator + exerciseFiles[1];
+            }
+
+            if (VALID_TEXT_FILE_EXTENSIONS.contains(getExtension(exerciseFiles[0]))) {
+                descriptionFileName = path + File.separator + exerciseFiles[0];
+            }
+            else if (VALID_TEXT_FILE_EXTENSIONS.contains(getExtension(exerciseFiles[1]))){
+                descriptionFileName = path + File.separator + exerciseFiles[1];
+            }
+
+            if (TextUtils.isEmpty(illustrationFileName) || TextUtils.isEmpty(descriptionFileName)) {
+                return null;
+            }
+
+            String description = getStringFromFile(descriptionFileName);
+            Drawable drawable = getDrawableFromFile(illustrationFileName);
+
+            if (TextUtils.isEmpty(description) || drawable == null){
+                Log.i("Exercise View Model", "fail");
+            }
+
+            return new Exercise(name, description, drawable);
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    public List<Exercise> getExercises(String type) {
+        String pathToExerciseTypeFolder = EXERCISE_BANK_FOLDER_PATH + File.separator + type;
 
         List<Exercise> exerciseList = new ArrayList<>();
         try {
-            String[] exerciseFolders = this.mAssetManager.list(path);
-            // loop through folders and get .png, .txt files in each
-            // .png will be converted to drawable and .txt will be the description
-            // name of the exercise is the name of the folder. barbell_bench_press -> Barbell Bench Press
-            for(String folder: exerciseFolders){
-                String[] exerciseFiles = this.mAssetManager.list(path + "/" + folder);
-                if (exerciseFiles.length != 2){
-                    continue;
+            String[] folders = this.mAssetManager.list(pathToExerciseTypeFolder);
+            for (String folder: folders){
+                String path = pathToExerciseTypeFolder + File.separator + folder;
+                Exercise e = getExercise(path);
+                if (e != null){
+                    exerciseList.add(e);
                 }
-                String name = toTitleCase(folder);
-                String illustrationFileName;
-                String descriptionFileName;
-
-                if (exerciseFiles[0].contains(".png")){
-                    illustrationFileName = path + "/" + folder + "/" + exerciseFiles[0];
-                    descriptionFileName = path + "/" + folder + "/" + exerciseFiles[1];
-                }
-                else{
-                    illustrationFileName = path + "/" + folder + "/" + exerciseFiles[1];
-                    descriptionFileName = path + "/" + folder + "/" + exerciseFiles[0];
-                }
-
-                String description = getStringFromFile(descriptionFileName);
-                Drawable drawable = getDrawableFromFile(illustrationFileName);
-
-                if (TextUtils.isEmpty(description) || drawable == null){
-                    Log.i("Exercise View Model", "fail");
-                    continue;
-                }
-                exerciseList.add(new Exercise(name, description, drawable));
             }
+        } catch (IOException ignore){
 
-            return exerciseList;
-        } catch (IOException e) {
-            return new ArrayList<>();
         }
+        return exerciseList;
+    }
+
+    private String getExtension(String filename){
+        return filename.substring(filename.lastIndexOf('.'));
     }
 
     private Drawable getDrawableFromFile(String file){
