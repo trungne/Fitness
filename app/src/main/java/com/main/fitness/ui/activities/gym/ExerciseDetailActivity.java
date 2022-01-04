@@ -12,12 +12,13 @@ import android.widget.TextView;
 
 import com.main.fitness.R;
 import com.main.fitness.data.Model.Exercise;
-import com.main.fitness.data.ViewModel.ExerciseViewModel;
+import com.main.fitness.data.ViewModel.AssetsViewModel;
 
 public class ExerciseDetailActivity extends AppCompatActivity {
+    // TODO: add action bar
     public static final String PATH_KEY = "com.main.fitness.ui.activities.gym.ExerciseDetailActivity.path";
 
-    private ExerciseViewModel exerciseViewModel;
+    private AssetsViewModel assetsViewModel;
     private Exercise exercise;
     private String path = "";
 
@@ -46,8 +47,8 @@ public class ExerciseDetailActivity extends AppCompatActivity {
             return;
         }
 
-        this.exerciseViewModel = new ViewModelProvider(this).get(ExerciseViewModel.class);
-        this.exercise = this.exerciseViewModel.getExercise(this.path);
+        this.assetsViewModel = new ViewModelProvider(this).get(AssetsViewModel.class);
+        this.exercise = this.assetsViewModel.getExercise(this.path);
 
         if (this.exercise == null){
             finish();

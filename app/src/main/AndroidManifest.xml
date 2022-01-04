@@ -21,6 +21,7 @@
         android:theme="@style/Theme.Fitness">
         <activity
             android:name=".ui.activities.gym.ExerciseDetailActivity"
+            android:parentActivityName=".ui.activities.gym.ExerciseBankActivity"
             android:exported="false" />
         <activity
             android:name=".ui.activities.gym.ProgramDetailActivity"
