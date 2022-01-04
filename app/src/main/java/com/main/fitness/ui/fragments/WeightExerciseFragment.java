@@ -22,6 +22,7 @@ import com.main.fitness.R;
 import com.main.fitness.data.Model.Exercise;
 import com.main.fitness.data.ViewModel.ExerciseViewModel;
 import com.main.fitness.ui.adapters.ExerciseAdapter;
+import com.main.fitness.ui.menu.CustomDropdownMenu;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -59,7 +60,7 @@ public class WeightExerciseFragment extends Fragment {
         this.exerciseViewModel = new ViewModelProvider(requireActivity()).get(ExerciseViewModel.class);
     }
 
-    private AutoCompleteTextView autoCompleteTextView;
+    private CustomDropdownMenu autoCompleteTextView;
     private RecyclerView recyclerView;
     private ExerciseAdapter exerciseAdapter;
     @Override
@@ -68,25 +69,27 @@ public class WeightExerciseFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_weight_exercise, container, false);
         this.autoCompleteTextView = view.findViewById(R.id.WeightExerciseAutoCompleteTextView);
+        this.autoCompleteTextView.setInputType(InputType.TYPE_NULL);
+        this.autoCompleteTextView.setFreezesText(false);
+
         this.recyclerView = view.findViewById(R.id.WeightExerciseRecycleView);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireActivity());
-        this.recyclerView.setLayoutManager(linearLayoutManager);
+        this.recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
         this.exerciseAdapter = new ExerciseAdapter(new ArrayList<>());
 
-        this.autoCompleteTextView.setInputType(InputType.TYPE_NULL);
         loadOptionsForBodyParts();
         return view;
     }
 
     private void loadOptionsForBodyParts(){
         String[] folders = this.exerciseViewModel.getExerciseTypes();
+        Log.i(TAG, Arrays.toString(folders));
         if (folders == null){
             // handle cases when no folders are found
             return;
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.option_exercise_body_part, folders);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.option_exercise_body_part, Arrays.asList(folders));
         this.autoCompleteTextView.setAdapter(adapter);
         this.autoCompleteTextView.setOnItemClickListener((parent, view, position, id) -> {
             String exerciseType = (String) parent.getItemAtPosition(position);
@@ -94,8 +97,6 @@ public class WeightExerciseFragment extends Fragment {
             this.exerciseAdapter.updateExerciseList(exerciseList);
             this.recyclerView.setAdapter(this.exerciseAdapter);
 //            this.exerciseAdapter.notifyDataSetChanged();
-            Log.i(TAG,exerciseList.toString());
-            Log.i(TAG,exerciseType);
         });
 
         this.autoCompleteTextView.setText(adapter.getItem(0).toString(), false);

@@ -19,11 +19,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+        <com.main.fitness.ui.menu.CustomDropdownMenu
             android:id="@+id/WeightExerciseAutoCompleteTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="none" />
+            android:inputType="none"
+            android:freezesText="false"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
