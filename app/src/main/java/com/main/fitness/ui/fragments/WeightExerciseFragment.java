@@ -4,6 +4,7 @@ import android.content.res.AssetManager;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.text.InputType;
 import android.util.Log;
@@ -15,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
 import com.main.fitness.R;
+import com.main.fitness.data.ViewModel.ExerciseViewModel;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,8 +40,7 @@ public class WeightExerciseFragment extends Fragment {
         return fragment;
     }
 
-    AssetManager mAssetManager;
-
+    private ExerciseViewModel exerciseViewModel;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,10 +48,10 @@ public class WeightExerciseFragment extends Fragment {
 
         }
 
-        this.mAssetManager = requireContext().getAssets();
+        this.exerciseViewModel = new ViewModelProvider(requireActivity()).get(ExerciseViewModel.class);
     }
 
-    AutoCompleteTextView autoCompleteTextView;
+    private AutoCompleteTextView autoCompleteTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,28 +66,22 @@ public class WeightExerciseFragment extends Fragment {
     }
 
     private void loadOptionsForBodyParts(){
-        try {
-
-
-
-
-
-            String[] options = this.mAssetManager.list("exercise_bank");
-            Arrays.sort(options);
-            for (String str: options){
-                Log.i("WeightExerciseFragment", str);
-            }
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.option_exercise_body_part, options);
-            this.autoCompleteTextView.setText(adapter.getItem(0).toString(), false);
-            this.autoCompleteTextView.setAdapter(adapter);
-            this.autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Log.i("WeightExerciseFragment", (String) parent.getItemAtPosition(position));
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
+        String[] folders = this.exerciseViewModel.getExerciseTypes();
+        if (folders == null){
+            // handle cases when no folders are found
+            return;
         }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.option_exercise_body_part, folders);
+        this.autoCompleteTextView.setAdapter(adapter);
+        this.autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.i("WeightExerciseFragment", (String) parent.getItemAtPosition(position));
+            }
+        });
+
+        this.autoCompleteTextView.setText(adapter.getItem(0).toString(), false);
+
     }
 }
