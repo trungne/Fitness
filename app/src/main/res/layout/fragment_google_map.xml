@@ -21,17 +21,24 @@
 
         <LinearLayout
             android:id="@+id/map_inner_linear_layout"
-            android:layout_width="240dp"
-            android:layout_height="200dp"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+
             android:layout_marginBottom="35dp"
-            android:background="#A7FFEB"
+            android:background="@drawable/custom_background"
+
             android:orientation="vertical">
 
             <Button
+
                 android:id="@+id/map_fragment_button_current_location"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Current Location" />
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/button_2"
+                android:text="My Location"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -93,17 +100,21 @@
                     android:id="@+id/map_fragment_button_run"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
+                    android:layout_margin="10dp"
                     android:layout_weight="1"
-                    android:backgroundTint="#7AAF3E"
-                    android:text="Run" />
+                    android:background="@drawable/button_4"
+                    android:text="Run"
+                    android:textColor="@color/white" />
 
                 <Button
                     android:id="@+id/map_fragment_button_stop_run"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
+                    android:layout_margin="10dp"
                     android:layout_weight="1"
-                    android:backgroundTint="#A31818"
-                    android:text="Stop" />
+                    android:background="@drawable/button_3"
+                    android:text="Stop"
+                    android:textColor="@color/white" />
             </LinearLayout>
 
         </LinearLayout>
