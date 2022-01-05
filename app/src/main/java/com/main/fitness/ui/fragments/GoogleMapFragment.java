@@ -39,6 +39,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -56,6 +57,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.main.fitness.R;
+import com.main.fitness.data.Model.RunningRecord;
+import com.main.fitness.data.ViewModel.WorkoutRecordViewModel;
 
 import java.text.DecimalFormat;
 
@@ -110,11 +113,15 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
         }
     };
 
+    private WorkoutRecordViewModel workoutRecordViewModel;
+
     @SuppressLint("SetTextI18n")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_google_map,container,false);
+        this.workoutRecordViewModel = new ViewModelProvider(requireActivity()).get(WorkoutRecordViewModel.class);
+
         Bundle bundle = this.getArguments();
         String data;
 
@@ -164,6 +171,8 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
             mapFragment.getMapAsync(callback);
         }
 
+
+
     }
 
     //Show Stop dialog when user pressed the STOP button on the map screen
@@ -186,6 +195,13 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
                             //Turn off the boolean
                             stepDetectorSensorIsActivated = false;
                         }
+
+                        // TODO 1: Create a Running Record object
+                        RunningRecord runningRecord = new RunningRecord();
+                        // put time, step..... here
+
+                        // upload running record to Firebase
+                        this.workoutRecordViewModel.updateRunningRecord(runningRecord);
 
                         //Process the fragment removal
                         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();

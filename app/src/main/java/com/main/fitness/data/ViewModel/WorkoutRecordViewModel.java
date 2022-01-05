@@ -11,6 +11,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.SetOptions;
+import com.main.fitness.data.Model.RunningRecord;
 import com.main.fitness.data.Model.WorkoutProgram;
 
 import java.util.HashMap;
@@ -29,6 +30,10 @@ public class WorkoutRecordViewModel extends AndroidViewModel {
         super(application);
         this.application = application;
         this.db = FirebaseFirestore.getInstance();
+    }
+
+    public Task<Void> updateRunningRecord(RunningRecord runningRecord){
+        return null;
     }
 
     public Task<Void> unregisterProgram(String userId, String programId){
