@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -24,6 +25,7 @@ import com.main.fitness.data.ViewModel.UserViewModel;
 import java.util.List;
 
 public class ProgramDetailActivity extends AppCompatActivity {
+    private static final String TAG = "ProgramDetailActivity";
     public static final String WORKOUT_PROGRAM_FOLDER_PATH_KEY = "workout_program_folder_path_key";
     private ProgramViewModel programViewModel;
     private AssetsViewModel assetsViewModel;
@@ -54,6 +56,7 @@ public class ProgramDetailActivity extends AppCompatActivity {
 
         if (getIntent() != null){
             String path = getIntent().getStringExtra(WORKOUT_PROGRAM_FOLDER_PATH_KEY);
+            Log.i(TAG, path);
             this.assetsViewModel.getWorkoutProgram(path).addOnCompleteListener(this, task -> {
                 if (!task.isSuccessful()){
                     Toast.makeText(this, "Cannot get program!", Toast.LENGTH_SHORT).show();
@@ -66,13 +69,13 @@ public class ProgramDetailActivity extends AppCompatActivity {
                 setUpButton(false, w);
             });
         }
-        else {
-            WorkoutProgram workoutProgram = this.programViewModel.getCurrentWorkoutProgram().getValue();
-            if (workoutProgram != null){
-                setUpTextViews(workoutProgram);
-                setUpButton(false, workoutProgram);
-            }
-        }
+//        else {
+//            WorkoutProgram workoutProgram = this.programViewModel.getCurrentWorkoutProgram();
+//            if (workoutProgram != null){
+//                setUpTextViews(workoutProgram);
+//                setUpButton(false, workoutProgram);
+//            }
+//        }
 
         if (this.userViewModel.getFirebaseUser() != null){
             this.button.setVisibility(View.VISIBLE);

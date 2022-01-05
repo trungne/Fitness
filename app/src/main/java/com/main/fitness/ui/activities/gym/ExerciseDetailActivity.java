@@ -30,17 +30,18 @@ public class ExerciseDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_exercise_detail);
         Intent intent = getIntent();
 
-        if (intent == null && savedInstanceState == null){
+        if (intent == null){
             finish();
             return;
         }
-
-        if (intent != null){
-            this.path = intent.getStringExtra(PATH_KEY);
-        }
-        else{
-            this.path = savedInstanceState.getString(PATH_KEY);
-        }
+        this.path = intent.getStringExtra(PATH_KEY);
+//
+//        if (intent != null){
+//            this.path = intent.getStringExtra(PATH_KEY);
+//        }
+//        else{
+//            this.path = savedInstanceState.getString(PATH_KEY);
+//        }
 
         if (TextUtils.isEmpty(path)){
             finish();
@@ -64,12 +65,12 @@ public class ExerciseDetailActivity extends AppCompatActivity {
         this.description.setText(this.exercise.getDescription());
         this.illustration.setImageDrawable(this.exercise.getIllustration());
     }
-
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (!TextUtils.isEmpty(this.path)){
-            outState.putString(PATH_KEY, this.path);
-        }
-    }
+//
+//    @Override
+//    protected void onSaveInstanceState(@NonNull Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        if (!TextUtils.isEmpty(this.path)){
+//            outState.putString(PATH_KEY, this.path);
+//        }
+//    }
 }
