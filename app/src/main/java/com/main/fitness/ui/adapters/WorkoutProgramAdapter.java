@@ -17,9 +17,14 @@ import java.util.List;
 
 public class WorkoutProgramAdapter extends RecyclerView.Adapter<WorkoutProgramAdapter.WorkoutProgramHolder> {
     private List<WorkoutProgram> workoutProgramList;
+    private OnViewWithFilePathClickListener mListener;
 
     public WorkoutProgramAdapter(List<WorkoutProgram> workoutProgramList){
         this.workoutProgramList = workoutProgramList;
+    }
+
+    public void setOnViewClickListener(OnViewWithFilePathClickListener listener){
+        this.mListener = listener;
     }
 
     @NonNull
@@ -35,6 +40,13 @@ public class WorkoutProgramAdapter extends RecyclerView.Adapter<WorkoutProgramAd
         WorkoutProgram workoutProgram = this.workoutProgramList.get(position);
         holder.programName.setText(workoutProgram.getName());
         holder.programBanner.setImageDrawable(workoutProgram.getBanner());
+        holder.programBanner.setOnClickListener(v -> {
+            if (this.mListener == null){
+                return;
+            }
+
+            this.mListener.onViewClicked(workoutProgram.getFolderPath());
+        });
     }
 
     @Override
@@ -52,4 +64,5 @@ public class WorkoutProgramAdapter extends RecyclerView.Adapter<WorkoutProgramAd
             this.programBanner = itemView.findViewById(R.id.rowProgramBanner);
         }
     }
+
 }

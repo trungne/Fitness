@@ -1,7 +1,5 @@
 package com.main.fitness.ui.adapters;
 
-import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,13 +17,13 @@ import java.util.List;
 public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ExerciseHolder> {
     private static final String TAG = "ExerciseAdapter";
     private List<Exercise> exerciseList;
-    private OnExerciseClickListener mListener = null;
+    private OnViewWithFilePathClickListener mListener = null;
 
     public ExerciseAdapter(List<Exercise> exerciseList){
         this.exerciseList = exerciseList;
     }
 
-    public void setOnExerciseClickListener(OnExerciseClickListener listener){
+    public void setOnExerciseClickListener(OnViewWithFilePathClickListener listener){
         this.mListener = listener;
     }
 
@@ -48,7 +46,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         holder.exerciseIllustration.setImageDrawable(exercise.getIllustration());
         holder.exerciseIllustration.setOnClickListener(v -> {
             if (this.mListener != null){
-                this.mListener.onExerciseClick(exercise.getFolderPath());
+                this.mListener.onViewClicked(exercise.getFolderPath());
             }
         });
     }
@@ -68,7 +66,4 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         }
     }
 
-    public interface OnExerciseClickListener {
-        public void onExerciseClick(String folderPath);
-    }
 }

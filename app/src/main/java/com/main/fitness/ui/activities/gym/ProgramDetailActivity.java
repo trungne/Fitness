@@ -1,5 +1,6 @@
 package com.main.fitness.ui.activities.gym;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -11,16 +12,21 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.main.fitness.R;
 import com.main.fitness.data.Model.WorkoutProgram;
 import com.main.fitness.data.Model.UserLevel;
+import com.main.fitness.data.ViewModel.AssetsViewModel;
 import com.main.fitness.data.ViewModel.ProgramViewModel;
 import com.main.fitness.data.ViewModel.UserViewModel;
 
 import java.util.List;
 
 public class ProgramDetailActivity extends AppCompatActivity {
+    public static final String WORKOUT_PROGRAM_FOLDER_PATH_KEY = "workout_program_folder_path_key";
     private ProgramViewModel programViewModel;
+    private AssetsViewModel assetsViewModel;
     private UserViewModel userViewModel;
 
     private TextView programName, programGoal,
@@ -33,14 +39,6 @@ public class ProgramDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_program_detail);
-        this.programViewModel = new ViewModelProvider(this).get(ProgramViewModel.class);
-
-        WorkoutProgram workoutProgram = this.programViewModel.getCurrentWorkoutProgram().getValue();
-        if (workoutProgram == null){
-            finish();
-            Toast.makeText(this, "Cannot load program!", Toast.LENGTH_SHORT).show();
-            return;
-        }
 
         this.programName = findViewById(R.id.programDetailName);
         this.programGoal = findViewById(R.id.programDetailGoal);
@@ -50,14 +48,35 @@ public class ProgramDetailActivity extends AppCompatActivity {
         this.programOverview = findViewById(R.id.programDetailOverview);
         this.button = findViewById(R.id.programDetailTrainButton);
 
+        this.programViewModel = new ViewModelProvider(this).get(ProgramViewModel.class);
+        this.assetsViewModel = new ViewModelProvider(this).get(AssetsViewModel.class);
         this.userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+
+        if (getIntent() != null){
+            String path = getIntent().getStringExtra(WORKOUT_PROGRAM_FOLDER_PATH_KEY);
+            this.assetsViewModel.getWorkoutProgram(path).addOnCompleteListener(this, task -> {
+                if (!task.isSuccessful()){
+                    Toast.makeText(this, "Cannot get program!", Toast.LENGTH_SHORT).show();
+                    finish();
+                    return;
+                }
+
+                WorkoutProgram w = task.getResult();
+                setUpTextViews(w);
+                setUpButton(false, w);
+            });
+        }
+        else {
+            WorkoutProgram workoutProgram = this.programViewModel.getCurrentWorkoutProgram().getValue();
+            if (workoutProgram != null){
+                setUpTextViews(workoutProgram);
+                setUpButton(false, workoutProgram);
+            }
+        }
 
         if (this.userViewModel.getFirebaseUser() != null){
             this.button.setVisibility(View.VISIBLE);
         }
-
-        setUpTextViews(workoutProgram);
-        setUpButton(false, workoutProgram);
     }
 
     private void setUpButton(boolean userHasRegistered, WorkoutProgram workoutProgram){

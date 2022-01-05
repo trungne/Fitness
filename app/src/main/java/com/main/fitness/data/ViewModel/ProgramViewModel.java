@@ -26,7 +26,7 @@ public class ProgramViewModel extends AndroidViewModel {
     private final Application application;
     private final FirebaseFirestore db;
 
-    MutableLiveData<WorkoutProgram> currentWorkoutProgram;
+    private final MutableLiveData<WorkoutProgram> currentWorkoutProgram;
 
     public ProgramViewModel(@NonNull Application application) {
         super(application);
@@ -36,7 +36,7 @@ public class ProgramViewModel extends AndroidViewModel {
     }
 
     public void setCurrentWorkoutProgram(WorkoutProgram program){
-        this.currentWorkoutProgram.setValue(program);
+        this.currentWorkoutProgram.postValue(program);
     }
 
     public MutableLiveData<WorkoutProgram> getCurrentWorkoutProgram(){

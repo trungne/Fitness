@@ -74,7 +74,7 @@ public class AssetsViewModel extends AndroidViewModel {
         return "";
     }
 
-    public Task<List<WorkoutProgram>> getPrograms(String type){
+    public Task<List<WorkoutProgram>> getWorkoutPrograms(String type){
         final TaskCompletionSource<List<WorkoutProgram>> taskCompletionSource = new TaskCompletionSource<>();
 
         ExecutorService e = Executors.newSingleThreadExecutor();
@@ -85,7 +85,7 @@ public class AssetsViewModel extends AndroidViewModel {
 
                 List<WorkoutProgram> workoutProgramList = new ArrayList<>();
                 for (String folder: folders){
-                    WorkoutProgram w = getProgram(folderPath + File.separator + folder);
+                    WorkoutProgram w = _getProgram(folderPath + File.separator + folder);
                     if (w != null){
                         workoutProgramList.add(w);
                     }
@@ -128,7 +128,7 @@ public class AssetsViewModel extends AndroidViewModel {
         return "";
     }
 
-    private WorkoutProgram getProgram(String path){
+    private WorkoutProgram _getProgram(String path){
         String jsonString = getStringFromFile(getJSONFilePath(path));
         if (TextUtils.isEmpty(jsonString)){
             return null;
@@ -167,7 +167,6 @@ public class AssetsViewModel extends AndroidViewModel {
 
             Drawable drawable = getDrawableFromFile(getImageFilePath(path));
             workoutProgram.setBanner(drawable);
-
             return workoutProgram;
         } catch (JSONException jsonException) {
             jsonException.printStackTrace();
@@ -175,24 +174,16 @@ public class AssetsViewModel extends AndroidViewModel {
         }
     }
 
-    public Task<WorkoutProgram> getProgram(String name, String type){
+    public Task<WorkoutProgram> getWorkoutProgram(String path){
         final TaskCompletionSource<WorkoutProgram> taskCompletionSource = new TaskCompletionSource<>();
         ExecutorService e = Executors.newSingleThreadExecutor();
         e.execute(() -> {
-            String folderPath;
-            if (type.equals("strength")){
-                folderPath = STRENGTH_PROGRAMS_FOLDER_PATH + File.separator + name;
-            }
-            else{
-                folderPath = CARDIO_PROGRAMS_FOLDER_PATH + File.separator + name;
-            }
-
-            WorkoutProgram workoutProgram = getProgram(folderPath);
+            WorkoutProgram workoutProgram = _getProgram(path);
             if (workoutProgram != null){
                 taskCompletionSource.setResult(workoutProgram);
             }
             else{
-                taskCompletionSource.setException(new Exception("Cannot get program"));
+                taskCompletionSource.setException(new Exception("Cannot get workout program!"));
             }
         });
         return taskCompletionSource.getTask();
