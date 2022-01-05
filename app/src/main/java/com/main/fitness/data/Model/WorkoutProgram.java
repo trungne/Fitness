@@ -1,32 +1,29 @@
 package com.main.fitness.data.Model;
 
+import android.graphics.drawable.Drawable;
+
 import java.util.List;
 
-public class Program {
-    private String id;
+public class WorkoutProgram {
     private String name;
     private String goal;
     private String overview;
     private List<UserLevel> levels;
     private Integer duration;
     private Integer daysPerWeek;
-    private String imagePath;
-    private String type;
+    private Drawable banner;
 
-    public Program() {}
+    private String folderPath;
 
-    public String getId() {
-        return id;
+    public WorkoutProgram() {}
+
+    public Drawable getBanner() {
+        return banner;
     }
 
-    public String getType() {
-        return type;
+    public String getFolderPath() {
+        return folderPath;
     }
-
-    public String getImagePath() {
-        return imagePath;
-    }
-
     public String getName() {
         return name;
     }
@@ -47,20 +44,16 @@ public class Program {
         return goal;
     }
 
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
-    }
-
     public String getOverview() {
         return overview;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setBanner(Drawable banner) {
+        this.banner = banner;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setFolderPath(String folderPath) {
+        this.folderPath = folderPath;
     }
 
     public void setName(String name) {
