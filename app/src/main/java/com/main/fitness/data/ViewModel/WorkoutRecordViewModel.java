@@ -17,8 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Executors;
 
-public class ProgramViewModel extends AndroidViewModel {
-    private static final String PROGRAMS_COLLECTION = "programs";
+public class WorkoutRecordViewModel extends AndroidViewModel {
     private static final String REP_MAX_COLLECTION = "repMax";
     private static final String USER_PROGRAM_COLLECTION = "usersAndPrograms";
     private static final String REP_MAX_FIELD = "max";
@@ -26,29 +25,11 @@ public class ProgramViewModel extends AndroidViewModel {
     private final Application application;
     private final FirebaseFirestore db;
 
-    public ProgramViewModel(@NonNull Application application) {
+    public WorkoutRecordViewModel(@NonNull Application application) {
         super(application);
         this.application = application;
         this.db = FirebaseFirestore.getInstance();
     }
-
-    public Task<WorkoutProgram> getProgram(@NonNull String id){
-        return this.db.collection(PROGRAMS_COLLECTION).document(id).get().continueWith(Executors.newSingleThreadExecutor(), task -> {
-            if (!task.isSuccessful() || task.getResult() == null){
-                throw new Exception("Cannot find program!");
-            }
-
-            WorkoutProgram workoutProgram = task.getResult().toObject(WorkoutProgram.class);
-
-            if (workoutProgram == null){
-                throw new Exception("Cannot find program!");
-            }
-
-            return workoutProgram;
-        });
-    }
-
-
 
     public Task<Void> unregisterProgram(String userId, String programId){
         return this.db.collection(USER_PROGRAM_COLLECTION).document(userId).delete();
@@ -79,13 +60,5 @@ public class ProgramViewModel extends AndroidViewModel {
 
             return max;
         });
-    }
-
-    public Query getBaseQueryForStrengthPrograms(){
-        return this.db.collection(PROGRAMS_COLLECTION).whereEqualTo("type", "strength");
-    }
-
-    public Query getBaseQueryForCardioPrograms() {
-        return this.db.collection(PROGRAMS_COLLECTION).whereEqualTo("type", "cardio");
     }
 }

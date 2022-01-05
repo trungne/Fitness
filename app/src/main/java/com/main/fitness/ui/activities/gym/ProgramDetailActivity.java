@@ -1,25 +1,20 @@
 package com.main.fitness.ui.activities.gym;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.main.fitness.R;
 import com.main.fitness.data.Model.WorkoutProgram;
 import com.main.fitness.data.Model.UserLevel;
 import com.main.fitness.data.ViewModel.AssetsViewModel;
-import com.main.fitness.data.ViewModel.ProgramViewModel;
+import com.main.fitness.data.ViewModel.WorkoutRecordViewModel;
 import com.main.fitness.data.ViewModel.UserViewModel;
 
 import java.util.List;
@@ -27,7 +22,7 @@ import java.util.List;
 public class ProgramDetailActivity extends AppCompatActivity {
     private static final String TAG = "ProgramDetailActivity";
     public static final String WORKOUT_PROGRAM_FOLDER_PATH_KEY = "workout_program_folder_path_key";
-    private ProgramViewModel programViewModel;
+    private WorkoutRecordViewModel workoutRecordViewModel;
     private AssetsViewModel assetsViewModel;
     private UserViewModel userViewModel;
 
@@ -50,7 +45,7 @@ public class ProgramDetailActivity extends AppCompatActivity {
         this.programOverview = findViewById(R.id.programDetailOverview);
         this.button = findViewById(R.id.programDetailTrainButton);
 
-        this.programViewModel = new ViewModelProvider(this).get(ProgramViewModel.class);
+        this.workoutRecordViewModel = new ViewModelProvider(this).get(WorkoutRecordViewModel.class);
         this.assetsViewModel = new ViewModelProvider(this).get(AssetsViewModel.class);
         this.userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
@@ -91,13 +86,13 @@ public class ProgramDetailActivity extends AppCompatActivity {
         if (userHasRegistered){
             this.button.setText("Unregister");
             this.button.setOnClickListener(v -> {
-                this.programViewModel.unregisterProgram(userId, workoutProgram.getName());
+                this.workoutRecordViewModel.unregisterProgram(userId, workoutProgram.getName());
             });
         }
         else{
             this.button.setText("Train");
             this.button.setOnClickListener(v -> {
-                this.programViewModel.registerProgram(userId, workoutProgram.getName());
+                this.workoutRecordViewModel.registerProgram(userId, workoutProgram.getName());
             });
         }
     }
@@ -138,7 +133,7 @@ public class ProgramDetailActivity extends AppCompatActivity {
                 return;
             }
             String userId = this.userViewModel.getFirebaseUser().getUid();
-            this.programViewModel.registerProgram(userId, workoutProgram.getName());
+            this.workoutRecordViewModel.registerProgram(userId, workoutProgram.getName());
         });
     }
 

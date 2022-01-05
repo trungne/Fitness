@@ -1,6 +1,5 @@
 package com.main.fitness.ui.activities.gym;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -9,16 +8,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.main.fitness.R;
 import com.main.fitness.data.Model.WorkoutProgram;
 import com.main.fitness.data.ViewModel.AssetsViewModel;
-import com.main.fitness.data.ViewModel.ProgramViewModel;
-import com.main.fitness.ui.adapters.OnViewWithFilePathClickListener;
 import com.main.fitness.ui.adapters.WorkoutProgramAdapter;
 
 import java.util.List;
@@ -32,7 +26,6 @@ public class ProgramListActivity extends AppCompatActivity {
     public static final String CARDIO_PROGRAMS = "CARDIO_PROGRAMS";
 
     private RecyclerView programListRecycleView;
-    private ProgramViewModel programViewModel;
     private AssetsViewModel assetsViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +33,6 @@ public class ProgramListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_program_list);
         this.programListRecycleView = findViewById(R.id.ProgramListRecycleView);
         this.assetsViewModel = new ViewModelProvider(this).get(AssetsViewModel.class);
-        this.programViewModel = new ViewModelProvider(this).get(ProgramViewModel.class);
 
         Intent intent = getIntent();
         if (intent == null || TextUtils.isEmpty(intent.getStringExtra(PROGRAMS_KEY))){
