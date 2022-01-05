@@ -29,7 +29,7 @@ android {
     sourceSets {
         main {
             assets {
-                srcDirs 'src\\main\\assets', 'src\\main\\assets\\exercise_bank', 'src\\main\\assets\\exercise_bank\\Shoulders', 'src\\main\\assets\\exercise_bank\\Chest'
+                srcDirs 'src\\main\\assets', 'src\\main\\assets\\exercise_bank', 'src\\main\\assets\\exercise_bank\\Shoulders', 'src\\main\\assets\\exercise_bank\\Chest', 'src\\main\\assets\\programs'
             }
         }
     }

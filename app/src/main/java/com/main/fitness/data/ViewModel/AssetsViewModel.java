@@ -10,7 +10,15 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
 import com.main.fitness.data.Model.Exercise;
+import com.main.fitness.data.Model.Program;
+import com.main.fitness.data.Model.UserLevel;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,6 +28,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class AssetsViewModel extends AndroidViewModel {
     private static final String TAG = "ExerciseViewModel";
@@ -27,8 +37,15 @@ public class AssetsViewModel extends AndroidViewModel {
     private static final Set<String> VALID_TEXT_FILE_EXTENSIONS = new HashSet<>(Arrays.asList(".txt", ".md"));
 
     private static final String EXERCISE_BANK_FOLDER_PATH = "exercise_bank"; // relative path
-    private static final String STRENGTH_PROGRAMS_FOLDER_PATH = "strength_programs";
-    private static final String CARDIO_PROGRAMS_FOLDER_PATH = "cardio_programs";
+    private static final String WORKOUT_PROGRAMS_FOLDER_PATH = "programs";
+
+    private static final String PROGRAM_NAME_FIELD = "name";
+    private static final String PROGRAM_DURATION_FIELD = "duration";
+    private static final String PROGRAM_DAYS_PER_WEEK_FIELD = "daysPerWeek";
+    private static final String PROGRAM_GOAL_FIELD = "goal";
+    private static final String PROGRAM_LEVELS_FIELD = "levels";
+    private static final String PROGRAM_OVERVIEW_FIELD = "overview";
+    private static final String PROGRAM_TYPE_FIELD = "type";
 
     private final Application application;
     private final AssetManager mAssetManager;
@@ -36,6 +53,69 @@ public class AssetsViewModel extends AndroidViewModel {
         super(application);
         this.application = application;
         this.mAssetManager = application.getAssets();
+    }
+
+    private String getJSONFilePath(String folderPath){
+        try {
+            String[] files = this.mAssetManager.list(folderPath);
+            for (String file: files){
+                if(file.contains("json")){
+                    return folderPath + File.separator + file;
+                }
+            }
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+        return "";
+    }
+
+    public Task<Program> getProgram(String name){
+        final TaskCompletionSource<Program> taskCompletionSource = new TaskCompletionSource<>();
+        ExecutorService e = Executors.newSingleThreadExecutor();
+        e.execute(() -> {
+            String folderPath = WORKOUT_PROGRAMS_FOLDER_PATH + File.separator + name;
+
+            String filePath = getJSONFilePath(folderPath);
+            String jsonString = getStringFromFile(filePath);
+            if (TextUtils.isEmpty(jsonString)){
+                taskCompletionSource.setException(new Exception("Empty json"));
+                return;
+            }
+
+            try {
+                JSONObject json = new JSONObject(jsonString);
+                String programName = json.getString(PROGRAM_NAME_FIELD);
+                Integer programDuration = json.getInt(PROGRAM_DURATION_FIELD);
+                Integer programDPW = json.getInt(PROGRAM_DAYS_PER_WEEK_FIELD);
+                String programGoal = json.getString(PROGRAM_GOAL_FIELD);
+                List<String> levels = (List<String>)json.get(PROGRAM_LEVELS_FIELD);
+                List<UserLevel> userLevels = new ArrayList<>();
+                for (String level: levels){
+                    UserLevel userLevel = UserLevel.fromString(level);
+                    if (userLevel != null){
+                        userLevels.add(userLevel);
+                    }
+                }
+
+                String programOverview = json.getString(PROGRAM_OVERVIEW_FIELD);
+                String programType = json.getString(PROGRAM_TYPE_FIELD);
+
+                Program program = new Program();
+                program.setName(programName);
+                program.setDuration(programDuration);
+                program.setDaysPerWeek(programDPW);
+                program.setGoal(programGoal);
+                program.setLevels(userLevels);
+                program.setOverview(programOverview);
+                program.setType(programType);
+
+                taskCompletionSource.setResult(program);
+            } catch (JSONException jsonException) {
+                jsonException.printStackTrace();
+                taskCompletionSource.setResult(null);
+            }
+        });
+        return taskCompletionSource.getTask();
     }
 
     public String[] getExerciseTypes(){
