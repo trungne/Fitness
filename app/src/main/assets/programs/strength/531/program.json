@@ -1,8 +1,100 @@
 {
-  "name": "5-3-1",
-  "duration": 0,
-  "daysPerWeek": 4,
-  "goal": "Build strength",
-  "levels": ["BEGINNER", "INTERMEDIATE", "ADVANCED"],
-  "overview": "Focus on 4 main lifts: Bench Press, Back Squat, Shoulder Press, and Deadlift."
+  "program": {
+    "name": "5-3-1",
+    "duration": 0,
+    "daysPerWeek": 4,
+    "goal": "Build strength",
+    "levels": ["BEGINNER", "INTERMEDIATE", "ADVANCED"],
+    "overview": "Focus on 4 main lifts: Bench Press, Back Squat, Shoulder Press, and Deadlift."
+  },
+  "schedule": [
+    [
+      {
+        "exercise": "barbell_bench_press",
+        "reps": [5, 5, 5],
+        "weight": [65, 70, 80]
+      },
+
+      {
+        "exercise": "dumbbell_flat_bench_press",
+        "reps": [5, 5, 5],
+        "weight": [65, 70, 80]
+      },
+
+      {
+        "exercise": "incline_dumbbell_bench_chest_press",
+        "reps": [5, 5, 5],
+        "weight": [65, 70, 80]
+      }
+    ],
+
+    [
+      {
+        "exercise": "barbell_squats",
+        "reps": [5, 5, 5],
+        "weight": [65, 70, 80]
+      },
+
+      {
+        "exercise": "bulgarian_split_squats",
+        "reps": [5, 5, 5],
+        "weight": [65, 70, 80]
+      },
+
+      {
+        "exercise": "seated_calf_raises",
+        "reps": [5, 5, 5],
+        "weight": [65, 70, 80]
+      }
+    ],
+
+    [
+      {
+        "exercise": "barbell_deadlifts",
+        "reps": [5, 5, 5],
+        "weight": [65, 70, 80]
+      },
+
+      {
+        "exercise": "wide_grip_lat_pulldowns",
+        "reps": [5, 5, 5],
+        "weight": [65, 70, 80]
+      },
+
+      {
+        "exercise": "one_arm_dumbbell_rows",
+        "reps": [5, 5, 5],
+        "weight": [65, 70, 80]
+      }
+    ],
+
+    [
+      {
+        "exercise": "barbell_deadlifts",
+        "reps": [5, 5, 5],
+        "weight": [65, 70, 80]
+      },
+
+      {
+        "exercise": "wide_grip_lat_pulldowns",
+        "reps": [5, 5, 5],
+        "weight": [65, 70, 80]
+      },
+
+      {
+        "exercise": "one_arm_dumbbell_rows",
+        "reps": [5, 5, 5],
+        "weight": [65, 70, 80]
+      },
+
+      {
+        "exercise": "seated_lateral_shoulder_dumbbell_raise",
+        "reps": [5, 5, 5],
+        "weight": [65, 70, 80]
+      }
+
+    ]
+
+  ]
+
 }

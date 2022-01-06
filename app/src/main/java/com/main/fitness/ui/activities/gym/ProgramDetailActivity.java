@@ -61,7 +61,6 @@ public class ProgramDetailActivity extends AppCompatActivity {
 
         if (getIntent() != null){
             String path = getIntent().getStringExtra(WORKOUT_PROGRAM_FOLDER_PATH_KEY);
-            Log.i(TAG, path);
             this.assetsViewModel.getWorkoutProgram(path).addOnCompleteListener(this, task -> {
                 if (!task.isSuccessful()){
                     Toast.makeText(this, "Cannot get program!", Toast.LENGTH_SHORT).show();
