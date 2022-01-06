@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +22,7 @@ import com.main.fitness.data.Model.UserLevel;
 import com.main.fitness.data.ViewModel.AssetsViewModel;
 import com.main.fitness.data.ViewModel.WorkoutRecordViewModel;
 import com.main.fitness.data.ViewModel.UserViewModel;
+import com.main.fitness.ui.activities.WorkoutSessionActivity;
 
 import java.util.List;
 
@@ -37,6 +39,8 @@ public class ProgramDetailActivity extends AppCompatActivity {
 
     private Button button;
     private ImageButton backButton;
+
+    private String path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +70,7 @@ public class ProgramDetailActivity extends AppCompatActivity {
 
 
         if (getIntent() != null){
-            String path = getIntent().getStringExtra(WORKOUT_PROGRAM_FOLDER_PATH_KEY);
+            this.path = getIntent().getStringExtra(WORKOUT_PROGRAM_FOLDER_PATH_KEY);
             this.assetsViewModel.getWorkoutProgram(path).addOnCompleteListener(this, task -> {
                 if (!task.isSuccessful()){
                     Toast.makeText(this, "Cannot get program!", Toast.LENGTH_SHORT).show();
@@ -99,7 +103,12 @@ public class ProgramDetailActivity extends AppCompatActivity {
         else{
             this.button.setText("Train");
             this.button.setOnClickListener(v -> {
-                this.workoutRecordViewModel.registerProgram(userId, workoutProgram.getName());
+                Intent intent = new Intent(this, WorkoutSessionActivity.class);
+                intent.putExtra(WorkoutSessionActivity.WORKOUT_PROGRAM_FOLDER_PATH_KEY, this.path);
+                startActivity(intent);
+                Log.i(TAG, "Launch WorkoutSessionActivity");
+                Log.i(TAG, this.path);
+//                this.workoutRecordViewModel.registerProgram(userId, workoutProgram.getName());
             });
         }
     }

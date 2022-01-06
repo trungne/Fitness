@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.main.fitness.R;
 import com.main.fitness.data.Model.AppUser;
 import com.main.fitness.data.ViewModel.UserViewModel;
+import com.main.fitness.ui.activities.WorkoutSessionActivity;
 import com.main.fitness.ui.activities.gym.ExerciseBankActivity;
 import com.main.fitness.ui.activities.gym.FAQAndTerminologyActivity;
 import com.main.fitness.ui.activities.gym.ProgramListActivity;
@@ -93,7 +94,9 @@ public class GymFragment extends Fragment {
         });
 
         this.faqAndTermButton.setOnClickListener(v -> {
-            startActivity(new Intent(requireActivity(), FAQAndTerminologyActivity.class));
+            Intent intent = new Intent(requireActivity(), WorkoutSessionActivity.class);
+            startActivity(intent);
+//            startActivity(new Intent(requireActivity(), FAQAndTerminologyActivity.class));
         });
 
         this.exerciseBankButton.setOnClickListener(v -> {

@@ -20,9 +20,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Fitness">
         <activity
-            android:name=".ui.activities.gym.ExerciseDetailActivity"
-            android:parentActivityName=".ui.activities.gym.ExerciseBankActivity"
+            android:name=".ui.activities.WorkoutSessionActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.activities.gym.ExerciseDetailActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.activities.gym.ExerciseBankActivity" />
         <activity
             android:name=".ui.activities.gym.ProgramDetailActivity"
             android:exported="false" />
