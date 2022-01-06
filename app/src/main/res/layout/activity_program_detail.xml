@@ -7,6 +7,36 @@
     android:orientation="vertical"
     tools:context=".ui.activities.gym.ProgramDetailActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+
+        <ImageButton
+            android:id="@+id/activityProgramDetailBackButton"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:paddingTop="20dp"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_baseline_back"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:text="Program Detail:"
+            android:textColor="@color/blue_200"
+            android:textSize="30dp"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText,SpUsage" />
+
+
+    </LinearLayout>
+
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

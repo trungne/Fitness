@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.main.fitness.R;
@@ -27,12 +29,21 @@ public class ProgramListActivity extends AppCompatActivity {
 
     private RecyclerView programListRecycleView;
     private AssetsViewModel assetsViewModel;
+    private ImageButton backButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_program_list);
         this.programListRecycleView = findViewById(R.id.ProgramListRecycleView);
         this.assetsViewModel = new ViewModelProvider(this).get(AssetsViewModel.class);
+        this.backButton = findViewById(R.id.activityProgramListBackButton);
+        //Back button
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         Intent intent = getIntent();
         if (intent == null || TextUtils.isEmpty(intent.getStringExtra(PROGRAMS_KEY))){

@@ -124,9 +124,7 @@ public class RequireSignInFragment extends Fragment {
     public void createSignInIntent() {
         Log.d(TAG, "createSignInIntent: called");
         List<AuthUI.IdpConfig> providers = Arrays.asList(
-                new AuthUI.IdpConfig.EmailBuilder().build(),
-                new AuthUI.IdpConfig.PhoneBuilder().build(),
-                new AuthUI.IdpConfig.GoogleBuilder().build());
+                new AuthUI.IdpConfig.EmailBuilder().build());
         Intent signInIntent = AuthUI.getInstance()
                 .createSignInIntentBuilder()
                 .setAvailableProviders(providers)

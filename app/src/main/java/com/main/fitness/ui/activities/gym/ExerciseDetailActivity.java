@@ -7,6 +7,9 @@ import androidx.lifecycle.ViewModelProvider;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.method.ScrollingMovementMethod;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,6 +27,7 @@ public class ExerciseDetailActivity extends AppCompatActivity {
 
     private TextView name, description;
     private ImageView illustration;
+    private ImageButton backButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +54,14 @@ public class ExerciseDetailActivity extends AppCompatActivity {
 
         this.assetsViewModel = new ViewModelProvider(this).get(AssetsViewModel.class);
         this.exercise = this.assetsViewModel.getExercise(this.path);
+        this.backButton = findViewById(R.id.activityProgramListBackButton);
+        //Back Button
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         if (this.exercise == null){
             finish();
@@ -64,6 +76,8 @@ public class ExerciseDetailActivity extends AppCompatActivity {
         this.name.setText(this.exercise.getName());
         this.description.setText(this.exercise.getDescription());
         this.illustration.setImageDrawable(this.exercise.getIllustration());
+
+        this.description.setMovementMethod(new ScrollingMovementMethod());
     }
 //
 //    @Override
