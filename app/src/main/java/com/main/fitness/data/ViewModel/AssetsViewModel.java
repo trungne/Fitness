@@ -12,11 +12,15 @@ import androidx.lifecycle.AndroidViewModel;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
+import com.main.fitness.data.Factory.TrainingSessionFactory;
 import com.main.fitness.data.Factory.WorkoutProgramFactory;
 import com.main.fitness.data.FileUtils;
 import com.main.fitness.data.Model.Exercise;
+import com.main.fitness.data.Model.Schedule;
+import com.main.fitness.data.Model.TrainingSession;
 import com.main.fitness.data.Model.WorkoutProgram;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -43,6 +47,50 @@ public class AssetsViewModel extends AndroidViewModel {
         this.application = application;
         this.mAssetManager = application.getAssets();
     }
+
+    /* SCHEDULE PROGRAM SECTION
+     *
+     *
+     *
+     *
+     *  */
+    public Task<TrainingSession> getTrainingSession(String path, int day){
+        final TaskCompletionSource<TrainingSession> taskCompletionSource = new TaskCompletionSource<>();
+        ExecutorService e = Executors.newSingleThreadExecutor();
+        e.execute(() -> {
+            String jsonFilePath = FileUtils.getJSONFilePath(this.mAssetManager, path);
+            String jsonString = FileUtils.getStringFromFile(this.mAssetManager, jsonFilePath);
+            try {
+                JSONObject json = new JSONObject(jsonString);
+                JSONArray sessionArray = json.getJSONArray("schedule");
+
+                if (day >= sessionArray.length()){
+                    throw new IllegalArgumentException("Day is out of schedule range!");
+                }
+
+
+                JSONArray exerciseArray = sessionArray.getJSONArray(day);
+
+                TrainingSession trainingSession = TrainingSessionFactory.fromJSONArray(exerciseArray);
+
+                if (trainingSession != null){
+                    taskCompletionSource.setResult(trainingSession);
+                }
+                else{
+                    taskCompletionSource.setException(new Exception("Training Session Not Found!"));
+                }
+            } catch (JSONException jsonException) {
+                jsonException.printStackTrace();
+                taskCompletionSource.setException(jsonException);
+            }
+            catch (IllegalArgumentException exception){
+                taskCompletionSource.setException(exception);
+            }
+        });
+
+        return taskCompletionSource.getTask();
+    }
+
 
     /* WORKOUT PROGRAM SECTION
      *

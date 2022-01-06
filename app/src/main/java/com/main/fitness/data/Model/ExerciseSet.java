@@ -1,27 +1,27 @@
 package com.main.fitness.data.Model;
 
 public class ExerciseSet {
-    private final Exercise exercise;
+    private final String exercisdeName;
     private final int[] reps;
     private final int[] weight;
     private int currentSet;
 
-    public ExerciseSet(Exercise exercise, int[] reps, int[] weight){
-        this.exercise = exercise;
+    public ExerciseSet(String exercise, int[] reps, int[] weight){
+        this.exercisdeName = exercise;
         this.reps = reps;
         this.weight = weight;
         this.currentSet = 0;
     }
 
-    public ExerciseSet(Exercise exercise, int[] reps, int[] weight, int currentSet){
-        this.exercise = exercise;
+    public ExerciseSet(String exercise, int[] reps, int[] weight, int currentSet){
+        this.exercisdeName = exercise;
         this.reps = reps;
         this.weight = weight;
         this.currentSet = currentSet;
     }
 
-    public Exercise getExercise() {
-        return exercise;
+    public String getExercise() {
+        return exercisdeName;
     }
 
     public boolean nextSet(){
