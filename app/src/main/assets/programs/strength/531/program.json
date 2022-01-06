@@ -1,0 +1,8 @@
+{
+  "name": "5-3-1",
+  "duration": 0,
+  "daysPerWeek": 4,
+  "goal": "Build strength",
+  "levels": ["BEGINNER", "INTERMEDIATE", "ADVANCED"],
+  "overview": "Focus on 4 main lifts: Bench Press, Back Squat, Shoulder Press, and Deadlift."
+}

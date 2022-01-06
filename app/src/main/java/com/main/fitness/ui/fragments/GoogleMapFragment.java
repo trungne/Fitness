@@ -5,7 +5,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -15,7 +18,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.PowerManager;
+import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,9 +32,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -42,14 +47,23 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.main.fitness.R;
+import com.main.fitness.data.Model.RunningRecord;
+import com.main.fitness.data.ViewModel.WorkoutRecordViewModel;
+import com.main.fitness.service.LocationUpdateService;
 
 import java.text.DecimalFormat;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 public class GoogleMapFragment extends Fragment implements LocationListener {
 
@@ -57,10 +71,7 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
     private static final int UPDATE_INTERVAL = 10*1000; // 10 seconds
     private static final int FASTEST_INTERVAL = 2*1000; // 2 seconds
     private static final int MAX_WAIT_TIME = 1000;
-    private static final int PARTIAL_WAKE_LOCK = 1;
     private Integer steps;
-    private boolean allowUpdates = false;
-    private PowerManager.WakeLock wakeLock;
 
     //Used for location operations
     protected FusedLocationProviderClient client;
@@ -77,6 +88,13 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
     private Location prev;
     private Location current;
 
+    //Time
+    DateTimeFormatter time = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+    private static LocalDateTime startTime = null;
+    private static LocalDateTime endTime = null;
+    private static Instant start = null;
+    private static Instant end = null;
+
 
     //xml
     private TextView mapFragmentSelectedDistanceTextView;
@@ -85,8 +103,6 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
     private Button mapFragmentButtonRun;
     private Button mapFragmentButtonStop;
     private Button mapFragmentButtonGetCurrentLocation;
-
-
 
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
@@ -104,14 +120,20 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
             //Get current location
             getLocation();
 
+            Intent locationUpdate = new Intent(requireContext(), LocationUpdateService.class);
+            requireContext().startService(locationUpdate);
         }
     };
+
+    private WorkoutRecordViewModel workoutRecordViewModel;
 
     @SuppressLint("SetTextI18n")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_google_map,container,false);
+        this.workoutRecordViewModel = new ViewModelProvider(requireActivity()).get(WorkoutRecordViewModel.class);
+
         Bundle bundle = this.getArguments();
         String data;
 
@@ -122,12 +144,6 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
         mapFragmentButtonRun = v.findViewById(R.id.map_fragment_button_run);
         mapFragmentButtonStop = v.findViewById(R.id.map_fragment_button_stop_run);
         mapFragmentButtonGetCurrentLocation = v.findViewById(R.id.map_fragment_button_current_location);
-        Context mContext = getContext();
-        PowerManager powerManager = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
-        wakeLock =  powerManager.newWakeLock(PARTIAL_WAKE_LOCK,"motionDetection:keepAwake");
-        wakeLock.acquire();
-
-
 
         //Actions for the buttons
         mapFragmentButtonRun.setOnClickListener(this::startRunningButton);
@@ -144,8 +160,9 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
             mapFragmentUserTravelledDistance = 0;
             mapFragmentTravelledDistanceTextView.setText("" + mapFragmentUserTravelledDistance);
 
-            //Because we have not run yet, so we set the run boolean as false
+            //Because we have not run yet, so we set the run boolean as false, steps counter is also 0
             stepDetectorSensorIsActivated = false;
+            steps = 0;
 
         }
         catch(NullPointerException e){
@@ -164,13 +181,14 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
             mapFragment.getMapAsync(callback);
         }
 
+
+
     }
 
     //Show Stop dialog when user pressed the STOP button on the map screen
     private void showStopDialog() {
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-        if (steps == null) steps = 0;
         builder.setMessage("Steps: " + steps + "\nDo you want to stop running?")
                 .setNegativeButton("Keep Running", (dialog, id) -> dialog.cancel())
                 .setPositiveButton("Accept", (dialog, which) -> {
@@ -187,6 +205,21 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
                             //Turn off the boolean
                             stepDetectorSensorIsActivated = false;
                         }
+
+                        // TODO 1: Create a Running Record object
+                        String name = Objects.requireNonNull(FirebaseAuth.getInstance()
+                                .getCurrentUser()).getDisplayName();
+                        endTime = LocalDateTime.now();
+                        String finishTime = time.format(endTime);
+                        String initialTime  = time.format(startTime);
+                        end = Instant.now();
+                        Duration duration = Duration.between(start, end);
+
+                        RunningRecord runningRecord = new RunningRecord(name, initialTime, steps, duration, finishTime);
+                        // put time, step..... here
+
+                        // upload running record to Firebase
+                        this.workoutRecordViewModel.updateRunningRecord(runningRecord);
 
                         //Process the fragment removal
                         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
@@ -224,21 +257,22 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
             stepDetectorSensorIsActivated = true;
         }
 
+        //Initial time
+        startTime = LocalDateTime.now();
+        start = Instant.now();
+
         //Start updating location
         startLocationUpdate();
     }
 
     @SuppressLint("SetTextI18n")
     private void stopRunningButton(View v) {
-        if (wakeLock.isHeld()) wakeLock.release();
         showStopDialog();
     }
 
     //LOCATION UPDATES FUNCTIONS ------------------------
     @SuppressLint("MissingPermission")
     private void startLocationUpdate() {
-        //Allow the updates
-        allowUpdates = true;
 
         //Location request configuration
         locationRequest = LocationRequest.create()
@@ -248,13 +282,7 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
                 .setMaxWaitTime(MAX_WAIT_TIME);
 
         //Request updates
-        client.requestLocationUpdates(locationRequest, new LocationCallback() {
-            @SuppressLint("MissingPermission")
-            @Override
-            public void onLocationResult(@NonNull LocationResult locationResult) {
-                onLocationChanged(locationResult.getLastLocation());
-            }
-        },null);
+        client.requestLocationUpdates(locationRequest,locationCallback,Looper.myLooper());
     }
 
     @SuppressLint({"SourceLockedOrientationActivity", "SetTextI18n"})
@@ -276,16 +304,15 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
 
 
         //Draw the polyline
-        Polyline line = mMap.addPolyline(new PolylineOptions()
+        mMap.addPolyline(new PolylineOptions()
                 .add(new LatLng(prev.getLatitude(),prev.getLongitude()), new LatLng(current.getLatitude(),current.getLongitude()))
                 .width(10)
-                .color(Color.CYAN));
+                .color(Color.RED));
 
-        //Move the camera to the new location point
-        if(getActivity() != null){
-            Toast.makeText(requireContext(), "Updated", Toast.LENGTH_SHORT).show();
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        }
+        //Move the camera to the new location point, this line put here without an if get activity != null is to check whether the
+        //onLocationChanged method is still being invoked after user chose to stop running
+        Toast.makeText(requireContext(), "Updated", Toast.LENGTH_SHORT).show();
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
     }
 
@@ -298,8 +325,6 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
         }
     }
 
-
-
     @Override
     public void onPause() {
         super.onPause();
@@ -311,16 +336,7 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
 
     //Stop updating user location on interval
     public void stopLocationUpdates(){
-        client.removeLocationUpdates(new LocationCallback() {
-            @Override
-            public void onLocationResult(@NonNull LocationResult locationResult) {
-                super.onLocationResult(locationResult);
-                allowUpdates = false;
-                if(getActivity() != null){
-                    Toast.makeText(requireActivity(), "stopLocationUpdates function is invoked !", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        client.removeLocationUpdates(locationCallback);
     }
 
     //Function to check if the GPS Location is enabled in the settings
@@ -379,14 +395,15 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
 
                 //Adjust the camera
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker()).position(latLng));
+                mMap.addMarker(new MarkerOptions().icon(bitMapDescriptorFromVector(requireActivity(), R.drawable.my_location))
+                        .position(latLng));
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17));
                 Toast.makeText(requireActivity(), "latitude:" + latitude + " longitude:" + longitude, Toast.LENGTH_SHORT).show();
 
             }
             else {
                 //Request location updates then move the camera
-                locationManager.requestLocationUpdates(bestProvider, 1000, 0, this::onLocationChanged);
+                locationManager.requestLocationUpdates(bestProvider, 1000, 0, this);
 
                 //Move the camera
                 try {
@@ -400,7 +417,8 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
 
                     //Adjust the camera
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                    mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker()).position(latLng));
+                    mMap.addMarker(new MarkerOptions().icon(bitMapDescriptorFromVector(requireActivity(), R.drawable.my_location))
+                            .position(latLng));
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17));
 
                 }
@@ -413,10 +431,19 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
         }
     }
 
-    /**
-     * Listener that handles sensor events for STEP DETECTOR
-     */
+    //Help to add new image for icon
+    private BitmapDescriptor bitMapDescriptorFromVector(Context context, int vectorResId) {
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+        vectorDrawable.setBounds(0, 0,
+                vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
 
+    }
+
+    //***STEP DETECTOR EVENT LISTENER***//
     private final SensorEventListener stepDetectorSensorEventListener = new SensorEventListener() {
         @Override
         public void onSensorChanged(SensorEvent event) {
@@ -429,6 +456,15 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
         @Override
         public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+        }
+    };
+
+    //***Location Call Back ***//
+    private final LocationCallback locationCallback = new LocationCallback() {
+        @Override
+        public void onLocationResult(@NonNull LocationResult locationResult) {
+            super.onLocationResult(locationResult);
+            onLocationChanged(locationResult.getLastLocation());
         }
     };
 

@@ -26,6 +26,13 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    sourceSets {
+        main {
+            assets {
+                srcDirs 'src\\main\\assets', 'src\\main\\assets\\exercise_bank', 'src\\main\\assets\\exercise_bank\\Shoulders', 'src\\main\\assets\\exercise_bank\\Chest', 'src\\main\\assets\\programs'
+            }
+        }
+    }
 }
 
 dependencies {
@@ -48,7 +55,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:21.0.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.android.gms:play-services-maps:18.0.1'
-    implementation 'com.google.android.gms:play-services-location:19.0.0'
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
     testImplementation 'junit:junit:'
     testImplementation 'org.testng:testng:6.9.6'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

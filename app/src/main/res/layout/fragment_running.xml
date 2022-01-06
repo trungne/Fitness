@@ -25,7 +25,7 @@
             android:layout_marginBottom="100dp"
             android:ems="10"
             android:gravity="center"
-            android:hint="Enter the distance you want to run"
+            android:hint="Enter running distance (Km)"
             android:inputType="numberDecimal"
             android:textColorHint="@color/grey_100" />
 
