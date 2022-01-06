@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +32,7 @@ public class ProgramDetailActivity extends AppCompatActivity {
             programLevels, programOverview;
 
     private Button button;
+    private ImageButton backButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +46,18 @@ public class ProgramDetailActivity extends AppCompatActivity {
         this.programLevels = findViewById(R.id.programDetailLevels);
         this.programOverview = findViewById(R.id.programDetailOverview);
         this.button = findViewById(R.id.programDetailTrainButton);
+        this.backButton = findViewById(R.id.activityProgramDetailBackButton);
 
         this.workoutRecordViewModel = new ViewModelProvider(this).get(WorkoutRecordViewModel.class);
         this.assetsViewModel = new ViewModelProvider(this).get(AssetsViewModel.class);
         this.userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         if (getIntent() != null){
             String path = getIntent().getStringExtra(WORKOUT_PROGRAM_FOLDER_PATH_KEY);

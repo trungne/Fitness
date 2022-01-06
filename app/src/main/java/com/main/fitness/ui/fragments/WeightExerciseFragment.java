@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 
 import com.main.fitness.R;
 import com.main.fitness.data.Model.Exercise;
@@ -44,6 +45,7 @@ public class WeightExerciseFragment extends Fragment {
         return fragment;
     }
 
+
     private AssetsViewModel assetsViewModel;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,11 +55,14 @@ public class WeightExerciseFragment extends Fragment {
         }
 
         this.assetsViewModel = new ViewModelProvider(requireActivity()).get(AssetsViewModel.class);
+
+
     }
 
     private CustomDropdownMenu autoCompleteTextView;
     private RecyclerView recyclerView;
     private ExerciseAdapter exerciseAdapter;
+    private ImageButton backButton;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -65,6 +70,7 @@ public class WeightExerciseFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_weight_exercise, container, false);
         this.autoCompleteTextView = view.findViewById(R.id.WeightExerciseAutoCompleteTextView);
         this.autoCompleteTextView.setInputType(InputType.TYPE_NULL);
+        this.backButton = view.findViewById(R.id.fragmentWeightExerciseBackButton);
 
         this.exerciseAdapter = new ExerciseAdapter(new ArrayList<>());
         this.exerciseAdapter.setOnExerciseClickListener(folderPath -> {
@@ -76,6 +82,13 @@ public class WeightExerciseFragment extends Fragment {
         this.recyclerView = view.findViewById(R.id.WeightExerciseRecycleView);
         this.recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
         this.recyclerView.setAdapter(this.exerciseAdapter);
+
+        this.backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requireActivity().finish();
+            }
+        });
 
         loadOptionsForBodyParts();
         return view;

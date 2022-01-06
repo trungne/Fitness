@@ -53,7 +53,7 @@ public class UserFragment extends Fragment {
     private Button signOutButton, updateProfileButton;
     private UserViewModel userViewModel;
 
-    private TextView  userScore,userEmail, userDifficultyLevel;
+    private TextView  userEmail;
     private EditText userDisplayName,userPhone;
 
     private View rootView;
@@ -72,12 +72,10 @@ public class UserFragment extends Fragment {
                 .get(UserViewModel .class);
 
 
-
-        this.userScore = this.rootView.findViewById(R.id.fragmentUserScoreValue);
         this.userDisplayName = this.rootView.findViewById(R.id.fragmentUserDisplayNameValue);
         this.userEmail = this.rootView.findViewById(R.id.fragmentUserEmailValue);
         this.userPhone = this.rootView.findViewById(R.id.fragmentUserPhoneValue);
-        this.userDifficultyLevel = this.rootView.findViewById(R.id.fragmentUserDifficultyValue);
+
 
 
 
@@ -94,12 +92,6 @@ public class UserFragment extends Fragment {
                     this.userDisplayName.setText(appUser.getDisplayName());
                     this.userEmail.setText(appUser.getEmail());
                     this.userPhone.setText(appUser.getPhoneNumber());
-                    if(appUser.getUserLevel()!= null){
-                        this.userDifficultyLevel.setText(appUser.getUserLevel().getLevel());
-                    }
-                    if(appUser.getWorkoutScore() != null){
-                        this.userScore.setText(appUser.getWorkoutScore().toString());
-                    }
 
                     // set other attributes
                 });

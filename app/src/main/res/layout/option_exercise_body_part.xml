@@ -7,5 +7,4 @@
     android:padding="16dp"
     android:textAppearance="?attr/textAppearanceSubtitle1"
     >
-
 </TextView>
