@@ -16,7 +16,6 @@ import com.main.fitness.data.Factory.TrainingSessionFactory;
 import com.main.fitness.data.Factory.WorkoutProgramFactory;
 import com.main.fitness.data.FileUtils;
 import com.main.fitness.data.Model.Exercise;
-import com.main.fitness.data.Model.Schedule;
 import com.main.fitness.data.Model.TrainingSession;
 import com.main.fitness.data.Model.WorkoutProgram;
 
@@ -28,9 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
