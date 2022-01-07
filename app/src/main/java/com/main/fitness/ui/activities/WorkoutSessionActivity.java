@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,12 +27,11 @@ public class WorkoutSessionActivity extends AppCompatActivity {
     private static final String TAG = "WorkoutSessionActivity";
     public static final String WORKOUT_PROGRAM_FOLDER_PATH_KEY = "com.main.fitness.ui.activities.WorkoutSessionActivity.WORKOUT_PROGRAM_FOLDER_PATH_KEY";
 
-    private TextView timer;
-    private TextView exerciseName, targetMuscles, exerciseOrder, exerciseSet, exerciseWeight;
+    private TextView exerciseName, targetMuscles, exerciseOrder;
     private ImageView exerciseIllustration;
     private FloatingActionButton prevButton, nextButton;
-
     private LinearLayout repsLayout, weightsLayout;
+    private Button finishButton;
 
     private AssetsViewModel assetsViewModel;
     private TrainingSessionViewModel trainingSessionViewModel;
@@ -45,13 +45,11 @@ public class WorkoutSessionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout_session);
-        this.timer = findViewById(R.id.WorkoutSessionTimer);
         this.exerciseName = findViewById(R.id.WorkoutSessionExerciseName);
         this.targetMuscles = findViewById(R.id.WorkoutSessionTargetMuscleValues);
         this.exerciseOrder = findViewById(R.id.WorkoutSessionCurrentExerciseOrder);
         this.exerciseIllustration = findViewById(R.id.WorkoutSessionExerciseIllustration);
-        this.exerciseSet = findViewById(R.id.WorkoutSessionReps);
-        this.exerciseWeight = findViewById(R.id.WorkoutSessionWeights);
+        this.finishButton = findViewById(R.id.WorkoutSessionFinish);
 
         this.repsLayout = findViewById(R.id.WorkoutSessionRepsLinearLayout);
         this.weightsLayout = findViewById(R.id.WorkoutSessionWeightsLinearLayout);
@@ -110,24 +108,25 @@ public class WorkoutSessionActivity extends AppCompatActivity {
                 String name = workoutSet.getExercise();
 
                 int[] reps = workoutSet.getReps();
-                for (int i = 0; i < reps.length; i++){
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1.0f);
+                for (int rep : reps) {
                     TextView textView = new TextView(this);
                     textView.setTextSize(24);
-                    textView.setText(String.valueOf(reps[i]));
-                    textView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1.0f));
+                    textView.setText(String.valueOf(rep));
+                    textView.setLayoutParams(layoutParams);
                     textView.setGravity(Gravity.CENTER);
                     this.repsLayout.addView(textView);
                 }
                 this.repsLayout.requestLayout();
 
-                int[] weight = workoutSet.weight;
-                for (int i = 0; i < weight.length; i++){
+                int[] weights = workoutSet.weight;
+                for (int weight : weights) {
                     TextView textView = new TextView(this);
                     textView.setTextSize(24);
-                    String text = weight[i] + "%";
+                    String text = weight + "%";
                     textView.setText(text);
                     textView.setGravity(Gravity.CENTER);
-                    textView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1.0f));
+                    textView.setLayoutParams(layoutParams);
                     this.weightsLayout.addView(textView);
                 }
                 this.weightsLayout.requestLayout();

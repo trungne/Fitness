@@ -44,6 +44,10 @@ public class WorkoutRecordViewModel extends AndroidViewModel {
         return this.db.collection(USER_PROGRAM_COLLECTION).document(userId).delete();
     }
 
+//    public Task<Void> finishWorkout(String workoutProgramName){
+//
+//    }
+
     public Task<Void> registerProgram(String userId, String programId){
         HashMap<String, Object> data = new HashMap<>();
         data.put("programName", programId);
