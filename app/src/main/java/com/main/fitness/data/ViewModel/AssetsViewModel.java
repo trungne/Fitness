@@ -66,9 +66,9 @@ public class AssetsViewModel extends AndroidViewModel {
                 }
 
 
-                JSONArray exerciseArray = sessionArray.getJSONArray(day);
+                JSONObject session = sessionArray.getJSONObject(day);
 
-                TrainingSession trainingSession = TrainingSessionFactory.fromJSONArray(exerciseArray);
+                TrainingSession trainingSession = TrainingSessionFactory.fromJSON(session);
 
                 if (trainingSession != null){
                     taskCompletionSource.setResult(trainingSession);

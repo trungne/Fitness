@@ -3,21 +3,22 @@ package com.main.fitness.data.Model;
 import java.util.List;
 
 public class TrainingSession {
-    private final List<ExerciseSet> exerciseSets;
+    private final ExerciseSet[] exerciseSets;
     private int currentExercise;
+    private final String[] targetMuscles;
 
-    public TrainingSession(List<ExerciseSet> exerciseSets){
+    public TrainingSession(String[] targetMuscles, ExerciseSet[] exerciseSets){
+        this.targetMuscles = targetMuscles;
         this.exerciseSets = exerciseSets;
         this.currentExercise = 0;
     }
 
-    public TrainingSession(List<ExerciseSet> exerciseSets, int currentExercise){
-        this.exerciseSets = exerciseSets;
-        this.currentExercise = currentExercise;
+    public String[] getTargetMuscles() {
+        return targetMuscles;
     }
 
     public boolean nextExercise(){
-        if (this.currentExercise == exerciseSets.size() - 1){
+        if (this.currentExercise == exerciseSets.length - 1){
             return false;
         }
         else{
@@ -27,7 +28,7 @@ public class TrainingSession {
     }
 
     public ExerciseSet getCurrentExercise(){
-        return this.exerciseSets.get(this.currentExercise);
+        return this.exerciseSets[this.currentExercise];
     }
 
 
