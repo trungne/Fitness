@@ -175,6 +175,42 @@ public class AssetsViewModel extends AndroidViewModel {
         }
     }
 
+    private boolean isDirectory(String file){
+        return !file.contains(".");
+    }
+    private String findFilePath(String folder, String name){
+        try {
+            String[] files = this.mAssetManager.list(folder);
+            for(String file: files){
+                if (isDirectory(file)){
+                    String path = folder + File.separator + file;
+
+                    if (path.contains(name)){
+                        return path;
+                    }
+
+                    String found = findFilePath(path, name);
+                    if (found.contains(name)){
+                        return found;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public Exercise getExerciseByName(String name){
+        String path = findFilePath(EXERCISE_BANK_FOLDER_PATH, name);
+        if (TextUtils.isEmpty(path)){
+            return null;
+        }
+        else{
+            return getExercise(path);
+        }
+    }
+
     public Exercise getExercise(String path){
         try {
             String[] exerciseFiles = this.mAssetManager.list(path);
@@ -187,6 +223,9 @@ public class AssetsViewModel extends AndroidViewModel {
 
             String illustrationFileName = FileUtils.getImageFilePath(this.mAssetManager, path);
             String descriptionFileName = FileUtils.getTextFilePath(this.mAssetManager, path);
+
+            Log.e(TAG, illustrationFileName);
+            Log.e(TAG, descriptionFileName);
 
             if (TextUtils.isEmpty(illustrationFileName) || TextUtils.isEmpty(descriptionFileName)) {
                 return null;

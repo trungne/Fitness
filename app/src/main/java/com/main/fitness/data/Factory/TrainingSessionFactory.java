@@ -2,16 +2,12 @@ package com.main.fitness.data.Factory;
 
 import androidx.annotation.NonNull;
 
-import com.main.fitness.data.Model.Exercise;
-import com.main.fitness.data.Model.ExerciseSet;
+import com.main.fitness.data.Model.WorkoutSet;
 import com.main.fitness.data.Model.TrainingSession;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class TrainingSessionFactory {
     private static final String TARGET_MUSCLES_FIELD = "target_muscles";
@@ -35,7 +31,7 @@ public class TrainingSessionFactory {
 
             JSONArray exerciseArray = jsonObject.getJSONArray(EXERCISES_FIELD);
 
-            ExerciseSet[] exercises = new ExerciseSet[exerciseArray.length()];
+            WorkoutSet[] exercises = new WorkoutSet[exerciseArray.length()];
             int indexForExerciseSet = 0;
 
             for(int i = 0; i < exerciseArray.length(); i++){
@@ -55,14 +51,10 @@ public class TrainingSessionFactory {
                     weight[x] = weightJSONArray.getInt(x);
                 }
 
-                exercises[indexForExerciseSet++] = new ExerciseSet(name, reps, weight);
+                exercises[indexForExerciseSet++] = new WorkoutSet(name, reps, weight);
             }
 
             return new TrainingSession(targetMuscles, exercises);
-
-
-
-
         } catch (JSONException jsonException){
             jsonException.printStackTrace();
         }

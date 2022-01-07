@@ -1,16 +1,14 @@
 package com.main.fitness.data.Model;
 
-import java.util.List;
-
 public class TrainingSession {
-    private final ExerciseSet[] exerciseSets;
-    private int currentExercise;
+    private final WorkoutSet[] workoutSets;
+    private int currentExerciseOrder;
     private final String[] targetMuscles;
 
-    public TrainingSession(String[] targetMuscles, ExerciseSet[] exerciseSets){
+    public TrainingSession(String[] targetMuscles, WorkoutSet[] workoutSets){
         this.targetMuscles = targetMuscles;
-        this.exerciseSets = exerciseSets;
-        this.currentExercise = 0;
+        this.workoutSets = workoutSets;
+        this.currentExerciseOrder = 0;
     }
 
     public String[] getTargetMuscles() {
@@ -18,17 +16,35 @@ public class TrainingSession {
     }
 
     public boolean nextExercise(){
-        if (this.currentExercise == exerciseSets.length - 1){
+        if (this.currentExerciseOrder == workoutSets.length - 1){
             return false;
         }
         else{
-            this.currentExercise++;
+            this.currentExerciseOrder++;
             return true;
         }
     }
 
-    public ExerciseSet getCurrentExercise(){
-        return this.exerciseSets[this.currentExercise];
+    public boolean previousExercise(){
+        if (this.currentExerciseOrder == 0){
+            return false;
+        }
+        else{
+            this.currentExerciseOrder--;
+            return true;
+        }
+    }
+
+    public WorkoutSet[] getExerciseSets() {
+        return workoutSets;
+    }
+
+    public int getCurrentExerciseOrder(){
+        return this.currentExerciseOrder;
+    }
+
+    public WorkoutSet getCurrentExercise(){
+        return this.workoutSets[this.currentExerciseOrder];
     }
 
 

@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -25,16 +26,19 @@ public class WorkoutRecordViewModel extends AndroidViewModel {
 
     private final Application application;
     private final FirebaseFirestore db;
+    private final FirebaseAuth mAth;
 
     public WorkoutRecordViewModel(@NonNull Application application) {
         super(application);
         this.application = application;
         this.db = FirebaseFirestore.getInstance();
+        this.mAth = FirebaseAuth.getInstance();
     }
 
     public Task<Void> updateRunningRecord(RunningRecord runningRecord){
         return null;
     }
+
 
     public Task<Void> unregisterProgram(String userId, String programId){
         return this.db.collection(USER_PROGRAM_COLLECTION).document(userId).delete();

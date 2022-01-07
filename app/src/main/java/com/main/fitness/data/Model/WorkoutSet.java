@@ -1,19 +1,19 @@
 package com.main.fitness.data.Model;
 
-public class ExerciseSet {
+public class WorkoutSet {
     private final String exerciseName;
     private final int[] reps;
     private final int[] weight;
     private int currentSet;
 
-    public ExerciseSet(String exercise, int[] reps, int[] weight){
+    public WorkoutSet(String exercise, int[] reps, int[] weight){
         this.exerciseName = exercise;
         this.reps = reps;
         this.weight = weight;
         this.currentSet = 0;
     }
 
-    public ExerciseSet(String exercise, int[] reps, int[] weight, int currentSet){
+    public WorkoutSet(String exercise, int[] reps, int[] weight, int currentSet){
         this.exerciseName = exercise;
         this.reps = reps;
         this.weight = weight;

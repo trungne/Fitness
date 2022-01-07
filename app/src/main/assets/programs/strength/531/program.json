@@ -24,7 +24,7 @@
         },
 
         {
-          "name": "incline_dumbbell_bench_chest_press",
+          "name": "incline_dumbbell_chest_press",
           "reps": [5, 5, 5],
           "weight": [65, 75, 85]
         }
