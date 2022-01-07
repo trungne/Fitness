@@ -1,34 +1,26 @@
 package com.main.fitness.ui.activities;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
+import android.view.Gravity;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.api.Distribution;
 import com.main.fitness.R;
 import com.main.fitness.data.FileUtils;
 import com.main.fitness.data.Model.Exercise;
 import com.main.fitness.data.Model.TrainingSession;
-import com.main.fitness.data.Model.WorkoutSet;
 import com.main.fitness.data.ViewModel.AssetsViewModel;
 import com.main.fitness.data.ViewModel.TrainingSessionViewModel;
-
-import java.io.File;
 
 public class WorkoutSessionActivity extends AppCompatActivity {
     private static final String TAG = "WorkoutSessionActivity";
@@ -39,8 +31,15 @@ public class WorkoutSessionActivity extends AppCompatActivity {
     private ImageView exerciseIllustration;
     private FloatingActionButton prevButton, nextButton;
 
+    private LinearLayout repsLayout, weightsLayout;
+
     private AssetsViewModel assetsViewModel;
     private TrainingSessionViewModel trainingSessionViewModel;
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +50,13 @@ public class WorkoutSessionActivity extends AppCompatActivity {
         this.targetMuscles = findViewById(R.id.WorkoutSessionTargetMuscleValues);
         this.exerciseOrder = findViewById(R.id.WorkoutSessionCurrentExerciseOrder);
         this.exerciseIllustration = findViewById(R.id.WorkoutSessionExerciseIllustration);
-        this.exerciseSet = findViewById(R.id.WorkoutSessionSets);
+        this.exerciseSet = findViewById(R.id.WorkoutSessionReps);
         this.exerciseWeight = findViewById(R.id.WorkoutSessionWeights);
+
+        this.repsLayout = findViewById(R.id.WorkoutSessionRepsLinearLayout);
+        this.weightsLayout = findViewById(R.id.WorkoutSessionWeightsLinearLayout);
+
+
         this.prevButton = findViewById(R.id.WorkoutSessionPreviousExercise);
         this.nextButton = findViewById(R.id.WorkoutSessionNextExercise);
 
@@ -100,32 +104,39 @@ public class WorkoutSessionActivity extends AppCompatActivity {
                 showExerciseOrder(integer, this.trainingSessionViewModel.getExerciseSize());
             });
             this.trainingSessionViewModel.getWorkoutSetMutableLiveData().observe(this, workoutSet -> {
+                this.weightsLayout.removeAllViews();
+                this.repsLayout.removeAllViews();
+
                 String name = workoutSet.getExercise();
-                StringBuilder builder = new StringBuilder();
+
                 int[] reps = workoutSet.getReps();
                 for (int i = 0; i < reps.length; i++){
-                    builder.append(reps[i]);
-                    if (i != reps.length - 1){
-                        builder.append("/");
-                    }
+                    TextView textView = new TextView(this);
+                    textView.setTextSize(24);
+                    textView.setText(String.valueOf(reps[i]));
+                    textView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1.0f));
+                    textView.setGravity(Gravity.CENTER);
+                    this.repsLayout.addView(textView);
                 }
-                this.exerciseSet.setText(builder.toString());
-
+                this.repsLayout.requestLayout();
 
                 int[] weight = workoutSet.weight;
-                StringBuilder builder2 = new StringBuilder();
                 for (int i = 0; i < weight.length; i++){
-                    builder2.append(weight[i]);
-                    if (i != weight.length - 1){
-                        builder2.append("/");
-                    }
+                    TextView textView = new TextView(this);
+                    textView.setTextSize(24);
+                    String text = weight[i] + "%";
+                    textView.setText(text);
+                    textView.setGravity(Gravity.CENTER);
+                    textView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1.0f));
+                    this.weightsLayout.addView(textView);
                 }
-                this.exerciseWeight.setText(builder2.toString());
+                this.weightsLayout.requestLayout();
 
                 showExercise(name);
             });
 
             this.prevButton.setOnClickListener(v -> {
+
                 this.trainingSessionViewModel.previousExercise();
 
             });

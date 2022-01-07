@@ -112,22 +112,59 @@
         app:srcCompat="@drawable/ic_baseline_navigate_next_24" />
 
     <TextView
-        android:id="@+id/WorkoutSessionSets"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="41dp"
-        android:text="TextView"
+        android:id="@+id/WorkoutSessionReps"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="6dp"
+        android:gravity="center"
+        android:text="Rep: "
+        android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/WorkoutSessionExerciseName" />
+        app:layout_constraintTop_toBottomOf="@+id/WorkoutSessionRepsAndWeights" />
 
     <TextView
         android:id="@+id/WorkoutSessionWeights"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:gravity="center"
+        android:text="Weights: "
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/WorkoutSessionReps" />
+
+    <TextView
+        android:id="@+id/WorkoutSessionRepsAndWeights"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="TextView"
+        android:layout_marginTop="8dp"
+        android:text="Reps and Weight"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/WorkoutSessionExerciseName" />
 
+    <LinearLayout
+        android:gravity="center"
+        android:id="@+id/WorkoutSessionRepsLinearLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@+id/WorkoutSessionReps"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/WorkoutSessionWeights"
+        app:layout_constraintTop_toTopOf="@+id/WorkoutSessionReps"></LinearLayout>
+
+
+    <LinearLayout
+        android:gravity="center"
+        android:id="@+id/WorkoutSessionWeightsLinearLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@+id/WorkoutSessionWeights"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/WorkoutSessionWeights"
+        app:layout_constraintTop_toTopOf="@+id/WorkoutSessionWeights"
+        app:layout_constraintVertical_bias="1.0"></LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
