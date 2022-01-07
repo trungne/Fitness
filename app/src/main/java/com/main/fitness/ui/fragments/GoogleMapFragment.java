@@ -53,7 +53,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.GeoPoint;
 import com.main.fitness.R;
+import com.main.fitness.data.Model.ParcelableGeoPoint;
 import com.main.fitness.data.Model.RunningRecord;
 import com.main.fitness.data.ViewModel.WorkoutRecordViewModel;
 import com.main.fitness.service.LocationUpdateService;
@@ -63,6 +65,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class GoogleMapFragment extends Fragment implements LocationListener {
@@ -180,7 +183,6 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }
-
 
 
     }
@@ -322,6 +324,17 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
         super.onResume();
         if (getActivity() != null) {
             getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+
+        //Receive the points from LocationUpdateService
+        ArrayList<ParcelableGeoPoint> pointsExtra = getActivity().getIntent().getParcelableArrayListExtra("geopoints");
+        //ArrayList<GeoPoint> points = new ArrayList<>();
+        for (ParcelableGeoPoint point: pointsExtra) {
+            //points.add(point.getGeoPoint());
+            mMap.addPolyline(new PolylineOptions()
+                    .add(new LatLng(point.getGeoPoint().getLatitude(), point.getGeoPoint().getLongitude()))
+                    .width(10)
+                    .color(Color.RED));
         }
     }
 

@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
+import android.os.Parcelable;
 import android.os.PowerManager;
 import android.util.Log;
 import android.widget.TextView;
@@ -22,12 +23,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -36,9 +35,11 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.GeoPoint;
+import com.main.fitness.data.Model.ParcelableGeoPoint;
 
-import java.security.Provider;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class LocationUpdateService extends Service implements LocationListener {
@@ -46,18 +47,12 @@ public class LocationUpdateService extends Service implements LocationListener {
     private static final int UPDATE_INTERVAL = 10*1000; // 10 seconds
     private static final int FASTEST_INTERVAL = 2*1000; // 2 seconds
     private static final int MAX_WAIT_TIME = 1000;
-    private static final String CHANNEL_ID = "channel_01";
-    private static final String PACKAGE_NAME = "LocationUpdateService";
-    static final String ACTION_BROADCAST = PACKAGE_NAME + ".broadcast";
-    static final String EXTRA_LOCATION = PACKAGE_NAME + ".location";
-    private static final String EXTRA_STARTED_FROM_NOTIFICATION = PACKAGE_NAME +
-            ".started_from_notification";
-    private static final int NOTIFICATION_ID = 2657;
+    private static final List<GeoPoint> points = new ArrayList<>();
+
 
     protected FusedLocationProviderClient client;
     private LocationManager locationManager;
     private LocationRequest locationRequest;
-    private static final int PARTIAL_WAKE_LOCK = 1;
     private GoogleMap mMap;
     private Location prev;
     private Location current;
@@ -88,13 +83,6 @@ public class LocationUpdateService extends Service implements LocationListener {
         super.onCreate();
 
         client = LocationServices.getFusedLocationProviderClient(this);
-        mLocationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(@NonNull LocationResult locationResult) {
-                super.onLocationResult(locationResult);
-                onNewLocation(locationResult.getLastLocation());
-            }
-        };
 
         createLocationRequest();
         getLastLocation();
@@ -102,15 +90,6 @@ public class LocationUpdateService extends Service implements LocationListener {
         HandlerThread handlerThread = new HandlerThread(TAG);
         handlerThread.start();
         mServiceHandler = new Handler(handlerThread.getLooper());
-    }
-
-    private void onNewLocation(Location location) {
-        mLocation = location;
-
-        // Notify anyone listening for broadcasts about the new location.
-        Intent intent = new Intent(ACTION_BROADCAST);
-        intent.putExtra(EXTRA_LOCATION, location);
-        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
     }
 
     private void getLastLocation() {
@@ -160,27 +139,9 @@ public class LocationUpdateService extends Service implements LocationListener {
                 .setMaxWaitTime(MAX_WAIT_TIME);
     }
 
-    public boolean serviceIsRunningInForeground(Context context) {
-        ActivityManager manager = (ActivityManager) context.getSystemService(
-                Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningAppProcessInfo> runningProcesses = manager.getRunningAppProcesses();
-        for (ActivityManager.RunningAppProcessInfo service : runningProcesses) {
-            if (service.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
-                for (String activeProcess : service.pkgList) {
-                    if (activeProcess.equals(context.getPackageName())) {
-                        //If your app is the process in foreground, then it's not in running in background
-                        return false;
-                    }
-                }
-            }
-        }
-        return true;
-    }
-
     @SuppressLint("MissingPermission")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
         new Thread(
                 () -> {
                     while (true) {
@@ -192,7 +153,6 @@ public class LocationUpdateService extends Service implements LocationListener {
                     }
                 }
         );
-
         return START_STICKY;
     }
 
@@ -201,34 +161,24 @@ public class LocationUpdateService extends Service implements LocationListener {
     @SuppressLint("SetTextI18n")
     @Override
     public void onLocationChanged(@NonNull Location location) {
-        LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
-
-        //Update location
-        prev = current;
-        current = location;
-
-        //Calculate distance
-        mapFragmentUserTravelledDistance += ((prev.distanceTo(current)) / 1000);
-        //Format them into shorter string, to save space
-        DecimalFormat df = new DecimalFormat("#0.000");
-        mapFragmentTravelledDistanceTextView.setText("" + df.format(mapFragmentUserTravelledDistance));
-
-        //Draw the polyline
-        Polyline line = mMap.addPolyline(new PolylineOptions()
-                .add(new LatLng(prev.getLatitude(),prev.getLongitude()), new LatLng(current.getLatitude(),current.getLongitude()))
-                .width(10)
-                .color(Color.CYAN));
-
-        //Move the camera to the new location point
-        if(getApplicationContext() != null){
-            Toast.makeText(getApplicationContext(), "Updated", Toast.LENGTH_SHORT).show();
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        }
+        //get the location change in the background and put it in the list
+        int lat = (int) (location.getLatitude() * 1E6);
+        int lng = (int) (location.getLongitude() * 1E6);
+        GeoPoint geoPoint = new GeoPoint(lat, lng);
+        points.add(geoPoint);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        //Send the list of points to GoogleMapFragMent
+        ArrayList<ParcelableGeoPoint> pointsExtra = new ArrayList<>();
+        for (GeoPoint point : points) {
+            pointsExtra.add(new ParcelableGeoPoint(point));
+        }
+        Intent intent = new Intent();
+        intent.putExtra("geopoints", pointsExtra);
 
         removeLocationUpdates();
     }
