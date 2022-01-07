@@ -224,9 +224,6 @@ public class AssetsViewModel extends AndroidViewModel {
             String illustrationFileName = FileUtils.getImageFilePath(this.mAssetManager, path);
             String descriptionFileName = FileUtils.getTextFilePath(this.mAssetManager, path);
 
-            Log.e(TAG, illustrationFileName);
-            Log.e(TAG, descriptionFileName);
-
             if (TextUtils.isEmpty(illustrationFileName) || TextUtils.isEmpty(descriptionFileName)) {
                 return null;
             }

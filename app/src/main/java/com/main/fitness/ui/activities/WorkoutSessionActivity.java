@@ -35,7 +35,7 @@ public class WorkoutSessionActivity extends AppCompatActivity {
     public static final String WORKOUT_PROGRAM_FOLDER_PATH_KEY = "com.main.fitness.ui.activities.WorkoutSessionActivity.WORKOUT_PROGRAM_FOLDER_PATH_KEY";
 
     private TextView timer;
-    private TextView exerciseName, targetMuscles, exerciseOrder;
+    private TextView exerciseName, targetMuscles, exerciseOrder, exerciseSet, exerciseWeight;
     private ImageView exerciseIllustration;
     private FloatingActionButton prevButton, nextButton;
 
@@ -51,6 +51,8 @@ public class WorkoutSessionActivity extends AppCompatActivity {
         this.targetMuscles = findViewById(R.id.WorkoutSessionTargetMuscleValues);
         this.exerciseOrder = findViewById(R.id.WorkoutSessionCurrentExerciseOrder);
         this.exerciseIllustration = findViewById(R.id.WorkoutSessionExerciseIllustration);
+        this.exerciseSet = findViewById(R.id.WorkoutSessionSets);
+        this.exerciseWeight = findViewById(R.id.WorkoutSessionWeights);
         this.prevButton = findViewById(R.id.WorkoutSessionPreviousExercise);
         this.nextButton = findViewById(R.id.WorkoutSessionNextExercise);
 
@@ -99,7 +101,28 @@ public class WorkoutSessionActivity extends AppCompatActivity {
             });
             this.trainingSessionViewModel.getWorkoutSetMutableLiveData().observe(this, workoutSet -> {
                 String name = workoutSet.getExercise();
-                showExercise(workoutProgramPath, name);
+                StringBuilder builder = new StringBuilder();
+                int[] reps = workoutSet.getReps();
+                for (int i = 0; i < reps.length; i++){
+                    builder.append(reps[i]);
+                    if (i != reps.length - 1){
+                        builder.append("/");
+                    }
+                }
+                this.exerciseSet.setText(builder.toString());
+
+
+                int[] weight = workoutSet.weight;
+                StringBuilder builder2 = new StringBuilder();
+                for (int i = 0; i < weight.length; i++){
+                    builder2.append(weight[i]);
+                    if (i != weight.length - 1){
+                        builder2.append("/");
+                    }
+                }
+                this.exerciseWeight.setText(builder2.toString());
+
+                showExercise(name);
             });
 
             this.prevButton.setOnClickListener(v -> {
@@ -120,7 +143,7 @@ public class WorkoutSessionActivity extends AppCompatActivity {
 
 
 
-    private void showExercise(String workoutFolderPath, String exerciseName){
+    private void showExercise(String exerciseName){
         Exercise e = this.assetsViewModel.getExerciseByName(exerciseName);
 
 
