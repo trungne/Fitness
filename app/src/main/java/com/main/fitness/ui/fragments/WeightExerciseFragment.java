@@ -17,7 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 
 import com.main.fitness.R;
-import com.main.fitness.data.Model.Exercise;
+import com.main.fitness.data.Model.WorkoutExercise;
 import com.main.fitness.data.ViewModel.AssetsViewModel;
 import com.main.fitness.ui.activities.gym.ExerciseDetailActivity;
 import com.main.fitness.ui.adapters.ExerciseAdapter;
@@ -107,8 +107,8 @@ public class WeightExerciseFragment extends Fragment {
         this.autoCompleteTextView.setOnItemClickListener((parent, view, position, id) -> {
             String exerciseType = (String) parent.getItemAtPosition(position);
             Log.i(TAG, "exerciseType: " + exerciseType);
-            List<Exercise> exerciseList = this.assetsViewModel.getExercises(exerciseType);
-            this.exerciseAdapter.updateExerciseList(exerciseList);
+            List<WorkoutExercise> workoutExerciseList = this.assetsViewModel.getExercises(exerciseType);
+            this.exerciseAdapter.updateExerciseList(workoutExerciseList);
 //            this.recyclerView.setAdapter(this.exerciseAdapter);
             this.exerciseAdapter.notifyDataSetChanged();
         });

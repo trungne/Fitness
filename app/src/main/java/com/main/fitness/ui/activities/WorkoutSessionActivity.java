@@ -15,13 +15,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.api.Distribution;
 import com.main.fitness.R;
 import com.main.fitness.data.FileUtils;
-import com.main.fitness.data.Model.Exercise;
-import com.main.fitness.data.Model.TrainingSession;
+import com.main.fitness.data.Model.WorkoutExercise;
+import com.main.fitness.data.Model.WorkoutSession;
 import com.main.fitness.data.ViewModel.AssetsViewModel;
-import com.main.fitness.data.ViewModel.TrainingSessionViewModel;
+import com.main.fitness.data.ViewModel.WorkOutScheduleViewModel;
+import com.main.fitness.data.ViewModel.WorkoutScheduleViewModelFactory;
 
 public class WorkoutSessionActivity extends AppCompatActivity {
     private static final String TAG = "WorkoutSessionActivity";
@@ -34,7 +34,7 @@ public class WorkoutSessionActivity extends AppCompatActivity {
     private Button finishButton;
 
     private AssetsViewModel assetsViewModel;
-    private TrainingSessionViewModel trainingSessionViewModel;
+    private WorkOutScheduleViewModel workOutScheduleViewModel;
 
     @Override
     public void onBackPressed() {
@@ -72,19 +72,21 @@ public class WorkoutSessionActivity extends AppCompatActivity {
         }
 
         this.assetsViewModel = new ViewModelProvider(this).get(AssetsViewModel.class);
-        this.trainingSessionViewModel = new ViewModelProvider(this).get(TrainingSessionViewModel.class);
 
         // TODO: get current day in workout program, create SQL lite to cache user workout info
         // int day = get....
 
-        this.assetsViewModel.getTrainingSession(workoutProgramPath, 0).addOnCompleteListener(this, task -> {
+        this.assetsViewModel.getWorkoutSchedule(workoutProgramPath, 0).addOnCompleteListener(this, task -> {
             if (!task.isSuccessful()){
                 Toast.makeText(this, "Cannot load session!", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            TrainingSession trainingSession = task.getResult();
-            String[] targetMuscles = trainingSession.getTargetMuscles();
+            WorkoutScheduleViewModelFactory factory = new WorkoutScheduleViewModelFactory(getApplication(), task.getResult());
+            this.workOutScheduleViewModel = new ViewModelProvider(this, factory).get(WorkOutScheduleViewModel.class);
+
+            WorkoutSession workoutSession = task.getResult().getCurrentSession();
+            String[] targetMuscles = workoutSession.getTargetMuscles();
             StringBuilder stringBuilder = new StringBuilder();
 
             for(int i = 0; i < targetMuscles.length; i++){
@@ -97,18 +99,21 @@ public class WorkoutSessionActivity extends AppCompatActivity {
 
             this.targetMuscles.setText(stringBuilder.toString());
 
-            this.trainingSessionViewModel.setTrainingSession(trainingSession);
-            this.trainingSessionViewModel.getExerciseOrderLiveData().observe(this, integer -> {
-                showExerciseOrder(integer, this.trainingSessionViewModel.getExerciseSize());
+            this.workOutScheduleViewModel.getExerciseOrderLiveData().observe(this, integer -> {
+                showExerciseOrder(integer, this.workOutScheduleViewModel.getExerciseSize());
             });
-            this.trainingSessionViewModel.getWorkoutSetMutableLiveData().observe(this, workoutSet -> {
+
+            this.workOutScheduleViewModel.getWorkoutSetMutableLiveData().observe(this, workoutSet -> {
                 this.weightsLayout.removeAllViews();
                 this.repsLayout.removeAllViews();
 
                 String name = workoutSet.getExercise();
+                showExercise(name);
+
+
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1.0f);
 
                 int[] reps = workoutSet.getReps();
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1.0f);
                 for (int rep : reps) {
                     TextView textView = new TextView(this);
                     textView.setTextSize(24);
@@ -131,17 +136,15 @@ public class WorkoutSessionActivity extends AppCompatActivity {
                 }
                 this.weightsLayout.requestLayout();
 
-                showExercise(name);
+
             });
 
             this.prevButton.setOnClickListener(v -> {
-
-                this.trainingSessionViewModel.previousExercise();
-
+                this.workOutScheduleViewModel.previousExercise();
             });
 
             this.nextButton.setOnClickListener(v -> {
-                this.trainingSessionViewModel.nextExercise();
+                this.workOutScheduleViewModel.nextExercise();
             });
         });
     }
@@ -154,7 +157,7 @@ public class WorkoutSessionActivity extends AppCompatActivity {
 
 
     private void showExercise(String exerciseName){
-        Exercise e = this.assetsViewModel.getExerciseByName(exerciseName);
+        WorkoutExercise e = this.assetsViewModel.getExerciseByName(exerciseName);
 
 
         if (e == null){
@@ -163,8 +166,6 @@ public class WorkoutSessionActivity extends AppCompatActivity {
         }
         String name = FileUtils.toTitleCase(e.getName());
         this.exerciseName.setText(name);
-
-        Log.i(TAG, name);
         this.exerciseIllustration.setImageDrawable(e.getIllustration());
     }
 }

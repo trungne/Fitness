@@ -10,25 +10,25 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.main.fitness.R;
-import com.main.fitness.data.Model.Exercise;
+import com.main.fitness.data.Model.WorkoutExercise;
 
 import java.util.List;
 
 public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ExerciseHolder> {
     private static final String TAG = "ExerciseAdapter";
-    private List<Exercise> exerciseList;
+    private List<WorkoutExercise> workoutExerciseList;
     private OnViewWithFilePathClickListener mListener = null;
 
-    public ExerciseAdapter(List<Exercise> exerciseList){
-        this.exerciseList = exerciseList;
+    public ExerciseAdapter(List<WorkoutExercise> workoutExerciseList){
+        this.workoutExerciseList = workoutExerciseList;
     }
 
     public void setOnExerciseClickListener(OnViewWithFilePathClickListener listener){
         this.mListener = listener;
     }
 
-    public void updateExerciseList(List<Exercise> exerciseList){
-        this.exerciseList = exerciseList;
+    public void updateExerciseList(List<WorkoutExercise> workoutExerciseList){
+        this.workoutExerciseList = workoutExerciseList;
     }
 
     @NonNull
@@ -41,19 +41,19 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
     @Override
     public void onBindViewHolder(@NonNull ExerciseHolder holder, int position) {
-        Exercise exercise = this.exerciseList.get(position);
-        holder.exerciseName.setText(exercise.getName());
-        holder.exerciseIllustration.setImageDrawable(exercise.getIllustration());
+        WorkoutExercise workoutExercise = this.workoutExerciseList.get(position);
+        holder.exerciseName.setText(workoutExercise.getName());
+        holder.exerciseIllustration.setImageDrawable(workoutExercise.getIllustration());
         holder.exerciseIllustration.setOnClickListener(v -> {
             if (this.mListener != null){
-                this.mListener.onViewClicked(exercise.getFolderPath());
+                this.mListener.onViewClicked(workoutExercise.getFolderPath());
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return exerciseList.size();
+        return workoutExerciseList.size();
     }
 
     static class ExerciseHolder extends RecyclerView.ViewHolder {

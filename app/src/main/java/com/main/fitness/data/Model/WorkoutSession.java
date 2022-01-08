@@ -1,11 +1,13 @@
 package com.main.fitness.data.Model;
 
-public class TrainingSession {
+import javax.annotation.Nullable;
+
+public class WorkoutSession {
     private final WorkoutSet[] workoutSets;
     private int currentExerciseOrder;
     private final String[] targetMuscles;
 
-    public TrainingSession(String[] targetMuscles, WorkoutSet[] workoutSets){
+    public WorkoutSession(String[] targetMuscles, WorkoutSet[] workoutSets){
         this.targetMuscles = targetMuscles;
         this.workoutSets = workoutSets;
         this.currentExerciseOrder = 0;
@@ -15,24 +17,19 @@ public class TrainingSession {
         return targetMuscles;
     }
 
-    public boolean nextExercise(){
+    @Nullable
+    public WorkoutSet nextExercise(){
         if (this.currentExerciseOrder == workoutSets.length - 1){
-            return false;
+            return null;
         }
-        else{
-            this.currentExerciseOrder++;
-            return true;
-        }
+        return this.workoutSets[++currentExerciseOrder];
     }
 
-    public boolean previousExercise(){
+    public WorkoutSet previousExercise(){
         if (this.currentExerciseOrder == 0){
-            return false;
+            return null;
         }
-        else{
-            this.currentExerciseOrder--;
-            return true;
-        }
+        return this.workoutSets[--currentExerciseOrder];
     }
 
     public WorkoutSet[] getExerciseSets() {

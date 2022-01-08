@@ -1,6 +1,5 @@
 package com.main.fitness.ui.activities.gym;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -14,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.main.fitness.R;
-import com.main.fitness.data.Model.Exercise;
+import com.main.fitness.data.Model.WorkoutExercise;
 import com.main.fitness.data.ViewModel.AssetsViewModel;
 
 public class ExerciseDetailActivity extends AppCompatActivity {
@@ -22,7 +21,7 @@ public class ExerciseDetailActivity extends AppCompatActivity {
     public static final String PATH_KEY = "com.main.fitness.ui.activities.gym.ExerciseDetailActivity.path";
 
     private AssetsViewModel assetsViewModel;
-    private Exercise exercise;
+    private WorkoutExercise workoutExercise;
     private String path = "";
 
     private TextView name, description;
@@ -53,7 +52,7 @@ public class ExerciseDetailActivity extends AppCompatActivity {
         }
 
         this.assetsViewModel = new ViewModelProvider(this).get(AssetsViewModel.class);
-        this.exercise = this.assetsViewModel.getExercise(this.path);
+        this.workoutExercise = this.assetsViewModel.getExercise(this.path);
         this.backButton = findViewById(R.id.activityProgramListBackButton);
         //Back Button
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -63,7 +62,7 @@ public class ExerciseDetailActivity extends AppCompatActivity {
             }
         });
 
-        if (this.exercise == null){
+        if (this.workoutExercise == null){
             finish();
             return;
         }
@@ -73,9 +72,9 @@ public class ExerciseDetailActivity extends AppCompatActivity {
         this.description = findViewById(R.id.ExerciseDetailDescription);
         this.illustration = findViewById(R.id.ExerciseDetailIllustration);
 
-        this.name.setText(this.exercise.getName());
-        this.description.setText(this.exercise.getDescription());
-        this.illustration.setImageDrawable(this.exercise.getIllustration());
+        this.name.setText(this.workoutExercise.getName());
+        this.description.setText(this.workoutExercise.getDescription());
+        this.illustration.setImageDrawable(this.workoutExercise.getIllustration());
 
         this.description.setMovementMethod(new ScrollingMovementMethod());
     }

@@ -1,6 +1,5 @@
 package com.main.fitness.ui.activities.gym;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -13,10 +12,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.main.fitness.R;
-import com.main.fitness.data.Model.TrainingSession;
 import com.main.fitness.data.Model.WorkoutProgram;
 import com.main.fitness.data.Model.UserLevel;
 import com.main.fitness.data.ViewModel.AssetsViewModel;
@@ -106,8 +102,6 @@ public class ProgramDetailActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, WorkoutSessionActivity.class);
                 intent.putExtra(WorkoutSessionActivity.WORKOUT_PROGRAM_FOLDER_PATH_KEY, this.path);
                 startActivity(intent);
-                Log.i(TAG, "Launch WorkoutSessionActivity");
-                Log.i(TAG, this.path);
 //                this.workoutRecordViewModel.registerProgram(userId, workoutProgram.getName());
             });
         }

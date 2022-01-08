@@ -12,11 +12,12 @@ import androidx.lifecycle.AndroidViewModel;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
-import com.main.fitness.data.Factory.TrainingSessionFactory;
+import com.main.fitness.data.Factory.WorkoutSessionFactory;
 import com.main.fitness.data.Factory.WorkoutProgramFactory;
 import com.main.fitness.data.FileUtils;
-import com.main.fitness.data.Model.Exercise;
-import com.main.fitness.data.Model.TrainingSession;
+import com.main.fitness.data.Model.WorkoutExercise;
+import com.main.fitness.data.Model.WorkoutSchedule;
+import com.main.fitness.data.Model.WorkoutSession;
 import com.main.fitness.data.Model.WorkoutProgram;
 
 import org.json.JSONArray;
@@ -51,8 +52,8 @@ public class AssetsViewModel extends AndroidViewModel {
      *
      *
      *  */
-    public Task<TrainingSession> getTrainingSession(String path, int day){
-        final TaskCompletionSource<TrainingSession> taskCompletionSource = new TaskCompletionSource<>();
+    public Task<WorkoutSchedule> getWorkoutSchedule(String path, int day){
+        final TaskCompletionSource<WorkoutSchedule> taskCompletionSource = new TaskCompletionSource<>();
         ExecutorService e = Executors.newSingleThreadExecutor();
         e.execute(() -> {
             String jsonFilePath = FileUtils.getJSONFilePath(this.mAssetManager, path);
@@ -65,17 +66,16 @@ public class AssetsViewModel extends AndroidViewModel {
                     throw new IllegalArgumentException("Day is out of schedule range!");
                 }
 
-
-                JSONObject session = sessionArray.getJSONObject(day);
-
-                TrainingSession trainingSession = TrainingSessionFactory.fromJSON(session);
-
-                if (trainingSession != null){
-                    taskCompletionSource.setResult(trainingSession);
+                WorkoutSession[] sessions = new WorkoutSession[sessionArray.length()];
+                for (int i = 0; i < sessionArray.length(); i++){
+                    WorkoutSession w = WorkoutSessionFactory.fromJSON(sessionArray.getJSONObject(i));
+                    sessions[i] = w;
                 }
-                else{
-                    taskCompletionSource.setException(new Exception("Training Session Not Found!"));
-                }
+                WorkoutSchedule schedule = new WorkoutSchedule(sessions, day);
+
+                taskCompletionSource.setResult(schedule);
+
+
             } catch (JSONException jsonException) {
                 jsonException.printStackTrace();
                 taskCompletionSource.setException(jsonException);
@@ -201,7 +201,7 @@ public class AssetsViewModel extends AndroidViewModel {
         return "";
     }
 
-    public Exercise getExerciseByName(String name){
+    public WorkoutExercise getExerciseByName(String name){
         String path = findFilePath(EXERCISE_BANK_FOLDER_PATH, name);
         if (TextUtils.isEmpty(path)){
             return null;
@@ -211,7 +211,7 @@ public class AssetsViewModel extends AndroidViewModel {
         }
     }
 
-    public Exercise getExercise(String path){
+    public WorkoutExercise getExercise(String path){
         try {
             String[] exerciseFiles = this.mAssetManager.list(path);
             if (exerciseFiles.length != 2){
@@ -235,7 +235,7 @@ public class AssetsViewModel extends AndroidViewModel {
                 Log.i("Exercise View Model", "fail");
             }
 
-            return new Exercise(path, name, description, drawable);
+            return new WorkoutExercise(path, name, description, drawable);
         } catch (IOException e) {
             return null;
         }
@@ -248,22 +248,22 @@ public class AssetsViewModel extends AndroidViewModel {
     *
     *  */
 
-    public List<Exercise> getExercises(String type) {
+    public List<WorkoutExercise> getExercises(String type) {
         String pathToExerciseTypeFolder = EXERCISE_BANK_FOLDER_PATH + File.separator + type;
 
-        List<Exercise> exerciseList = new ArrayList<>();
+        List<WorkoutExercise> workoutExerciseList = new ArrayList<>();
         try {
             String[] folders = this.mAssetManager.list(pathToExerciseTypeFolder);
             for (String folder: folders){
                 String exerciseFolder = pathToExerciseTypeFolder + File.separator + folder;
-                Exercise e = getExercise(exerciseFolder);
+                WorkoutExercise e = getExercise(exerciseFolder);
                 if (e != null){
-                    exerciseList.add(e);
+                    workoutExerciseList.add(e);
                 }
             }
         } catch (IOException ignore){
 
         }
-        return exerciseList;
+        return workoutExerciseList;
     }
 }
