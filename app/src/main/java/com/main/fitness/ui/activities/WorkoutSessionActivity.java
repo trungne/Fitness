@@ -1,8 +1,6 @@
 package com.main.fitness.ui.activities;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -10,26 +8,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.main.fitness.R;
-import com.main.fitness.data.FileUtils;
-import com.main.fitness.data.Model.WorkoutExercise;
 import com.main.fitness.data.Model.WorkoutSchedule;
-import com.main.fitness.data.Model.WorkoutSession;
 import com.main.fitness.data.ViewModel.AssetsViewModel;
-import com.main.fitness.data.ViewModel.WorkOutScheduleViewModel;
-import com.main.fitness.data.ViewModel.WorkoutScheduleViewModelFactory;
 import com.main.fitness.ui.adapters.ViewPagerAdapterForFragments;
 import com.main.fitness.ui.fragments.WorkoutSessionFragment;
 

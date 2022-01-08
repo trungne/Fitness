@@ -22,7 +22,6 @@ public class ExerciseDetailActivity extends AppCompatActivity {
 
     private AssetsViewModel assetsViewModel;
     private WorkoutExercise workoutExercise;
-    private String path = "";
 
     private TextView name, description;
     private ImageView illustration;
@@ -37,14 +36,8 @@ public class ExerciseDetailActivity extends AppCompatActivity {
             finish();
             return;
         }
-        this.path = intent.getStringExtra(PATH_KEY);
-//
-//        if (intent != null){
-//            this.path = intent.getStringExtra(PATH_KEY);
-//        }
-//        else{
-//            this.path = savedInstanceState.getString(PATH_KEY);
-//        }
+
+        String path = intent.getStringExtra(PATH_KEY);
 
         if (TextUtils.isEmpty(path)){
             finish();
@@ -52,15 +45,9 @@ public class ExerciseDetailActivity extends AppCompatActivity {
         }
 
         this.assetsViewModel = new ViewModelProvider(this).get(AssetsViewModel.class);
-        this.workoutExercise = this.assetsViewModel.getExercise(this.path);
+        this.workoutExercise = this.assetsViewModel.getExercise(path);
         this.backButton = findViewById(R.id.activityProgramListBackButton);
-        //Back Button
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        this.backButton.setOnClickListener(v -> finish());
 
         if (this.workoutExercise == null){
             finish();
@@ -78,12 +65,4 @@ public class ExerciseDetailActivity extends AppCompatActivity {
 
         this.description.setMovementMethod(new ScrollingMovementMethod());
     }
-//
-//    @Override
-//    protected void onSaveInstanceState(@NonNull Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        if (!TextUtils.isEmpty(this.path)){
-//            outState.putString(PATH_KEY, this.path);
-//        }
-//    }
 }

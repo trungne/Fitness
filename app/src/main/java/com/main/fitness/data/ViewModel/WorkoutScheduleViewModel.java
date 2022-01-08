@@ -11,7 +11,7 @@ import com.main.fitness.data.Model.WorkoutSchedule;
 import com.main.fitness.data.Model.WorkoutSet;
 import com.main.fitness.data.Model.WorkoutSession;
 
-public class WorkOutScheduleViewModel extends AndroidViewModel {
+public class WorkoutScheduleViewModel extends AndroidViewModel {
     private static final String TAG = "WorkOutScheduleViewModel";
     private WorkoutSession mCurrentWorkoutSession;
     private WorkoutSchedule mSchedule;
@@ -19,7 +19,7 @@ public class WorkOutScheduleViewModel extends AndroidViewModel {
     private MutableLiveData<Integer> exerciseOrderLiveData;
     private MutableLiveData<WorkoutSet> workoutSetMutableLiveData;
 
-    public WorkOutScheduleViewModel(@NonNull Application application, @NonNull WorkoutSchedule schedule){
+    public WorkoutScheduleViewModel(@NonNull Application application, @NonNull WorkoutSchedule schedule){
         super(application);
         this.mSchedule = schedule;
         this.mCurrentWorkoutSession = this.mSchedule.getCurrentSession();

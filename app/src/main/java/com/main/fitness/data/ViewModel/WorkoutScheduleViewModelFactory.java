@@ -18,6 +18,6 @@ public class WorkoutScheduleViewModelFactory implements ViewModelProvider.Factor
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        return (T) new WorkOutScheduleViewModel(mApplication, mSchedule);
+        return (T) new WorkoutScheduleViewModel(mApplication, mSchedule);
     }
 }

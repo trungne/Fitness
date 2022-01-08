@@ -1,17 +1,19 @@
 package com.main.fitness.ui.activities.gym;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.main.fitness.R;
 import com.main.fitness.data.Model.WorkoutProgram;
 import com.main.fitness.data.Model.UserLevel;
@@ -33,7 +35,7 @@ public class ProgramDetailActivity extends AppCompatActivity {
             programDuration, programDaysPerWeek,
             programLevels, programOverview;
 
-    private Button button;
+    private Button trainButton;
     private ImageButton backButton;
 
     private String path;
@@ -49,19 +51,14 @@ public class ProgramDetailActivity extends AppCompatActivity {
         this.programDaysPerWeek = findViewById(R.id.programDetailDaysPerWeek);
         this.programLevels = findViewById(R.id.programDetailLevels);
         this.programOverview = findViewById(R.id.programDetailOverview);
-        this.button = findViewById(R.id.programDetailTrainButton);
+        this.trainButton = findViewById(R.id.programDetailTrainButton);
         this.backButton = findViewById(R.id.activityProgramDetailBackButton);
 
         this.workoutRecordViewModel = new ViewModelProvider(this).get(WorkoutRecordViewModel.class);
         this.assetsViewModel = new ViewModelProvider(this).get(AssetsViewModel.class);
         this.userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        backButton.setOnClickListener(v -> finish());
 
 
 
@@ -76,35 +73,36 @@ public class ProgramDetailActivity extends AppCompatActivity {
 
                 WorkoutProgram w = task.getResult();
                 setUpTextViews(w);
-                setUpButton(false, w);
+                setUpButton(w);
             });
         }
         if (this.userViewModel.getFirebaseUser() != null){
-            this.button.setVisibility(View.VISIBLE);
+            this.trainButton.setVisibility(View.VISIBLE);
         }
     }
 
-    private void setUpButton(boolean userHasRegistered, WorkoutProgram workoutProgram){
+    private void setUpButton(WorkoutProgram workoutProgram){
         if (this.userViewModel.getFirebaseUser() == null){
             return;
         }
 
-        String userId = this.userViewModel.getFirebaseUser().getUid();
-        if (userHasRegistered){
-            this.button.setText("Unregister");
-            this.button.setOnClickListener(v -> {
-                this.workoutRecordViewModel.unregisterProgram(userId, workoutProgram.getName());
-            });
-        }
-        else{
-            this.button.setText("Train");
-            this.button.setOnClickListener(v -> {
-                Intent intent = new Intent(this, WorkoutSessionActivity.class);
-                intent.putExtra(WorkoutSessionActivity.WORKOUT_PROGRAM_FOLDER_PATH_KEY, this.path);
-                startActivity(intent);
-//                this.workoutRecordViewModel.registerProgram(userId, workoutProgram.getName());
-            });
-        }
+
+        this.trainButton.setText("Train");
+        this.trainButton.setOnClickListener(v -> {
+            this.workoutRecordViewModel.registerProgram(workoutProgram.getName(), workoutProgram.getDaysPerWeek())
+                    .addOnCompleteListener(this, task -> {
+                if (task.isSuccessful()){
+                    Intent intent = new Intent(this, WorkoutSessionActivity.class);
+                    intent.putExtra(WorkoutSessionActivity.WORKOUT_PROGRAM_FOLDER_PATH_KEY, this.path);
+                    startActivity(intent);
+                }
+                else{
+                    Toast.makeText(this, "Try again later!", Toast.LENGTH_SHORT).show();
+                }
+            })
+            ;
+        });
+
     }
 
     private void setUpTextViews(WorkoutProgram workoutProgram){
@@ -136,15 +134,6 @@ public class ProgramDetailActivity extends AppCompatActivity {
         }
         this.programLevels.setText(levelsStringBuilder.toString());
         this.programOverview.setText(workoutProgram.getOverview());
-
-        this.button.setOnClickListener(v -> {
-            if (this.userViewModel.getFirebaseUser() == null){
-                Toast.makeText(this, "Please sign in!", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            String userId = this.userViewModel.getFirebaseUser().getUid();
-            this.workoutRecordViewModel.registerProgram(userId, workoutProgram.getName());
-        });
     }
 
 

@@ -1,5 +1,6 @@
 package com.main.fitness.ui.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -19,10 +20,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.main.fitness.R;
 import com.main.fitness.data.FileUtils;
 import com.main.fitness.data.Model.WorkoutExercise;
+import com.main.fitness.data.Model.WorkoutSchedule;
 import com.main.fitness.data.Model.WorkoutSession;
 import com.main.fitness.data.ViewModel.AssetsViewModel;
-import com.main.fitness.data.ViewModel.WorkOutScheduleViewModel;
+import com.main.fitness.data.ViewModel.WorkoutScheduleViewModel;
 import com.main.fitness.data.ViewModel.WorkoutScheduleViewModelFactory;
+import com.main.fitness.ui.activities.gym.ExerciseDetailActivity;
 
 
 public class WorkoutSessionFragment extends Fragment {
@@ -50,7 +53,7 @@ public class WorkoutSessionFragment extends Fragment {
     }
 
     private AssetsViewModel assetsViewModel;
-    private WorkOutScheduleViewModel workOutScheduleViewModel;
+    private WorkoutScheduleViewModel workOutScheduleViewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -98,9 +101,10 @@ public class WorkoutSessionFragment extends Fragment {
                 Toast.makeText(requireActivity(), "Cannot load session!", Toast.LENGTH_SHORT).show();
                 return;
             }
+            WorkoutSchedule schedule = task.getResult();
 
-            WorkoutScheduleViewModelFactory factory = new WorkoutScheduleViewModelFactory(requireActivity().getApplication(), task.getResult());
-            this.workOutScheduleViewModel = new ViewModelProvider(this, factory).get(WorkOutScheduleViewModel.class);
+            WorkoutScheduleViewModelFactory factory = new WorkoutScheduleViewModelFactory(requireActivity().getApplication(), schedule);
+            this.workOutScheduleViewModel = new ViewModelProvider(this, factory).get(WorkoutScheduleViewModel.class);
 
             WorkoutSession workoutSession = task.getResult().getCurrentSession();
             String[] targetMuscles = workoutSession.getTargetMuscles();
@@ -178,5 +182,10 @@ public class WorkoutSessionFragment extends Fragment {
         String name = FileUtils.toTitleCase(e.getName());
         this.exerciseName.setText(name);
         this.exerciseIllustration.setImageDrawable(e.getIllustration());
+        this.exerciseIllustration.setOnClickListener(v -> {
+            Intent intent = new Intent(requireActivity(), ExerciseDetailActivity.class);
+            intent.putExtra(ExerciseDetailActivity.PATH_KEY, e.getFolderPath());
+            startActivity(intent);
+        });
     }
 }
