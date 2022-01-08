@@ -3,4 +3,6 @@
     <string name="what_would_you_like_to_exercise_today">What would you like to workoutExercise today?</string>
     <string name="dashboard_running">TODO</string>
     <string name="dashboard_gym">TODO</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
