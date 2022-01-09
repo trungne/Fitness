@@ -11,6 +11,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -31,24 +32,28 @@ import com.main.fitness.ui.activities.gym.ExerciseDetailActivity;
 public class WorkoutSessionFragment extends Fragment {
     private static final String TAG = "WorkoutSessionFragment";
     private static final String WORK_OUT_PROGRAM_PATH_PARAM = "WORK_OUT_PROGRAM_PATH_PARAM";
-    private static final String WORK_OUT_PROGRAM_NAME = "WORK_OUT_PROGRAM_NAME_PARAM";
+    private static final String WORK_OUT_PROGRAM_NAME_PARAM = "WORK_OUT_PROGRAM_NAME_PARAM";
+    private static final String IS_CURRENT_SESSION_PARAM = "IS_CURRENT_SESSION_PARAM";
     private static final String DAY_PARAM = "DAY_PARAM";
 
     private String workoutProgramPath;
+    private String workoutProgramName;
+    private boolean isCurrentSession;
     private int day;
 
     public WorkoutSessionFragment() {
         // Required empty public constructor
     }
 
-    public static WorkoutSessionFragment newInstance(String workoutProgramName, String workoutProgramPath, int day) {
+    public static WorkoutSessionFragment newInstance(String workoutProgramName, String workoutProgramPath, int day, boolean isCurrentSession) {
         WorkoutSessionFragment fragment = new WorkoutSessionFragment();
         Log.e(TAG, workoutProgramPath);
         Bundle args = new Bundle();
 
         args.putString(WORK_OUT_PROGRAM_PATH_PARAM, workoutProgramPath);
+        args.putBoolean(IS_CURRENT_SESSION_PARAM, isCurrentSession);
         args.putInt(DAY_PARAM, day);
-        args.putString(WORK_OUT_PROGRAM_NAME, workoutProgramName);
+        args.putString(WORK_OUT_PROGRAM_NAME_PARAM, workoutProgramName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -59,22 +64,20 @@ public class WorkoutSessionFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i(TAG, "On create called");
         if (getArguments() != null) {
-
             workoutProgramPath = getArguments().getString(WORK_OUT_PROGRAM_PATH_PARAM);
-            Log.i(TAG, workoutProgramPath);
+            workoutProgramName = getArguments().getString(WORK_OUT_PROGRAM_NAME_PARAM);
+            isCurrentSession = getArguments().getBoolean(IS_CURRENT_SESSION_PARAM);
             day = getArguments().getInt(DAY_PARAM);
         }
         this.assetsViewModel = new ViewModelProvider(this).get(AssetsViewModel.class);
-
-
     }
 
     private TextView exerciseName, targetMuscles, exerciseOrder;
     private ImageView exerciseIllustration;
     private FloatingActionButton prevButton, nextButton;
     private LinearLayout repsLayout, weightsLayout;
+    private Button button;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -91,8 +94,10 @@ public class WorkoutSessionFragment extends Fragment {
 
         this.prevButton = view.findViewById(R.id.WorkoutSessionPreviousExercise);
         this.nextButton = view.findViewById(R.id.WorkoutSessionNextExercise);
+        this.button = view.findViewById(R.id.WorkoutSessionFinish);
 
         showSession();
+
         return view;
     }
 
@@ -103,7 +108,7 @@ public class WorkoutSessionFragment extends Fragment {
                 return;
             }
             WorkoutSchedule schedule = task.getResult();
-
+            if (getActivity() == null) return; // DO NOT REMOVE THIS LINE, for some reason it crashes the tab layout if we don't null check here
             WorkoutScheduleViewModelFactory factory = new WorkoutScheduleViewModelFactory(requireActivity().getApplication(), schedule);
             this.workOutScheduleViewModel = new ViewModelProvider(this, factory).get(WorkoutScheduleViewModel.class);
 
@@ -163,6 +168,17 @@ public class WorkoutSessionFragment extends Fragment {
             this.prevButton.setOnClickListener(v -> this.workOutScheduleViewModel.previousExercise());
 
             this.nextButton.setOnClickListener(v -> this.workOutScheduleViewModel.nextExercise());
+
+
+            if (isCurrentSession){
+                this.button.setText("Finish Session");
+                this.button.setBackgroundColor(getResources().getColor(R.color.colorPrimary, requireActivity().getTheme()));
+            }
+            else{
+                this.button.setText("Move To This Session");
+            }
+
+
         });
     }
 

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.main.fitness.R;
 import com.main.fitness.data.Model.WorkoutProgram;
 import com.main.fitness.data.Model.UserLevel;
@@ -39,6 +41,8 @@ public class ProgramDetailActivity extends AppCompatActivity {
     private ImageButton backButton;
 
     private String path;
+
+    private WorkoutProgram w;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +75,7 @@ public class ProgramDetailActivity extends AppCompatActivity {
                     return;
                 }
 
-                WorkoutProgram w = task.getResult();
+                w = task.getResult();
                 setUpTextViews(w);
                 setUpButton(w);
             });
@@ -81,28 +85,32 @@ public class ProgramDetailActivity extends AppCompatActivity {
         }
     }
 
+    private void startWorkoutSessionActivity(int currentSession){
+        Intent intent = new Intent(this, WorkoutSessionActivity.class);
+        intent.putExtra(WorkoutSessionActivity.WORKOUT_PROGRAM_FOLDER_PATH_KEY, w.getFolderPath());
+        intent.putExtra(WorkoutSessionActivity.CURRENT_SESSION_KEY, currentSession);
+        startActivity(intent);
+    }
+
     private void setUpButton(WorkoutProgram workoutProgram){
         if (this.userViewModel.getFirebaseUser() == null){
             return;
         }
 
-
-        this.trainButton.setText("Train");
-        this.trainButton.setOnClickListener(v -> {
-            this.workoutRecordViewModel.registerProgram(workoutProgram.getName(), workoutProgram.getDaysPerWeek())
-                    .addOnCompleteListener(this, task -> {
-                if (task.isSuccessful()){
-                    Intent intent = new Intent(this, WorkoutSessionActivity.class);
-                    intent.putExtra(WorkoutSessionActivity.WORKOUT_PROGRAM_FOLDER_PATH_KEY, this.path);
-                    startActivity(intent);
-                }
-                else{
-                    Toast.makeText(this, "Try again later!", Toast.LENGTH_SHORT).show();
-                }
-            })
-            ;
+        this.workoutRecordViewModel.getCurrentSessionIndexOfWorkoutProgram(workoutProgram.getName()).addOnCompleteListener(this, task -> {
+            if (!task.isSuccessful()){
+                this.trainButton.setText("Start Training");
+                this.trainButton.setOnClickListener(v -> {
+                    this.workoutRecordViewModel.registerProgram(workoutProgram.getName(), workoutProgram.getDaysPerWeek());
+                    startWorkoutSessionActivity(0);
+                });
+                return;
+            }
+            this.trainButton.setText("Resume Training");
+            this.trainButton.setOnClickListener(v -> {
+                startWorkoutSessionActivity(task.getResult());
+            });
         });
-
     }
 
     private void setUpTextViews(WorkoutProgram workoutProgram){

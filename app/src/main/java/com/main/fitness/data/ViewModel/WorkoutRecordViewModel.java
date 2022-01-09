@@ -29,6 +29,7 @@ public class WorkoutRecordViewModel extends AndroidViewModel {
     private static final String PROGRAM_NAME_FIELD = "programName";
     private static final String PROGRAM_DAYS_PER_WEEK_FIELD = "daysPerWeek";
     private static final String USER_ID_FIELD = "uid";
+    private static final String CURRENT_SESSION_OF_PROGRAM = "currentSession";
 
     private final Application application;
     private final FirebaseFirestore db;
@@ -54,41 +55,60 @@ public class WorkoutRecordViewModel extends AndroidViewModel {
 //
 //    }
 
-    public Task<String> getProgramRegistrationDocumentId(String programName){
-        String uid = Objects.requireNonNull(this.mAth.getUid());
+    private Task<Void> updateCurrentWorkoutSession(String docID, int day){
+        HashMap<String, Object> data = new HashMap<>();
+        data.put(CURRENT_SESSION_OF_PROGRAM, day);
+        return this.db.collection(PROGRAM_REGISTRATION_COLLECTION).document(docID).set(data, SetOptions.merge());
+    }
+
+    private Task<DocumentSnapshot> getWorkoutProgramRegistrationDocumentSnapshot(String programName){
+        String uid = this.mAth.getUid();
         return this.db.collection(PROGRAM_REGISTRATION_COLLECTION)
                 .whereEqualTo(USER_ID_FIELD, uid)
                 .whereEqualTo(PROGRAM_NAME_FIELD, programName)
                 .limit(1)
                 .get().continueWith(Executors.newSingleThreadExecutor(), task -> {
-            if (task.isSuccessful()){
-                QuerySnapshot snapshot = task.getResult();
-                List<DocumentSnapshot> documents = snapshot.getDocuments();
-                if (!documents.isEmpty()){
-                    return documents.get(0).getId();
-                }
-                return "";
+                    if (task.isSuccessful() || task.getResult().getDocuments().isEmpty()){
+                        List<DocumentSnapshot> documents = task.getResult().getDocuments();
+                        return documents.get(0);
+                    }
+                    else{
+                        throw new Exception();
+                    }
+                });
+    }
+
+
+    // return the current of a workout program
+    // for example, the user could be on the second day of the program -> this method will return 1 (1 is the second index)
+    public Task<Integer> getCurrentSessionIndexOfWorkoutProgram(String programName){
+        return getWorkoutProgramRegistrationDocumentSnapshot(programName).continueWith(Executors.newSingleThreadExecutor(), task -> {
+            if (!task.isSuccessful()){
+                throw new Exception();
+            }
+            Integer currentSession = task.getResult().get(CURRENT_SESSION_OF_PROGRAM, Integer.class);
+            if (currentSession == null){
+                return 0;
             }
             else{
-                throw new Exception();
+                return currentSession;
             }
         });
     }
 
+
     public Task<Void> registerProgram(String programName, int programDaysPerWeek){
-        return getProgramRegistrationDocumentId(programName).continueWith(Executors.newSingleThreadExecutor(), task -> {
+        return getWorkoutProgramRegistrationDocumentSnapshot(programName).continueWith(Executors.newSingleThreadExecutor(), task -> {
            if (!task.isSuccessful()){
-               throw new Exception();
-           }
-           // if user hasn't registered for the program
-           if (TextUtils.isEmpty(task.getResult())){
                String uid = Objects.requireNonNull(this.mAth.getUid());
                HashMap<String, Object> data = new HashMap<>();
                data.put(PROGRAM_NAME_FIELD, programName);
                data.put(USER_ID_FIELD, uid);
                data.put(PROGRAM_DAYS_PER_WEEK_FIELD, programDaysPerWeek);
+               data.put(CURRENT_SESSION_OF_PROGRAM, 0);
                this.db.collection(PROGRAM_REGISTRATION_COLLECTION).document().set(data, SetOptions.merge());
            }
+
            return null;
         });
     }

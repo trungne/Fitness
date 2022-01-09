@@ -5,9 +5,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
@@ -24,6 +26,7 @@ import java.util.List;
 public class WorkoutSessionActivity extends AppCompatActivity {
     private static final String TAG = "WorkoutSessionActivity";
     public static final String WORKOUT_PROGRAM_FOLDER_PATH_KEY = "com.main.fitness.ui.activities.WorkoutSessionActivity.WORKOUT_PROGRAM_FOLDER_PATH_KEY";
+    public static final String CURRENT_SESSION_KEY = "com.main.fitness.ui.activities.WorkoutSessionActivity.CURRENT_SESSION_KEY";
 
     private AssetsViewModel assetsViewModel;
     private TabLayout tabLayout;
@@ -50,20 +53,14 @@ public class WorkoutSessionActivity extends AppCompatActivity {
         }
 
         String workoutProgramPath = intent.getStringExtra(WORKOUT_PROGRAM_FOLDER_PATH_KEY);
+        int day = intent.getIntExtra(CURRENT_SESSION_KEY, -1);
 
-        if (TextUtils.isEmpty(workoutProgramPath)) {
+        if (TextUtils.isEmpty(workoutProgramPath) || day == -1) {
             finish();
             return;
         }
 
         this.assetsViewModel = new ViewModelProvider(this).get(AssetsViewModel.class);
-
-        // TODO: get current day in workout program, create SQL lite to cache user workout info
-        // int day = get....
-        int day = 0;
-
-
-
         this.assetsViewModel.getWorkoutSchedule(workoutProgramPath, day).addOnCompleteListener(this, task -> {
            if (!task.isSuccessful()){
                Toast.makeText(this, "Cannot get workout schedule", Toast.LENGTH_SHORT).show();
@@ -77,10 +74,12 @@ public class WorkoutSessionActivity extends AppCompatActivity {
             Log.e(TAG, "Length" + schedule.getSchedule().length);
 
             for (int i = 0; i < schedule.getSchedule().length; i++){
-                WorkoutSessionFragment fragment = WorkoutSessionFragment.newInstance(workoutProgramName, workoutProgramPath, i);
+                // TODO: add isCurrentSession boolean when create a fragment
+                boolean isCurrentSession  = i == day;
+                WorkoutSessionFragment fragment = WorkoutSessionFragment.newInstance(workoutProgramName, workoutProgramPath, i, isCurrentSession);
                 fragments.add(fragment);
             }
-
+            // TODO: if time allows, use view instead of fragment to reduce load on main thread
             ViewPagerAdapterForFragments<WorkoutSessionFragment> viewPagerAdapterForFragments = new ViewPagerAdapterForFragments<>(this, fragments);
             this.viewPager2.setAdapter(viewPagerAdapterForFragments);
             TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(this.tabLayout, this.viewPager2, (tab, position) -> {
@@ -90,12 +89,27 @@ public class WorkoutSessionActivity extends AppCompatActivity {
                 tab.setText("Day " + (position + 1));
 
             });
-            tabLayoutMediator.detach();
             tabLayoutMediator.attach();
-
+            scrollToTabAfterLayout(day);
         });
+    }
+    // http://developer.android.com/reference/android/view/ViewTreeObserver.html
+    private void scrollToTabAfterLayout(final int tabIndex) {
 
+            final ViewTreeObserver observer = tabLayout.getViewTreeObserver();
 
-
+            if (observer.isAlive()) {
+                observer.dispatchOnGlobalLayout(); // In case a previous call is waiting when this call is made
+                observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        observer.removeOnGlobalLayoutListener(this);
+                        TabLayout.Tab tab = tabLayout.getTabAt(tabIndex);
+                        if (tab != null){
+                            tab.select();
+                        }
+                    }
+                });
+            }
     }
 }
