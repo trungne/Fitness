@@ -1,12 +1,10 @@
 {
-  "program": {
-    "name": "5-3-1",
-    "duration": 3,
-    "daysPerWeek": 4,
-    "goal": "Build strength",
-    "levels": ["BEGINNER", "INTERMEDIATE", "ADVANCED"],
-    "overview": "Focus on 4 main lifts: Bench Press, Back Squat, Shoulder Press, and Deadlift."
-  },
+  "name": "5-3-1",
+  "duration": 3,
+  "daysPerWeek": 4,
+  "goal": "Build strength",
+  "levels": ["BEGINNER", "INTERMEDIATE", "ADVANCED"],
+  "overview": "Focus on 4 main lifts: Bench Press, Back Squat, Shoulder Press, and Deadlift.",
   "schedule": [
     {
       "target_muscles": ["Chest", "Triceps"],

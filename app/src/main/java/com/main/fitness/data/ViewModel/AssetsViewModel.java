@@ -61,6 +61,7 @@ public class AssetsViewModel extends AndroidViewModel {
             try {
                 JSONObject json = new JSONObject(jsonString);
                 JSONArray sessionArray = json.getJSONArray("schedule");
+                String workoutProgram = json.getString("name");
 
                 if (day >= sessionArray.length()){
                     throw new IllegalArgumentException("Day is out of schedule range!");
@@ -71,7 +72,7 @@ public class AssetsViewModel extends AndroidViewModel {
                     WorkoutSession w = WorkoutSessionFactory.fromJSON(sessionArray.getJSONObject(i));
                     sessions[i] = w;
                 }
-                WorkoutSchedule schedule = new WorkoutSchedule(sessions, day);
+                WorkoutSchedule schedule = new WorkoutSchedule(workoutProgram, sessions, day);
 
                 taskCompletionSource.setResult(schedule);
 
@@ -131,8 +132,7 @@ public class AssetsViewModel extends AndroidViewModel {
 
         try {
             JSONObject json = new JSONObject(jsonString);
-            JSONObject programJson = json.getJSONObject("program");
-            WorkoutProgram workoutProgram = WorkoutProgramFactory.fromJSON(programJson);
+            WorkoutProgram workoutProgram = WorkoutProgramFactory.fromJSON(json);
 
             if (workoutProgram == null){
                 return null;

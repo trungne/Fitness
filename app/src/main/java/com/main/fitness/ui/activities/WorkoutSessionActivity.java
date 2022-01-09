@@ -71,11 +71,13 @@ public class WorkoutSessionActivity extends AppCompatActivity {
            }
 
            WorkoutSchedule schedule = task.getResult();
+
+           String workoutProgramName = schedule.getWorkoutProgramName();
             List<WorkoutSessionFragment> fragments = new ArrayList<>();
             Log.e(TAG, "Length" + schedule.getSchedule().length);
 
             for (int i = 0; i < schedule.getSchedule().length; i++){
-                WorkoutSessionFragment fragment = WorkoutSessionFragment.newInstance(workoutProgramPath, i);
+                WorkoutSessionFragment fragment = WorkoutSessionFragment.newInstance(workoutProgramName, workoutProgramPath, i);
                 fragments.add(fragment);
             }
 

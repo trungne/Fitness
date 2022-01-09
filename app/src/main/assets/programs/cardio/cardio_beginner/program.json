@@ -1,12 +1,10 @@
 {
-  "program": {
-    "name": "Cardio For Beginner",
-    "duration": 12,
-    "daysPerWeek": 3,
-    "goal": "Enhance stamina",
-    "levels": ["BEGINNER"],
-    "overview": "Exercises on treadmill and bicycle"
-  },
+  "name": "Cardio For Beginner",
+  "duration": 12,
+  "daysPerWeek": 3,
+  "goal": "Enhance stamina",
+  "levels": ["BEGINNER"],
+  "overview": "Exercises on treadmill and bicycle",
   "schedule": {
 
   }

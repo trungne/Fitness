@@ -31,6 +31,7 @@ import com.main.fitness.ui.activities.gym.ExerciseDetailActivity;
 public class WorkoutSessionFragment extends Fragment {
     private static final String TAG = "WorkoutSessionFragment";
     private static final String WORK_OUT_PROGRAM_PATH_PARAM = "WORK_OUT_PROGRAM_PATH_PARAM";
+    private static final String WORK_OUT_PROGRAM_NAME = "WORK_OUT_PROGRAM_NAME_PARAM";
     private static final String DAY_PARAM = "DAY_PARAM";
 
     private String workoutProgramPath;
@@ -40,14 +41,14 @@ public class WorkoutSessionFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static WorkoutSessionFragment newInstance(String workoutProgramPath, int day) {
+    public static WorkoutSessionFragment newInstance(String workoutProgramName, String workoutProgramPath, int day) {
         WorkoutSessionFragment fragment = new WorkoutSessionFragment();
         Log.e(TAG, workoutProgramPath);
         Bundle args = new Bundle();
 
         args.putString(WORK_OUT_PROGRAM_PATH_PARAM, workoutProgramPath);
         args.putInt(DAY_PARAM, day);
-
+        args.putString(WORK_OUT_PROGRAM_NAME, workoutProgramName);
         fragment.setArguments(args);
         return fragment;
     }

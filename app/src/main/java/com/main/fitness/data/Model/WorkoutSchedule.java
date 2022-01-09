@@ -5,9 +5,15 @@ import java.util.List;
 public class WorkoutSchedule {
     private final WorkoutSession[] schedule;
     private int currentSession;
-    public WorkoutSchedule(WorkoutSession[] schedule, int currentSession){
+    private final String workoutProgramName;
+    public WorkoutSchedule(String workoutProgramName, WorkoutSession[] schedule, int currentSession){
+        this.workoutProgramName = workoutProgramName;
         this.schedule = schedule;
         this.currentSession = currentSession;
+    }
+
+    public String getWorkoutProgramName() {
+        return workoutProgramName;
     }
 
     public WorkoutSession[] getSchedule() {
