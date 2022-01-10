@@ -2,19 +2,23 @@ package com.main.fitness.ui.fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.main.fitness.R;
 
 public class TravelledStatusFragement extends Fragment {
 
+    //XML components
     private TextView statusFragmentTravelledDistance;
     private TextView statusFragmentTotalDistance;
     private TextView statusFragmentInitialTime;
@@ -22,6 +26,8 @@ public class TravelledStatusFragement extends Fragment {
     private TextView statusFragmentSteps;
     private TextView statusFragmentTrackCompleted;
     private TextView statusFragmentDuration;
+    private Button statusFragmentOKButton;
+    private BottomNavigationView navBar;
 
 
 
@@ -61,6 +67,14 @@ public class TravelledStatusFragement extends Fragment {
         statusFragmentSteps = v.findViewById(R.id.status_fragment_steps);
         statusFragmentTrackCompleted = v.findViewById(R.id.status_fragment_complete_status);
         statusFragmentDuration = v.findViewById(R.id.status_fragment_duration);
+        statusFragmentOKButton = v.findViewById(R.id.status_fragment_button_switch_to_profile);
+
+        statusFragmentOKButton.setOnClickListener(this::OKButton);
+
+        navBar = requireActivity().findViewById(R.id.MainActivityBottomNavigationView);
+        navBar.setVisibility(View.GONE);
+
+
 
 
 
@@ -87,6 +101,18 @@ public class TravelledStatusFragement extends Fragment {
         }
 
         return v;
+    }
+
+    private void OKButton(View v){
+        navBar = requireActivity().findViewById(R.id.MainActivityBottomNavigationView);
+        navBar.setVisibility(View.VISIBLE);
+        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        //Remove this fragment
+        fragmentManager.popBackStack();
+        fragmentManager.popBackStack();
+        fragmentManager.popBackStack();
+        fragmentTransaction.commit();
     }
 
 

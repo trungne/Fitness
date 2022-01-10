@@ -192,8 +192,11 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
     //Show Stop dialog when user pressed the STOP button on the map screen
     private void showStopDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-        builder.setMessage("Steps: " + steps + "\nDo you want to stop running?")
-                .setNegativeButton("Keep Running", (dialog, id) -> dialog.cancel())
+        builder.setMessage("Steps: " + steps + "\nDo you want to stop running?").setNegativeButton("Keep Running", (dialog, which) -> {
+            navBar = requireActivity().findViewById(R.id.MainActivityBottomNavigationView);
+            navBar.setVisibility(View.GONE);
+            dialog.cancel();
+        })
                 .setPositiveButton("Accept", (dialog, which) -> {
                     try{
 
@@ -249,10 +252,10 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
                         travelledStatusFragement.setArguments(bundle);
 
                         //Switch to Map Fragment
+                        fragmentTransaction.remove(GoogleMapFragment.this);
                         fragmentTransaction.add(R.id.MainActivityFragmentContainer,travelledStatusFragement);
-                        //fragmentTransaction.remove(this);
+                        fragmentTransaction.addToBackStack(null);
                         fragmentTransaction.commit();
-                        fragmentManager.popBackStack();
 
                     }
                     //Catch null value
@@ -292,7 +295,7 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
         //Start updating location
         startLocationUpdate();
 
-        BottomNavigationView navBar = requireActivity().findViewById(R.id.MainActivityBottomNavigationView);
+        navBar = requireActivity().findViewById(R.id.MainActivityBottomNavigationView);
         navBar.setVisibility(View.GONE);
     }
 
