@@ -52,6 +52,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.GeoPoint;
 import com.main.fitness.R;
@@ -93,7 +94,7 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
     private String data;
 
     //Time
-    DateTimeFormatter time = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+    DateTimeFormatter time = DateTimeFormatter.ofPattern("HH:mm:ss  dd/MM/yyyy");
     private static LocalDateTime startTime = null;
     private static LocalDateTime endTime = null;
     private static Instant start = null;
@@ -218,21 +219,38 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
                             isTrackCompleted = true;
                         }
 
-                        RunningRecord runningRecord = new RunningRecord(totalDistance, travelledDistance,
-                                isTrackCompleted, initialTime, steps, duration, finishTime);
+                        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+                        String uid = firebaseAuth.getCurrentUser().getUid();
+
+                        RunningRecord runningRecord = new RunningRecord(initialTime, steps,
+                                duration,finishTime,totalDistance,isTrackCompleted,travelledDistance,uid);
 
                         // upload running record to Firebase
                         this.workoutRecordViewModel.updateRunningRecord(runningRecord);
 
-
-
-                        //Process the fragment removal
+                        //Switch to the Travelled Fragment to display the final result
                         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        //Remove this fragment
-                        fragmentTransaction.remove(GoogleMapFragment.this);
+
+                        //Add data to the bundle for the map fragment
+                        Bundle bundle = new Bundle();
+                        bundle.putString("userTravelledDistance",String.valueOf(mapFragmentUserTravelledDistance));
+                        bundle.putString("userTotalDistance",String.valueOf(totalDistance));
+                        bundle.putString("userTrackCompletedStatus",String.valueOf(isTrackCompleted));
+                        bundle.putString("userInitialTime",initialTime);
+                        bundle.putString("userFinishedTime",finishTime);
+                        bundle.putString("userSteps",String.valueOf(steps));
+                        bundle.putString("userDuration",String.valueOf(duration.toMinutes()));
+
+                        TravelledStatusFragement travelledStatusFragement = new TravelledStatusFragement();
+                        travelledStatusFragement.setArguments(bundle);
+
+                        //Switch to Map Fragment
+                        fragmentTransaction.add(R.id.MainActivityFragmentContainer,travelledStatusFragement);
+                        //fragmentTransaction.remove(this);
                         fragmentTransaction.commit();
                         fragmentManager.popBackStack();
+
                     }
                     //Catch null value
                     catch (NullPointerException e){
@@ -250,6 +268,8 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
         //Change the zoom in a-bit for closer look on the street
         mapFragmentButtonRun.setEnabled(false);
         mapFragmentButtonRun.setText("Running");
+        mapFragmentButtonGetCurrentLocation.setEnabled(false);
+
 
         //initialize the step DETECTOR SENSOR and the STEP counter global variable
         steps = 0;
@@ -268,6 +288,9 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
 
         //Start updating location
         startLocationUpdate();
+
+        BottomNavigationView navBar = requireActivity().findViewById(R.id.MainActivityBottomNavigationView);
+        navBar.setVisibility(View.GONE);
     }
 
     @SuppressLint("SetTextI18n")
@@ -328,7 +351,9 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
         super.onResume();
         if (getActivity() != null) {
             getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         }
+
 
         //Receive the points from LocationUpdateService
         ArrayList<ParcelableGeoPoint> pointsExtra = getActivity().getIntent().getParcelableArrayListExtra("geopoints");

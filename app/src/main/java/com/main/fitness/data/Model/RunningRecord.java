@@ -11,15 +11,25 @@ public class RunningRecord {
     private int totalDistance;
     private boolean isTrackCompleted;
     private Double travelledDistance;
+    private String uid;
 
-    public RunningRecord(int totalDistance, double travelledDistance, boolean isTrackCompleted,
-                         String time, int step, Duration duration, String finishTime) {
-        this.totalDistance = totalDistance;
-        this.travelledDistance = travelledDistance;
-        this.isTrackCompleted = isTrackCompleted;
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public RunningRecord(String time, int step, Duration duration, String finishTime, int totalDistance, boolean isTrackCompleted, Double travelledDistance, String uid) {
         this.time = time;
         this.step = step;
+        this.duration = duration;
         this.finishTime = finishTime;
+        this.totalDistance = totalDistance;
+        this.isTrackCompleted = isTrackCompleted;
+        this.travelledDistance = travelledDistance;
+        this.uid = uid;
     }
 
     public int getTotalDistance() {
