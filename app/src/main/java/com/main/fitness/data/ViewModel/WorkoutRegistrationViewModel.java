@@ -14,6 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 
 public class WorkoutRegistrationViewModel extends AndroidViewModel {
@@ -32,6 +33,13 @@ public class WorkoutRegistrationViewModel extends AndroidViewModel {
         this.mApplication = application;
         this.db = FirebaseFirestore.getInstance();
         this.mAuth = FirebaseAuth.getInstance();
+    }
+
+    public Task<Void> updateCurrentSession(int currentSessionNumber){
+        String uid = this.mAuth.getUid();
+        HashMap<String, Object> data = new HashMap<>();
+        data.put(CURRENT_SESSION_OF_PROGRAM, currentSessionNumber);
+        return this.db.collection(PROGRAM_REGISTRATION_COLLECTION).document(Objects.requireNonNull(uid)).set(data, SetOptions.merge());
     }
 
     public Task<Void> registerProgram(String uid, String programName, int programDaysPerWeek){

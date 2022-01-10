@@ -2,10 +2,12 @@ package com.main.fitness.ui.activities;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.BroadcastReceiver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
@@ -15,11 +17,13 @@ import android.util.Log;
 import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.main.fitness.R;
 import com.main.fitness.data.Model.WorkoutSchedule;
 import com.main.fitness.data.ViewModel.AssetsViewModel;
+import com.main.fitness.data.ViewModel.WorkoutRegistrationViewModel;
 import com.main.fitness.ui.adapters.ViewPagerAdapterForFragments;
 import com.main.fitness.ui.fragments.WorkoutSessionFragment;
 
@@ -32,8 +36,19 @@ public class WorkoutSessionActivity extends AppCompatActivity {
     public static final String CURRENT_SESSION_KEY = "com.main.fitness.ui.activities.WorkoutSessionActivity.CURRENT_SESSION_KEY";
 
     private AssetsViewModel assetsViewModel;
+    private WorkoutRegistrationViewModel workoutRegistrationViewModel;
     private TabLayout tabLayout;
     private ViewPager2 viewPager2;
+
+    private void reload(int newSessionNumber){
+        Intent intent = getIntent();
+        intent.putExtra(CURRENT_SESSION_KEY, newSessionNumber);
+        overridePendingTransition(0, 0);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        finish();
+        overridePendingTransition(0, 0);
+        startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +73,7 @@ public class WorkoutSessionActivity extends AppCompatActivity {
             return;
         }
 
-
+        this.workoutRegistrationViewModel = new ViewModelProvider(this).get(WorkoutRegistrationViewModel.class);
         this.assetsViewModel = new ViewModelProvider(this).get(AssetsViewModel.class);
         this.assetsViewModel.getWorkoutSchedule(workoutProgramPath, day == -1 ? 0 : day).addOnCompleteListener(this, task -> {
            if (!task.isSuccessful()){
@@ -74,6 +89,37 @@ public class WorkoutSessionActivity extends AppCompatActivity {
             for (int i = 0; i < schedule.getSchedule().length; i++){
                 boolean isCurrentSession = i == day;
                 WorkoutSessionFragment fragment = WorkoutSessionFragment.newInstance(workoutProgramName, workoutProgramPath, i, isCurrentSession);
+
+                fragment.setOnFinishSessionListener(sessionNumber -> {
+                    int newSessionNumber = sessionNumber == schedule.getSchedule().length - 1 ? 0 : sessionNumber + 1;
+                    workoutRegistrationViewModel.updateCurrentSession(newSessionNumber);
+                    new MaterialAlertDialogBuilder(this)
+                            .setTitle("Session Finished")
+                            .setMessage("Well Done! You have finished today's session!")
+                            .setPositiveButton("Back To Home Screen", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    setResult(RESULT_OK);
+                                    dialog.dismiss();
+                                    finish();
+                                }
+                            })
+                            .setNegativeButton("Next Session", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    reload(newSessionNumber);
+                                }
+                            })
+                            .show();
+
+                });
+
+                fragment.setOnSkipToSessionListener(sessionNumber -> {
+                    workoutRegistrationViewModel.updateCurrentSession(sessionNumber);
+                    reload(sessionNumber);
+                });
+
                 fragments.add(fragment);
             }
             ViewPagerAdapterForFragments<WorkoutSessionFragment> viewPagerAdapterForFragments = new ViewPagerAdapterForFragments<>(this, fragments);

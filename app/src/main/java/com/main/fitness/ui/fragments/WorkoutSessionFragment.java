@@ -79,6 +79,15 @@ public class WorkoutSessionFragment extends Fragment {
     private LinearLayout repsLayout, weightsLayout;
     private Button button;
 
+    private OnFinishSessionListener finishSessionListener;
+    public void setOnFinishSessionListener(OnFinishSessionListener listener){
+        this.finishSessionListener = listener;
+    }
+    private OnSkipToSessionListener skipToSessionListener;
+    public void setOnSkipToSessionListener(OnSkipToSessionListener listener){
+        this.skipToSessionListener = listener;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -173,21 +182,37 @@ public class WorkoutSessionFragment extends Fragment {
             if (isCurrentSession){
                 this.button.setText("Finish Session");
                 this.button.setBackgroundResource(R.drawable.button_4);
+                this.button.setOnClickListener(v -> {
+                    if (this.finishSessionListener != null){
+                        this.finishSessionListener.finishSession(day);
+                    }
+                });
             }
             else{
-                this.button.setText("Move To This Session");
+                this.button.setText("Skip To This Session");
+                this.button.setOnClickListener(v -> {
+                    if (this.skipToSessionListener != null){
+                        this.skipToSessionListener.onSkipToSession(day);
+                    }
+                });
             }
-
-
         });
     }
+
+    public interface OnFinishSessionListener {
+        public void finishSession(int sessionNumber);
+    }
+
+    public interface OnSkipToSessionListener {
+        public void onSkipToSession(int sessionNumber);
+    }
+
+
 
     private void showExerciseOrder(int current, int total){
         String text = (current + 1) + "/" + total;
         this.exerciseOrder.setText(text);
     }
-
-
 
     private void showExercise(String exerciseName){
         WorkoutExercise e = this.assetsViewModel.getExerciseByName(exerciseName);
