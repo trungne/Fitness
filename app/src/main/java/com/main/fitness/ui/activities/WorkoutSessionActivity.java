@@ -36,11 +36,6 @@ public class WorkoutSessionActivity extends AppCompatActivity {
     private ViewPager2 viewPager2;
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout_session);
@@ -58,13 +53,14 @@ public class WorkoutSessionActivity extends AppCompatActivity {
         String workoutProgramPath = intent.getStringExtra(WORKOUT_PROGRAM_FOLDER_PATH_KEY);
         int day = intent.getIntExtra(CURRENT_SESSION_KEY, -1);
 
-        if (TextUtils.isEmpty(workoutProgramPath) || day == -1) {
+        if (TextUtils.isEmpty(workoutProgramPath)) {
             finish();
             return;
         }
 
+
         this.assetsViewModel = new ViewModelProvider(this).get(AssetsViewModel.class);
-        this.assetsViewModel.getWorkoutSchedule(workoutProgramPath, day).addOnCompleteListener(this, task -> {
+        this.assetsViewModel.getWorkoutSchedule(workoutProgramPath, day == -1 ? 0 : day).addOnCompleteListener(this, task -> {
            if (!task.isSuccessful()){
                Toast.makeText(this, "Cannot get workout schedule", Toast.LENGTH_SHORT).show();
                return;
@@ -74,36 +70,31 @@ public class WorkoutSessionActivity extends AppCompatActivity {
 
            String workoutProgramName = schedule.getWorkoutProgramName();
             List<WorkoutSessionFragment> fragments = new ArrayList<>();
-            Log.e(TAG, "Length" + schedule.getSchedule().length);
 
             for (int i = 0; i < schedule.getSchedule().length; i++){
-                boolean isCurrentSession  = i == day;
+                boolean isCurrentSession = i == day;
                 WorkoutSessionFragment fragment = WorkoutSessionFragment.newInstance(workoutProgramName, workoutProgramPath, i, isCurrentSession);
                 fragments.add(fragment);
             }
             ViewPagerAdapterForFragments<WorkoutSessionFragment> viewPagerAdapterForFragments = new ViewPagerAdapterForFragments<>(this, fragments);
             this.viewPager2.setAdapter(viewPagerAdapterForFragments);
             TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(this.tabLayout, this.viewPager2, (tab, position) -> {
-                boolean select= false;
-
                 if (position == day){
-
                     tab.view.setBackgroundColor(getResources().getColor(R.color.green_main, getTheme()));
-
                 }
                 tab.setText("Day " + (position + 1));
 
             });
             tabLayoutMediator.attach();
-            scrollToTabAfterLayout(day);
+
+            if (day != -1){
+                scrollToTabAfterLayout(day);
+            }
         });
-
     }
-
 
     // http://developer.android.com/reference/android/view/ViewTreeObserver.html
     private void scrollToTabAfterLayout(final int tabIndex) {
-
             final ViewTreeObserver observer = tabLayout.getViewTreeObserver();
 
             if (observer.isAlive()) {
@@ -111,10 +102,12 @@ public class WorkoutSessionActivity extends AppCompatActivity {
                 observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
                     public void onGlobalLayout() {
-                        observer.removeOnGlobalLayoutListener(this);
-                        TabLayout.Tab tab = tabLayout.getTabAt(tabIndex);
-                        if (tab != null){
-                            tab.select();
+                        if (observer.isAlive()){
+                            observer.removeOnGlobalLayoutListener(this);
+                            TabLayout.Tab tab = tabLayout.getTabAt(tabIndex);
+                            if (tab != null){
+                                tab.select();
+                            }
                         }
                     }
                 });
