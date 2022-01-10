@@ -1,4 +1,4 @@
-package com.main.fitness.ui.activities.gym;
+package com.main.fitness.ui.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -22,7 +22,7 @@ import java.util.List;
 public class ProgramListActivity extends AppCompatActivity {
     private static final String TAG = "ProgramListActivity";
     // this key is used to indicate whether user has selected to view strength or cardio programs
-    public static final String PROGRAMS_KEY = "com.main.fitness.ui.activities.gym.ProgramListActivity.programKey";
+    public static final String PROGRAMS_KEY = "com.main.fitness.ui.activities.ProgramListActivity.programKey";
 
     public static final String STRENGTH_PROGRAMS = "STRENGTH_PROGRAMS";
     public static final String CARDIO_PROGRAMS = "CARDIO_PROGRAMS";

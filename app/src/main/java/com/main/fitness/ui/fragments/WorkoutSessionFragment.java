@@ -26,7 +26,7 @@ import com.main.fitness.data.Model.WorkoutSession;
 import com.main.fitness.data.ViewModel.AssetsViewModel;
 import com.main.fitness.data.ViewModel.WorkoutScheduleViewModel;
 import com.main.fitness.data.ViewModel.WorkoutScheduleViewModelFactory;
-import com.main.fitness.ui.activities.gym.ExerciseDetailActivity;
+import com.main.fitness.ui.activities.ExerciseDetailActivity;
 
 
 public class WorkoutSessionFragment extends Fragment {

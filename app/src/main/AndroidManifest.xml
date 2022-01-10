@@ -23,20 +23,20 @@
             android:name=".ui.activities.WorkoutSessionActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activities.gym.ExerciseDetailActivity"
+            android:name=".ui.activities.ExerciseDetailActivity"
             android:exported="false"
-            android:parentActivityName=".ui.activities.gym.ExerciseBankActivity" />
+            android:parentActivityName=".ui.activities.ExerciseBankActivity" />
         <activity
-            android:name=".ui.activities.gym.ProgramDetailActivity"
+            android:name=".ui.activities.ProgramDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activities.gym.ProgramListActivity"
+            android:name=".ui.activities.ProgramListActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activities.gym.ExerciseBankActivity"
+            android:name=".ui.activities.ExerciseBankActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activities.gym.FAQAndTerminologyActivity"
+            android:name=".ui.activities.FAQAndTerminologyActivity"
             android:exported="false" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

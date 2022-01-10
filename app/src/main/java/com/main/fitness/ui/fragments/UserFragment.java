@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +20,8 @@ import com.google.android.gms.tasks.Task;
 import com.main.fitness.R;
 import com.main.fitness.data.Model.AppUser;
 import com.main.fitness.data.ViewModel.UserViewModel;
-import com.main.fitness.ui.dialogs.ChooseUserLevelDialog;
 
 import java.util.HashMap;
-import java.util.Map;
 
 
 public class UserFragment extends Fragment {

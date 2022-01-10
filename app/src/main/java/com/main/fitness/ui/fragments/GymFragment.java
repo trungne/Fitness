@@ -10,14 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.main.fitness.R;
-import com.main.fitness.data.Model.AppUser;
 import com.main.fitness.data.ViewModel.UserViewModel;
-import com.main.fitness.ui.activities.gym.ExerciseBankActivity;
-import com.main.fitness.ui.activities.gym.FAQAndTerminologyActivity;
-import com.main.fitness.ui.activities.gym.ProgramListActivity;
+import com.main.fitness.ui.activities.ExerciseBankActivity;
+import com.main.fitness.ui.activities.FAQAndTerminologyActivity;
+import com.main.fitness.ui.activities.ProgramListActivity;
 
 /**
  * A simple {@link Fragment} subclass.

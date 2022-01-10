@@ -1,4 +1,4 @@
-package com.main.fitness.ui.activities.gym;
+package com.main.fitness.ui.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;

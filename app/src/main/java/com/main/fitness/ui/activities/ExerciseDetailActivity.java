@@ -1,4 +1,4 @@
-package com.main.fitness.ui.activities.gym;
+package com.main.fitness.ui.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -18,7 +18,7 @@ import com.main.fitness.data.ViewModel.AssetsViewModel;
 
 public class ExerciseDetailActivity extends AppCompatActivity {
     // TODO: add action bar
-    public static final String PATH_KEY = "com.main.fitness.ui.activities.gym.ExerciseDetailActivity.path";
+    public static final String PATH_KEY = "com.main.fitness.ui.activities.ExerciseDetailActivity.path";
 
     private AssetsViewModel assetsViewModel;
     private WorkoutExercise workoutExercise;
