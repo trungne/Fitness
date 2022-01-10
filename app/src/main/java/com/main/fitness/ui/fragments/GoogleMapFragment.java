@@ -329,12 +329,14 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
         //Receive the points from LocationUpdateService
         ArrayList<ParcelableGeoPoint> pointsExtra = getActivity().getIntent().getParcelableArrayListExtra("geopoints");
         //ArrayList<GeoPoint> points = new ArrayList<>();
-        for (ParcelableGeoPoint point: pointsExtra) {
-            //points.add(point.getGeoPoint());
-            mMap.addPolyline(new PolylineOptions()
-                    .add(new LatLng(point.getGeoPoint().getLatitude(), point.getGeoPoint().getLongitude()))
-                    .width(10)
-                    .color(Color.RED));
+        if (pointsExtra != null) {
+            for (ParcelableGeoPoint point : pointsExtra) {
+                //points.add(point.getGeoPoint());
+                mMap.addPolyline(new PolylineOptions()
+                        .add(new LatLng(point.getGeoPoint().getLatitude(), point.getGeoPoint().getLongitude()))
+                        .width(10)
+                        .color(Color.RED));
+            }
         }
     }
 
@@ -420,7 +422,7 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
 
                 //Move the camera
                 try {
-                    double latitude = location.getLatitude();
+                    double latitude = Objects.requireNonNull(location).getLatitude();
                     double longitude = location.getLongitude();
                     LatLng latLng = new LatLng(latitude, longitude);
 
