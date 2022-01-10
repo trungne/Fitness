@@ -298,19 +298,20 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
         prev = current;
         current = lastLocation;
 
-        //Calculate distance
-        mapFragmentUserTravelledDistance += ((prev.distanceTo(current)) / 1000);
-        //Format them into shorter string, to save space
-        DecimalFormat df = new DecimalFormat("#0.000");
-        mapFragmentTravelledDistanceTextView.setText("" + df.format(mapFragmentUserTravelledDistance));
+        //Calculate
+        if (prev != null) {
+            mapFragmentUserTravelledDistance += ((prev.distanceTo(current)) / 1000);
+            //Format them into shorter string, to save space
+            DecimalFormat df = new DecimalFormat("#0.000");
+            mapFragmentTravelledDistanceTextView.setText("" + df.format(mapFragmentUserTravelledDistance));
 
 
-        //Draw the polyline
-        mMap.addPolyline(new PolylineOptions()
-                .add(new LatLng(prev.getLatitude(),prev.getLongitude()), new LatLng(current.getLatitude(),current.getLongitude()))
-                .width(10)
-                .color(Color.RED));
-
+            //Draw the polyline
+            mMap.addPolyline(new PolylineOptions()
+                    .add(new LatLng(prev.getLatitude(), prev.getLongitude()), new LatLng(current.getLatitude(), current.getLongitude()))
+                    .width(10)
+                    .color(Color.RED));
+        }
         //Move the camera to the new location point, this line put here without an if get activity != null is to check whether the
         //onLocationChanged method is still being invoked after user chose to stop running
         Toast.makeText(requireContext(), "Updated", Toast.LENGTH_SHORT).show();
@@ -328,15 +329,19 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
 
         //Receive the points from LocationUpdateService
         ArrayList<ParcelableGeoPoint> pointsExtra = getActivity().getIntent().getParcelableArrayListExtra("geopoints");
-        //ArrayList<GeoPoint> points = new ArrayList<>();
+        PolylineOptions polylineOptions = new PolylineOptions();
         if (pointsExtra != null) {
             for (ParcelableGeoPoint point : pointsExtra) {
-                //points.add(point.getGeoPoint());
-                mMap.addPolyline(new PolylineOptions()
-                        .add(new LatLng(point.getGeoPoint().getLatitude(), point.getGeoPoint().getLongitude()))
-                        .width(10)
-                        .color(Color.RED));
+                double lat = point.getGeoPoint().getLatitude();
+                double lng = point.getGeoPoint().getLongitude();
+                LatLng latLng = new LatLng(lat, lng);
+                polylineOptions.add(latLng)
+                        .width(5)
+                        .color(Color.RED);
             }
+            mMap.addPolyline(polylineOptions);
+        } else {
+            Toast.makeText(getContext(), "pointsExtra is null", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -482,6 +487,4 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
             onLocationChanged(locationResult.getLastLocation());
         }
     };
-
-
 }

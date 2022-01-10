@@ -37,6 +37,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.GeoPoint;
 import com.main.fitness.data.Model.ParcelableGeoPoint;
+import com.main.fitness.ui.fragments.GoogleMapFragment;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -95,14 +96,11 @@ public class LocationUpdateService extends Service implements LocationListener {
     private void getLastLocation() {
         try {
             client.getLastLocation()
-                    .addOnCompleteListener(new OnCompleteListener<Location>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Location> task) {
-                            if (task.isSuccessful() && task.getResult() != null) {
-                                mLocation = task.getResult();
-                            } else {
-                                Log.w(TAG, "Failed to get location.");
-                            }
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful() && task.getResult() != null) {
+                            mLocation = task.getResult();
+                        } else {
+                            Log.w(TAG, "Failed to get location.");
                         }
                     });
         } catch (SecurityException unlikely) {
@@ -177,8 +175,8 @@ public class LocationUpdateService extends Service implements LocationListener {
         for (GeoPoint point : points) {
             pointsExtra.add(new ParcelableGeoPoint(point));
         }
-        Intent intent = new Intent();
-        intent.putExtra("geopoints", pointsExtra);
+        Intent intent = new Intent(LocationUpdateService.this, GoogleMapFragment.class);
+        intent.putParcelableArrayListExtra("geopoints", pointsExtra);
 
         removeLocationUpdates();
     }
