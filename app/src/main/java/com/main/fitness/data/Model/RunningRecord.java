@@ -9,12 +9,31 @@ public class RunningRecord {
     private int step;
     private Duration duration;
     private String finishTime;
+    private int totalDistance;
+    private boolean isTrackCompleted;
+    private Double travelledDistance;
 
-    public RunningRecord(String name, String time, int step, Duration duration, String finishTime) {
+    public RunningRecord(int totalDistance, String name, double travelledDistance, boolean isTrackCompleted,
+                         String time, int step, Duration duration, String finishTime) {
+        this.totalDistance = totalDistance;
         this.name = name;
+        this.travelledDistance = travelledDistance;
+        this.isTrackCompleted = isTrackCompleted;
         this.time = time;
         this.step = step;
         this.finishTime = finishTime;
+    }
+
+    public int getTotalDistance() {
+        return totalDistance;
+    }
+
+    public boolean isTrackCompleted() {
+        return isTrackCompleted;
+    }
+
+    public Double getTravelledDistance() {
+        return travelledDistance;
     }
 
     public String getName() {

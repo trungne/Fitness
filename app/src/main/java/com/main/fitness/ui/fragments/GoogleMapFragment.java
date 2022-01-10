@@ -183,13 +183,10 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }
-
-
     }
 
     //Show Stop dialog when user pressed the STOP button on the map screen
     private void showStopDialog() {
-
         final AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         builder.setMessage("Steps: " + steps + "\nDo you want to stop running?")
                 .setNegativeButton("Keep Running", (dialog, id) -> dialog.cancel())
@@ -314,7 +311,7 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
         }
         //Move the camera to the new location point, this line put here without an if get activity != null is to check whether the
         //onLocationChanged method is still being invoked after user chose to stop running
-        Toast.makeText(requireContext(), "Updated", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(requireActivity(), "Updated", Toast.LENGTH_SHORT).show();
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
     }
