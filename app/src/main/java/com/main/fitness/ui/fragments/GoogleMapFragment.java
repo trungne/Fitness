@@ -197,11 +197,11 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
                         }
 
                         // TODO 1: Create a Running Record object
-                        RunningRecord runningRecord = new RunningRecord();
+                        //RunningRecord runningRecord = new RunningRecord();
                         // put time, step..... here
 
                         // upload running record to Firebase
-                        this.workoutRecordViewModel.updateRunningRecord(runningRecord);
+                        //this.workoutRecordViewModel.updateRunningRecord(runningRecord);
 
                         //Process the fragment removal
                         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();

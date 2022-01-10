@@ -20,6 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Fitness">
         <activity
+            android:name=".ui.activities.MyRunRecordsActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activities.WorkoutSessionActivity"
             android:exported="false" />
         <activity
