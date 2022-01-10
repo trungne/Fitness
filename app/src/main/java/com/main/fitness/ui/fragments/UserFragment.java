@@ -1,5 +1,6 @@
 package com.main.fitness.ui.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,6 +21,8 @@ import com.google.android.gms.tasks.Task;
 import com.main.fitness.R;
 import com.main.fitness.data.Model.AppUser;
 import com.main.fitness.data.ViewModel.UserViewModel;
+import com.main.fitness.ui.activities.MainActivity;
+import com.main.fitness.ui.activities.MyRunRecordsActivity;
 
 import java.util.HashMap;
 
@@ -47,7 +50,7 @@ public class UserFragment extends Fragment {
 
     }
 
-    private Button signOutButton, updateProfileButton;
+    private Button signOutButton, updateProfileButton, runRecordsButton;
     private UserViewModel userViewModel;
 
     private TextView  userEmail;
@@ -64,6 +67,8 @@ public class UserFragment extends Fragment {
         this.signOutButton.setOnClickListener(this::signOut);
         this.updateProfileButton = this.rootView.findViewById(R.id.UserFragmentUpdateButton);
         this.updateProfileButton.setOnClickListener(this::updateUserProfile);
+        this.runRecordsButton = this.rootView.findViewById(R.id.UserFragmentRunRecordListButton);
+        this.runRecordsButton.setOnClickListener((this::viewRunRecordList));
 
         this.userViewModel = new ViewModelProvider(this)
                 .get(UserViewModel .class);
@@ -94,6 +99,11 @@ public class UserFragment extends Fragment {
                 });
 
         return this.rootView;
+    }
+    //View Run record list
+    private void viewRunRecordList(View view) {
+        Intent intent = new Intent(requireActivity(), MyRunRecordsActivity.class);
+        startActivity(intent);
     }
 
     // Update User Profile
