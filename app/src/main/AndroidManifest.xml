@@ -66,9 +66,6 @@
             android:exported="true" />
 
         <activity
-            android:name=".ui.activities.DashboardActivity"
-            android:exported="true" />
-        <activity
             android:name=".ui.activities.MainActivity"
             android:exported="true" />
     </application>

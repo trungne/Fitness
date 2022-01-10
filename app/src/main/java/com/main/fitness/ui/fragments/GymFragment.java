@@ -3,7 +3,6 @@ package com.main.fitness.ui.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -16,7 +15,6 @@ import android.widget.Toast;
 import com.main.fitness.R;
 import com.main.fitness.data.Model.AppUser;
 import com.main.fitness.data.ViewModel.UserViewModel;
-import com.main.fitness.ui.activities.WorkoutSessionActivity;
 import com.main.fitness.ui.activities.gym.ExerciseBankActivity;
 import com.main.fitness.ui.activities.gym.FAQAndTerminologyActivity;
 import com.main.fitness.ui.activities.gym.ProgramListActivity;
@@ -41,7 +39,6 @@ public class GymFragment extends Fragment {
     }
 
     private UserViewModel userViewModel;
-    private String uid;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,50 +50,27 @@ public class GymFragment extends Fragment {
         this.userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         if (!this.userViewModel.isLoggedIn()){
             getParentFragmentManager().beginTransaction().replace(R.id.MainActivityFragmentContainer, RequireSignInFragment.newInstance()).commit();
-            return;
         }
-
-        this.userViewModel.getUser(this.userViewModel.getFirebaseUser().getUid()).addOnCompleteListener(requireActivity(), task -> {
-            if (!task.isSuccessful() || task.getResult() == null){
-                Toast.makeText(requireActivity(), "Cannot load user's information", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            AppUser appUser = task.getResult();
-            this.uid = appUser.getUid();
-            if (appUser.getUserLevel() == null){
-                getParentFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.MainActivityFragmentContainer, RequireUserLevelFragment.newInstance())
-                        .commit();
-            }
-        });
     }
 
-    Button strengthButton, cardioButton, faqAndTermButton, exerciseBankButton;
+    Button workoutProgramButton, faqAndTermButton, exerciseBankButton;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_gym, container, false);
-        this.strengthButton = rootView.findViewById(R.id.gymStrength);
-        this.cardioButton = rootView.findViewById(R.id.gymCardio);
+        this.workoutProgramButton = rootView.findViewById(R.id.gymStrength);
         this.faqAndTermButton = rootView.findViewById(R.id.gymFAQAndTerminology);
         this.exerciseBankButton = rootView.findViewById(R.id.gymExerciseBank);
         Intent programListActivityIntent = new Intent(requireActivity(), ProgramListActivity.class);
-        this.strengthButton.setOnClickListener(v -> {
+
+        this.workoutProgramButton.setOnClickListener(v -> {
             programListActivityIntent.putExtra(ProgramListActivity.PROGRAMS_KEY, ProgramListActivity.STRENGTH_PROGRAMS);
             startActivity(programListActivityIntent);
         });
 
-        this.cardioButton.setOnClickListener(v -> {
-            programListActivityIntent.putExtra(ProgramListActivity.PROGRAMS_KEY, ProgramListActivity.CARDIO_PROGRAMS);
-            startActivity(programListActivityIntent);
-        });
-
         this.faqAndTermButton.setOnClickListener(v -> {
-            Intent intent = new Intent(requireActivity(), WorkoutSessionActivity.class);
-            startActivity(intent);
-//            startActivity(new Intent(requireActivity(), FAQAndTerminologyActivity.class));
+            startActivity(new Intent(requireActivity(), FAQAndTerminologyActivity.class));
         });
 
         this.exerciseBankButton.setOnClickListener(v -> {

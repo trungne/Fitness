@@ -1,10 +1,13 @@
 package com.main.fitness.ui.activities;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -74,12 +77,10 @@ public class WorkoutSessionActivity extends AppCompatActivity {
             Log.e(TAG, "Length" + schedule.getSchedule().length);
 
             for (int i = 0; i < schedule.getSchedule().length; i++){
-                // TODO: add isCurrentSession boolean when create a fragment
                 boolean isCurrentSession  = i == day;
                 WorkoutSessionFragment fragment = WorkoutSessionFragment.newInstance(workoutProgramName, workoutProgramPath, i, isCurrentSession);
                 fragments.add(fragment);
             }
-            // TODO: if time allows, use view instead of fragment to reduce load on main thread
             ViewPagerAdapterForFragments<WorkoutSessionFragment> viewPagerAdapterForFragments = new ViewPagerAdapterForFragments<>(this, fragments);
             this.viewPager2.setAdapter(viewPagerAdapterForFragments);
             TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(this.tabLayout, this.viewPager2, (tab, position) -> {
@@ -96,7 +97,10 @@ public class WorkoutSessionActivity extends AppCompatActivity {
             tabLayoutMediator.attach();
             scrollToTabAfterLayout(day);
         });
+
     }
+
+
     // http://developer.android.com/reference/android/view/ViewTreeObserver.html
     private void scrollToTabAfterLayout(final int tabIndex) {
 

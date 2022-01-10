@@ -1,10 +1,8 @@
 package com.main.fitness.ui.activities.gym;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -13,12 +11,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.main.fitness.R;
 import com.main.fitness.data.Model.WorkoutProgram;
-import com.main.fitness.data.Model.UserLevel;
+import com.main.fitness.data.Model.WorkoutProgramLevel;
 import com.main.fitness.data.ViewModel.AssetsViewModel;
 import com.main.fitness.data.ViewModel.WorkoutRecordViewModel;
 import com.main.fitness.data.ViewModel.UserViewModel;
@@ -127,16 +122,16 @@ public class ProgramDetailActivity extends AppCompatActivity {
         this.programDaysPerWeek.setText(daysPerWeekText);
 
         StringBuilder levelsStringBuilder = new StringBuilder();
-        List<UserLevel> userLevelList = workoutProgram.getLevels();
-        for (int i = 0; i < userLevelList.size() ; i++){
+        List<WorkoutProgramLevel> workoutProgramLevelList = workoutProgram.getLevels();
+        for (int i = 0; i < workoutProgramLevelList.size() ; i++){
             // this is just to capitalize the first letter of user level
             // so instead of "BEGINNER", we have "Beginner"
-            String level = userLevelList.get(i).getLevel().substring(0, 1).toUpperCase()
-                    + userLevelList.get(i).getLevel().substring(1).toLowerCase();
+            String level = workoutProgramLevelList.get(i).getLevel().substring(0, 1).toUpperCase()
+                    + workoutProgramLevelList.get(i).getLevel().substring(1).toLowerCase();
             levelsStringBuilder.append(level);
 
             // don't add the " - " at the end
-            if (i != userLevelList.size() - 1){
+            if (i != workoutProgramLevelList.size() - 1){
                 levelsStringBuilder.append(" - ");
             }
         }

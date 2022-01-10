@@ -12,7 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.main.fitness.R;
-import com.main.fitness.data.Model.UserLevel;
+import com.main.fitness.data.Model.WorkoutProgramLevel;
 
 public class ChooseUserLevelDialog extends DialogFragment {
     public ChooseUserLevelDialog(){
@@ -49,29 +49,29 @@ public class ChooseUserLevelDialog extends DialogFragment {
         Button advancedButton = rootView.findViewById(R.id.chooseUserLevelAdvanced);
 
         beginnerButton.setOnClickListener(v -> {
-            changeUserLevel(UserLevel.BEGINNER);
+            changeUserLevel(WorkoutProgramLevel.BEGINNER);
         });
 
         intermediateButton.setOnClickListener(v -> {
-            changeUserLevel(UserLevel.INTERMEDIATE);
+            changeUserLevel(WorkoutProgramLevel.INTERMEDIATE);
         });
 
         advancedButton.setOnClickListener(v -> {
-            changeUserLevel(UserLevel.ADVANCED);
+            changeUserLevel(WorkoutProgramLevel.ADVANCED);
         });
 
         return rootView;
     }
 
-    private void changeUserLevel(@NonNull UserLevel newUserLevel){
+    private void changeUserLevel(@NonNull WorkoutProgramLevel newWorkoutProgramLevel){
         if (this.mListener == null || this.getDialog() == null){
             return;
         }
 
-        this.mListener.onUserLevelChanged(getDialog(), newUserLevel);
+        this.mListener.onUserLevelChanged(getDialog(), newWorkoutProgramLevel);
     }
 
     public interface OnUserLevelChangedListener {
-        void onUserLevelChanged(Dialog dialog, UserLevel newUserLevel);
+        void onUserLevelChanged(Dialog dialog, WorkoutProgramLevel newWorkoutProgramLevel);
     }
 }

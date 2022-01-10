@@ -1,10 +1,8 @@
 package com.main.fitness.data.Factory;
 
-import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 
-import com.main.fitness.data.FileUtils;
-import com.main.fitness.data.Model.UserLevel;
+import com.main.fitness.data.Model.WorkoutProgramLevel;
 import com.main.fitness.data.Model.WorkoutProgram;
 
 import org.json.JSONArray;
@@ -42,12 +40,12 @@ public class WorkoutProgramFactory {
 
 
             JSONArray jsonArray = json.getJSONArray(PROGRAM_LEVELS_FIELD);
-            List<UserLevel> programUserLevels = new ArrayList<>();
+            List<WorkoutProgramLevel> programWorkoutProgramLevels = new ArrayList<>();
             for(int i = 0; i < jsonArray.length(); i++){
                 String level = (String) jsonArray.get(i);
-                UserLevel userLevel = UserLevel.fromString(level);
-                if (userLevel != null){
-                    programUserLevels.add(userLevel);
+                WorkoutProgramLevel workoutProgramLevel = WorkoutProgramLevel.fromString(level);
+                if (workoutProgramLevel != null){
+                    programWorkoutProgramLevels.add(workoutProgramLevel);
                 }
             }
 
@@ -56,7 +54,7 @@ public class WorkoutProgramFactory {
             workoutProgram.setDaysPerWeek(programDaysPerWeek);
             workoutProgram.setGoal(programGoal);
             workoutProgram.setOverview(programOverview);
-            workoutProgram.setLevels(programUserLevels);
+            workoutProgram.setLevels(programWorkoutProgramLevels);
 
             return workoutProgram;
         } catch (JSONException jsonException){

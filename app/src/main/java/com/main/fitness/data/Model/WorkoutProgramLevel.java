@@ -1,12 +1,12 @@
 package com.main.fitness.data.Model;
 
-public enum UserLevel {
+public enum WorkoutProgramLevel {
     BEGINNER("BEGINNER"),
     INTERMEDIATE("INTERMEDIATE"),
     ADVANCED("ADVANCED");
 
     private final String level;
-    UserLevel(String level){
+    WorkoutProgramLevel(String level){
         this.level = level;
     }
 
@@ -14,10 +14,10 @@ public enum UserLevel {
         return this.level;
     }
 
-    public static UserLevel fromString(String str){
-        for (UserLevel userLevel :UserLevel.values()){
-            if (userLevel.level.equalsIgnoreCase(str)){
-                return userLevel;
+    public static WorkoutProgramLevel fromString(String str){
+        for (WorkoutProgramLevel workoutProgramLevel : WorkoutProgramLevel.values()){
+            if (workoutProgramLevel.level.equalsIgnoreCase(str)){
+                return workoutProgramLevel;
             }
         }
         return null;

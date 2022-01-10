@@ -8,7 +8,7 @@ public class WorkoutProgram {
     private String name;
     private String goal;
     private String overview;
-    private List<UserLevel> levels;
+    private List<WorkoutProgramLevel> levels;
     private Integer duration;
     private Integer daysPerWeek;
     private Drawable banner;
@@ -32,7 +32,7 @@ public class WorkoutProgram {
         return daysPerWeek;
     }
 
-    public List<UserLevel> getLevels() {
+    public List<WorkoutProgramLevel> getLevels() {
         return levels;
     }
 
@@ -72,7 +72,7 @@ public class WorkoutProgram {
         this.goal = goal;
     }
 
-    public void setLevels(List<UserLevel> levels) {
+    public void setLevels(List<WorkoutProgramLevel> levels) {
         this.levels = levels;
     }
 

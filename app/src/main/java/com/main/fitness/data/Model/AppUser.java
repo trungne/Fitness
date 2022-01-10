@@ -9,25 +9,8 @@ public class AppUser {
     private String photoUrl;
     private String phoneNumber;
     private Integer workoutScore;
-    private UserLevel userLevel;
 
     public AppUser(){} // Needed for Firebase
-
-    public AppUser(String uid, String displayName, String email, String photoUrl, String phoneNumber, int workoutScore, UserLevel userLevel){
-        this.uid = uid;
-        this.displayName = displayName;
-        this.email = email;
-        this.photoUrl = photoUrl;
-        this.phoneNumber = phoneNumber;
-        this.workoutScore = workoutScore;
-        this.userLevel = userLevel;
-    }
-
-    public boolean hasRequiredInformation(){
-        return      !TextUtils.isEmpty(this.uid)
-                && !TextUtils.isEmpty(this.displayName)
-                && this.userLevel != null;
-    }
 
     @Override
     public String toString() {
@@ -38,7 +21,6 @@ public class AppUser {
                 ", photoUrl='" + photoUrl + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", workoutScore=" + workoutScore +
-                ", userLevel=" + userLevel +
                 '}';
     }
 
@@ -67,9 +49,6 @@ public class AppUser {
         return this.workoutScore;
     }
 
-    public UserLevel getUserLevel() {
-        return this.userLevel;
-    }
 
     // setters
     public void setUid(String uid) {
@@ -94,9 +73,5 @@ public class AppUser {
 
     public void setWorkoutScore(Integer workoutScore) {
         this.workoutScore = workoutScore;
-    }
-
-    public void setUserLevel(UserLevel userLevel) {
-        this.userLevel = userLevel;
     }
 }
