@@ -14,15 +14,13 @@ import com.main.fitness.data.Model.WorkoutSession;
 public class WorkoutScheduleViewModel extends AndroidViewModel {
     private static final String TAG = "WorkOutScheduleViewModel";
     private WorkoutSession mCurrentWorkoutSession;
-    private WorkoutSchedule mSchedule;
 
     private MutableLiveData<Integer> exerciseOrderLiveData;
     private MutableLiveData<WorkoutSet> workoutSetMutableLiveData;
 
-    public WorkoutScheduleViewModel(@NonNull Application application, @NonNull WorkoutSchedule schedule){
+    public WorkoutScheduleViewModel(@NonNull Application application, @NonNull WorkoutSession currentSession){
         super(application);
-        this.mSchedule = schedule;
-        this.mCurrentWorkoutSession = this.mSchedule.getCurrentSession();
+        this.mCurrentWorkoutSession = currentSession;
         this.exerciseOrderLiveData = new MutableLiveData<>(this.mCurrentWorkoutSession.getCurrentExerciseOrder());
         this.workoutSetMutableLiveData = new MutableLiveData<>(this.mCurrentWorkoutSession.getCurrentExercise());
     }
@@ -40,10 +38,7 @@ public class WorkoutScheduleViewModel extends AndroidViewModel {
     }
 
     public void nextExercise(){
-        Log.i(TAG, this.mCurrentWorkoutSession.getCurrentExercise().getExercise());
-
         WorkoutSet w = this.mCurrentWorkoutSession.nextExercise();
-        Log.i(TAG, this.mCurrentWorkoutSession.getCurrentExercise().getExercise());
         if (w != null){
             this.exerciseOrderLiveData.setValue(mCurrentWorkoutSession.getCurrentExerciseOrder());
             this.workoutSetMutableLiveData.setValue(w);

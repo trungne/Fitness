@@ -118,12 +118,10 @@
           },
 
           {
-            "name": "incline_dumbbell_bench_chest_press",
+            "name": "incline_dumbbell_chest_press",
             "reps": [3, 3, 3],
             "weight": [70, 80, 90]
           }
-
-
         ]
       },
 
@@ -216,12 +214,10 @@
           },
 
           {
-            "name": "incline_dumbbell_bench_chest_press",
+            "name": "incline_dumbbell_chest_press",
             "reps": [5, 3, 1],
             "weight": [75, 85, 95]
           }
-
-
         ]
       },
 

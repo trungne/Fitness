@@ -32,10 +32,11 @@ public class WorkoutRegistrationViewModel extends AndroidViewModel {
         this.mAuth = FirebaseAuth.getInstance();
     }
 
-    public Task<Void> updateCurrentSession(int currentSessionNumber){
+    public Task<Void> updateCurrentSession(int week, int day){
         String uid = this.mAuth.getUid();
         HashMap<String, Object> data = new HashMap<>();
-        data.put(PROGRAM_CURRENT_DAY, currentSessionNumber);
+        data.put(PROGRAM_CURRENT_WEEK, week);
+        data.put(PROGRAM_CURRENT_DAY, day);
         return this.db.collection(PROGRAM_REGISTRATION_COLLECTION).document(Objects.requireNonNull(uid)).set(data, SetOptions.merge());
     }
 

@@ -7,17 +7,18 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.main.fitness.data.Model.WorkoutSchedule;
+import com.main.fitness.data.Model.WorkoutSession;
 
 public class WorkoutScheduleViewModelFactory implements ViewModelProvider.Factory {
     private final Application mApplication;
-    private final WorkoutSchedule mSchedule;
-    public WorkoutScheduleViewModelFactory(@NonNull Application application,@NonNull WorkoutSchedule workoutSchedule){
+    private final WorkoutSession mSession;
+    public WorkoutScheduleViewModelFactory(@NonNull Application application,@NonNull WorkoutSession workoutSession){
         this.mApplication = application;
-        this.mSchedule = workoutSchedule;
+        this.mSession = workoutSession;
     }
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        return (T) new WorkoutScheduleViewModel(mApplication, mSchedule);
+        return (T) new WorkoutScheduleViewModel(mApplication, mSession);
     }
 }

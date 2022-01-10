@@ -1,12 +1,18 @@
 package com.main.fitness.ui.activities;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,8 +56,8 @@ public class ScheduleActivity extends AppCompatActivity {
         }
 
         String workoutProgramPath = intent.getStringExtra(WORKOUT_PROGRAM_FOLDER_PATH_KEY);
-        int day = intent.getIntExtra(CURRENT_DAY_KEY, -1);
-        int week = intent.getIntExtra(CURRENT_WEEK_KEY, -1);
+        int currentDay = intent.getIntExtra(CURRENT_DAY_KEY, -1);
+        int currentWeek = intent.getIntExtra(CURRENT_WEEK_KEY, -1);
 
         if (TextUtils.isEmpty(workoutProgramPath)) {
             finish();
@@ -59,19 +65,19 @@ public class ScheduleActivity extends AppCompatActivity {
         }
 
         // no day and week data, cannot go to current session
-        if (day == -1 || week == -1){
+        if (currentDay == -1 || currentWeek == -1){
             this.goToCurrentSessionButton.setVisibility(View.GONE);
         }
         else{
             this.goToCurrentSessionButton.setOnClickListener(v -> {
-                startWorkoutSession(workoutProgramPath, week, day);
+                startWorkoutSession(workoutProgramPath, currentWeek, currentWeek, currentDay);
             });
         }
 
         this.assetsViewModel = new ViewModelProvider(this).get(AssetsViewModel.class);
         this.assetsViewModel.getWorkoutSchedule(workoutProgramPath,
-                week == -1 ? 0 : week,
-                day == -1 ? 0 : day)
+                currentWeek == -1 ? 0 : currentWeek,
+                currentDay == -1 ? 0 : currentDay)
                 .addOnCompleteListener(this, task -> {
             if (!task.isSuccessful()){
                 Toast.makeText(this, "Cannot get workout schedule", Toast.LENGTH_LONG).show();
@@ -82,25 +88,27 @@ public class ScheduleActivity extends AppCompatActivity {
             int weekNum = schedule.getSchedule().length;
 
             if (weekNum == 1){
-                startWorkoutSession(workoutProgramPath, 0,  day == -1 ? 0 : day);
+                startWorkoutSession(workoutProgramPath, 0,0,  currentDay == -1 ? 0 : currentDay);
                 finish();
                 return;
             }
 
 
-            for (int i = 0; i < weekNum; i++){
+            for (int week = 0; week < weekNum; week++){
                 Button weekButton = new Button(this);
-                String text = "Week " + (i + 1);
+                String text = "Week " + (week + 1);
                 weekButton.setText(text);
                 weekButton.setLayoutParams(LAYOUT_PARAMS);
                 weekButton.setGravity(Gravity.CENTER);
 
-                int _day = i;
+                int sessionWeek = week;
+
                 weekButton.setOnClickListener(v -> {
-                    startWorkoutSession(workoutProgramPath, week == -1 ? 0 : week, _day);
+                    Log.e(TAG + "sessionWeek ", String.valueOf(sessionWeek));
+                    startWorkoutSession(workoutProgramPath, sessionWeek, currentWeek == -1 ? 0 : currentWeek, currentDay);
                 });
 
-                if (i == week){
+                if (week == currentWeek){
                     weekButton.setBackgroundColor(getResources().getColor(R.color.green_main, getTheme()));
                 }
 
@@ -110,11 +118,36 @@ public class ScheduleActivity extends AppCompatActivity {
         });
     }
 
-    private void startWorkoutSession(String workoutProgramPath, int week, int day){
+    private void startWorkoutSession(String workoutProgramPath, int sessionWeek, int currentWeek, int day){
         Intent workoutSessionIntent = new Intent(this, WorkoutSessionActivity.class);
         workoutSessionIntent.putExtra(WorkoutSessionActivity.WORKOUT_PROGRAM_FOLDER_PATH_KEY, workoutProgramPath);
         workoutSessionIntent.putExtra(WorkoutSessionActivity.CURRENT_DAY_KEY, day);
-        workoutSessionIntent.putExtra(WorkoutSessionActivity.CURRENT_WEEK_KEY, week);
-        startActivity(workoutSessionIntent);
+        workoutSessionIntent.putExtra(WorkoutSessionActivity.SESSION_WEEK, sessionWeek);
+        workoutSessionIntent.putExtra(WorkoutSessionActivity.CURRENT_WEEK_KEY, currentWeek);
+        WorkoutSessionActivityResultLauncher.launch(workoutSessionIntent);
     }
+
+
+    // You can do the assignment inside onAttach or onCreate, i.e, before the activity is displayed
+    private ActivityResultLauncher<Intent> WorkoutSessionActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent resultIntent = result.getData();
+                        if (resultIntent == null){
+                            return;
+                        }
+                        Intent originalIntent = getIntent();
+                        originalIntent.putExtra(CURRENT_DAY_KEY, resultIntent.getIntExtra(CURRENT_DAY_KEY, -1));
+                        originalIntent.putExtra(CURRENT_WEEK_KEY, resultIntent.getIntExtra(CURRENT_WEEK_KEY, -1));
+                        finish();
+                        overridePendingTransition(0, 0);
+                        startActivity(originalIntent);
+                        overridePendingTransition(0, 0);
+                        // There are no request codes
+                    }
+                }
+            });
 }

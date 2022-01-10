@@ -25,4 +25,7 @@ public class WorkoutSchedule {
     public WorkoutSession getCurrentSession(){
         return this.schedule[currentWeek][currentDay];
     }
+    public WorkoutSession getWorkoutSession(int week, int day){
+        return this.schedule[week][day];
+    }
 }

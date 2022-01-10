@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.main.fitness.R;
 import com.main.fitness.data.FileUtils;
+import com.main.fitness.data.Model.WeekAndDay;
 import com.main.fitness.data.Model.WorkoutExercise;
 import com.main.fitness.data.Model.WorkoutSchedule;
 import com.main.fitness.data.Model.WorkoutSession;
@@ -50,7 +51,6 @@ public class WorkoutSessionFragment extends Fragment {
 
     public static WorkoutSessionFragment newInstance(String workoutProgramName, String workoutProgramPath, int week, int day, boolean isCurrentSession) {
         WorkoutSessionFragment fragment = new WorkoutSessionFragment();
-        Log.e(TAG, workoutProgramPath);
         Bundle args = new Bundle();
 
         args.putString(WORK_OUT_PROGRAM_PATH_PARAM, workoutProgramPath);
@@ -124,11 +124,11 @@ public class WorkoutSessionFragment extends Fragment {
             }
             WorkoutSchedule schedule = task.getResult();
             if (getActivity() == null) return; // DO NOT REMOVE THIS LINE, for some reason it crashes the tab layout if we don't null check here
-            WorkoutScheduleViewModelFactory factory = new WorkoutScheduleViewModelFactory(requireActivity().getApplication(), schedule);
+
+
+            WorkoutSession workoutSession = schedule.getWorkoutSession(week, day);
+            WorkoutScheduleViewModelFactory factory = new WorkoutScheduleViewModelFactory(requireActivity().getApplication(), workoutSession);
             this.workOutScheduleViewModel = new ViewModelProvider(this, factory).get(WorkoutScheduleViewModel.class);
-            WorkoutSession workoutSession = schedule.getCurrentSession();
-
-
 
             String[] targetMuscles = workoutSession.getTargetMuscles();
             StringBuilder stringBuilder = new StringBuilder();
@@ -196,7 +196,7 @@ public class WorkoutSessionFragment extends Fragment {
                 this.button.setBackgroundResource(R.drawable.button_4);
                 this.button.setOnClickListener(v -> {
                     if (this.finishSessionListener != null){
-                        this.finishSessionListener.finishSession(day);
+                        this.finishSessionListener.finishSession(week, day);
                     }
                 });
             }
@@ -204,7 +204,7 @@ public class WorkoutSessionFragment extends Fragment {
                 this.button.setText("Skip To This Session");
                 this.button.setOnClickListener(v -> {
                     if (this.skipToSessionListener != null){
-                        this.skipToSessionListener.onSkipToSession(day);
+                        this.skipToSessionListener.onSkipToSession(week, day);
                     }
                 });
             }
@@ -212,14 +212,12 @@ public class WorkoutSessionFragment extends Fragment {
     }
 
     public interface OnFinishSessionListener {
-        public void finishSession(int sessionNumber);
+        public void finishSession(int week, int day);
     }
 
     public interface OnSkipToSessionListener {
-        public void onSkipToSession(int sessionNumber);
+        public void onSkipToSession(int week, int day);
     }
-
-
 
     private void showExerciseOrder(int current, int total){
         String text = (current + 1) + "/" + total;
@@ -228,6 +226,7 @@ public class WorkoutSessionFragment extends Fragment {
 
     private void showExercise(String exerciseName){
         WorkoutExercise e = this.assetsViewModel.getExerciseByName(exerciseName);
+        Log.e(TAG, exerciseName);
 
         if (e == null){
             Toast.makeText(requireActivity(), "Cannot load exercise info!", Toast.LENGTH_SHORT).show();
