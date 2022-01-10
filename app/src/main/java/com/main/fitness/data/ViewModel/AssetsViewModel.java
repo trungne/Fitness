@@ -52,7 +52,10 @@ public class AssetsViewModel extends AndroidViewModel {
      *
      *
      *  */
-    public Task<WorkoutSchedule> getWorkoutSchedule(String path, int day){
+
+
+
+    public Task<WorkoutSchedule> getWorkoutSchedule(String path, int week, int day){
         final TaskCompletionSource<WorkoutSchedule> taskCompletionSource = new TaskCompletionSource<>();
         ExecutorService e = Executors.newSingleThreadExecutor();
         e.execute(() -> {
@@ -60,21 +63,25 @@ public class AssetsViewModel extends AndroidViewModel {
             String jsonString = FileUtils.getStringFromFile(this.mAssetManager, jsonFilePath);
             try {
                 JSONObject json = new JSONObject(jsonString);
-                JSONArray sessionArray = json.getJSONArray("schedule");
+                JSONArray weekArray = json.getJSONArray("schedule");
                 String workoutProgram = json.getString("name");
 
-                if (day >= sessionArray.length()){
-                    throw new IllegalArgumentException("Day is out of schedule range!");
+                if (week >= weekArray.length() || week < 0){
+                    throw new IllegalArgumentException("Invalid week");
                 }
 
-                WorkoutSession[] sessions = new WorkoutSession[sessionArray.length()];
-                for (int i = 0; i < sessionArray.length(); i++){
-                    WorkoutSession w = WorkoutSessionFactory.fromJSON(sessionArray.getJSONObject(i));
-                    sessions[i] = w;
+                WorkoutSession[][] schedule = new WorkoutSession[weekArray.length()][];
+                for (int _week = 0; _week < weekArray.length(); _week++){
+                    JSONArray dayArray = weekArray.getJSONArray(_week);
+                    WorkoutSession[] sessions = new WorkoutSession[dayArray.length()];
+                    for(int _day = 0; _day < dayArray.length(); _day++){
+                        sessions[_day] = WorkoutSessionFactory.fromJSON(dayArray.getJSONObject(_day));
+                    }
+                    schedule[_week] = sessions;
                 }
-                WorkoutSchedule schedule = new WorkoutSchedule(workoutProgram, sessions, day);
+                WorkoutSchedule workoutSchedule = new WorkoutSchedule(workoutProgram, schedule, week, day);
 
-                taskCompletionSource.setResult(schedule);
+                taskCompletionSource.setResult(workoutSchedule);
 
 
             } catch (JSONException jsonException) {

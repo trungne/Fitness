@@ -33,24 +33,28 @@ public class WorkoutSessionFragment extends Fragment {
     private static final String TAG = "WorkoutSessionFragment";
     private static final String WORK_OUT_PROGRAM_PATH_PARAM = "WORK_OUT_PROGRAM_PATH_PARAM";
     private static final String WORK_OUT_PROGRAM_NAME_PARAM = "WORK_OUT_PROGRAM_NAME_PARAM";
+
     private static final String IS_CURRENT_SESSION_PARAM = "IS_CURRENT_SESSION_PARAM";
     private static final String DAY_PARAM = "DAY_PARAM";
+    private static final String WEEK_PARAM = "WEEK_PARAM";
 
     private String workoutProgramPath;
     private String workoutProgramName;
     private boolean isCurrentSession;
     private int day;
+    private int week;
 
     public WorkoutSessionFragment() {
         // Required empty public constructor
     }
 
-    public static WorkoutSessionFragment newInstance(String workoutProgramName, String workoutProgramPath, int day, boolean isCurrentSession) {
+    public static WorkoutSessionFragment newInstance(String workoutProgramName, String workoutProgramPath, int week, int day, boolean isCurrentSession) {
         WorkoutSessionFragment fragment = new WorkoutSessionFragment();
         Log.e(TAG, workoutProgramPath);
         Bundle args = new Bundle();
 
         args.putString(WORK_OUT_PROGRAM_PATH_PARAM, workoutProgramPath);
+        args.putInt(WEEK_PARAM, week);
         args.putBoolean(IS_CURRENT_SESSION_PARAM, isCurrentSession);
         args.putInt(DAY_PARAM, day);
         args.putString(WORK_OUT_PROGRAM_NAME_PARAM, workoutProgramName);
@@ -69,11 +73,12 @@ public class WorkoutSessionFragment extends Fragment {
             workoutProgramName = getArguments().getString(WORK_OUT_PROGRAM_NAME_PARAM);
             isCurrentSession = getArguments().getBoolean(IS_CURRENT_SESSION_PARAM);
             day = getArguments().getInt(DAY_PARAM);
+            week = getArguments().getInt(WEEK_PARAM);
         }
         this.assetsViewModel = new ViewModelProvider(this).get(AssetsViewModel.class);
     }
 
-    private TextView exerciseName, targetMuscles, exerciseOrder;
+    private TextView exerciseName, targetMuscles, exerciseOrder, weightLabel;
     private ImageView exerciseIllustration;
     private FloatingActionButton prevButton, nextButton;
     private LinearLayout repsLayout, weightsLayout;
@@ -97,6 +102,7 @@ public class WorkoutSessionFragment extends Fragment {
         this.targetMuscles = view.findViewById(R.id.WorkoutSessionTargetMuscleValues);
         this.exerciseOrder = view.findViewById(R.id.WorkoutSessionCurrentExerciseOrder);
         this.exerciseIllustration = view.findViewById(R.id.WorkoutSessionExerciseIllustration);
+        this.weightLabel = view.findViewById(R.id.WorkoutSessionWeights);
 
         this.repsLayout = view.findViewById(R.id.WorkoutSessionRepsLinearLayout);
         this.weightsLayout = view.findViewById(R.id.WorkoutSessionWeightsLinearLayout);
@@ -111,7 +117,7 @@ public class WorkoutSessionFragment extends Fragment {
     }
 
     private void showSession(){
-        this.assetsViewModel.getWorkoutSchedule(workoutProgramPath, day).addOnCompleteListener(requireActivity(), task -> {
+        this.assetsViewModel.getWorkoutSchedule(workoutProgramPath, week, day).addOnCompleteListener(requireActivity(), task -> {
             if (!task.isSuccessful()){
                 Toast.makeText(requireActivity(), "Cannot load session!", Toast.LENGTH_SHORT).show();
                 return;
@@ -120,8 +126,10 @@ public class WorkoutSessionFragment extends Fragment {
             if (getActivity() == null) return; // DO NOT REMOVE THIS LINE, for some reason it crashes the tab layout if we don't null check here
             WorkoutScheduleViewModelFactory factory = new WorkoutScheduleViewModelFactory(requireActivity().getApplication(), schedule);
             this.workOutScheduleViewModel = new ViewModelProvider(this, factory).get(WorkoutScheduleViewModel.class);
+            WorkoutSession workoutSession = schedule.getCurrentSession();
 
-            WorkoutSession workoutSession = task.getResult().getCurrentSession();
+
+
             String[] targetMuscles = workoutSession.getTargetMuscles();
             StringBuilder stringBuilder = new StringBuilder();
 
@@ -160,18 +168,22 @@ public class WorkoutSessionFragment extends Fragment {
                 this.repsLayout.requestLayout();
 
                 int[] weights = workoutSet.weight;
-                for (int weight : weights) {
-                    TextView textView = new TextView(requireActivity());
-                    textView.setTextSize(24);
-                    String text = weight + "%";
-                    textView.setText(text);
-                    textView.setGravity(Gravity.CENTER);
-                    textView.setLayoutParams(layoutParams);
-                    this.weightsLayout.addView(textView);
+                if (weights.length != 0){
+                    for (int weight : weights) {
+                        TextView textView = new TextView(requireActivity());
+                        textView.setTextSize(24);
+                        String text = weight + "%";
+                        textView.setText(text);
+                        textView.setGravity(Gravity.CENTER);
+                        textView.setLayoutParams(layoutParams);
+                        this.weightsLayout.addView(textView);
+                    }
+                    this.weightsLayout.requestLayout();
                 }
-                this.weightsLayout.requestLayout();
-
-
+                else{
+                    this.weightsLayout.setVisibility(View.GONE);
+                    this.weightLabel.setVisibility(View.GONE);
+                }
             });
 
             this.prevButton.setOnClickListener(v -> this.workOutScheduleViewModel.previousExercise());

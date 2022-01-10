@@ -8,343 +8,285 @@
   ],
   "overview": "This fast-track workout plan will help you drastically improve your physique and fitness levels",
   "schedule": [
-    {
-      "target_muscles": [
-        "Chest"
-      ],
-      "exercises": [
-        {
-          "name": "barbell_bench_press",
-          "reps": [
-            10,
-            10,
-            10
-          ],
-          "weight": [
-            50,
-            50,
-            50
-          ]
-        },
-        {
-          "name": "incline_dumbbell_chest_press",
-          "reps": [
-            10,
-            10,
-            10
-          ],
-          "weight": [
-            50,
-            50,
-            50
-          ]
-        },
-        {
-          "name": "incline_dumbbell_flyes",
-          "reps": [
-            10,
-            10,
-            10
-          ],
-          "weight": [
-            50,
-            50,
-            50
-          ]
-        },
-        {
-          "name": "pushups",
-          "reps": [
-            10,
-            10,
-            10,
-            10,
-            10
-          ],
-          "weight": [
-            0,
-            0,
-            0,
-            0,
-            0
-          ]
-        }
-      ]
-    },
-    {
-      "target_muscles": [
-        "Back"
-      ],
-      "exercises": [
-        {
-          "name": "seated_low_cable_back_rows",
-          "reps": [
-            10,
-            10,
-            10
-          ],
-          "weight": [
-            50,
-            50,
-            50
-          ]
-        },
-        {
-          "name": "wide_grip_lat_pulldowns",
-          "reps": [
-            10,
-            10,
-            10
-          ],
-          "weight": [
-            50,
-            50,
-            50
-          ]
-        },
-        {
-          "name": "seated_machine_back_row",
-          "reps": [
-            10,
-            10,
-            10
-          ],
-          "weight": [
-            50,
-            50,
-            50
-          ]
-        },
-        {
-          "name": "one_arm_dumbbell_rows",
-          "reps": [
-            10,
-            10,
-            10,
-            10,
-            10
-          ],
-          "weight": [
-            50,
-            50,
-            50,
-            50,
-            50
-          ]
-        }
-      ]
-    },
-    {
-      "target_muscles": [
-        "Shoulders"
-      ],
-      "exercises": [
-        {
-          "name": "dumbbell_shoulder_press",
-          "reps": [
-            10,
-            10,
-            10
-          ],
-          "weight": [
-            50,
-            50,
-            50
-          ]
-        },
-        {
-          "name": "seated_lateral_shoulder_dumbbell_raise",
-          "reps": [
-            10,
-            10,
-            10
-          ],
-          "weight": [
-            50,
-            50,
-            50
-          ]
-        },
-        {
-          "name": "two_arm_dumbbell_front_shoulder_raises",
-          "reps": [
-            10,
-            10,
-            10
-          ],
-          "weight": [
-            50,
-            50,
-            50
-          ]
-        },
-        {
-          "name": "dumbbell_shoulder_press",
-          "reps": [
-            10,
-            10,
-            10,
-            10,
-            10
-          ],
-          "weight": [
-            50,
-            50,
-            50,
-            50,
-            50
-          ]
-        }
-      ]
-    },
-    {
-      "target_muscles": [
-        "Legs"
-      ],
-      "exercises": [
-        {
-          "name": "leg_press",
-          "reps": [
-            10,
-            10,
-            10
-          ],
-          "weight": [
-            50,
-            50,
-            50
-          ]
-        },
-        {
-          "name": "lying_leg_curls",
-          "reps": [
-            10,
-            10,
-            10
-          ],
-          "weight": [
-            50,
-            50,
-            50
-          ]
-        },
-        {
-          "name": "seated_machine_leg_extensions",
-          "reps": [
-            10,
-            10,
-            10
-          ],
-          "weight": [
-            50,
-            50,
-            50
-          ]
-        },
-        {
-          "name": "jump_squats",
-          "reps": [
-            10,
-            10,
-            10,
-            10,
-            10
-          ],
-          "weight": [
-            0,
-            0,
-            0,
-            0,
-            0
-          ]
-        }
-      ]
-    },
-    {
-      "target_muscles": [
-        "Biceps",
-        "Triceps"
-      ],
-      "exercises": [
-        {
-          "name": "static_bicep_curls",
-          "reps": [
-            10,
-            10,
-            10
-          ],
-          "weight": [
-            50,
-            50,
-            50
-          ]
-        },
-        {
-          "name": "lying_dumbbell_tricep_extensions",
-          "reps": [
-            10,
-            10,
-            10
-          ],
-          "weight": [
-            50,
-            50,
-            50
-          ]
-        },
-        {
-          "name": "cable_curl",
-          "reps": [
-            10,
-            10,
-            10
-          ],
-          "weight": [
-            50,
-            50,
-            50
-          ]
-        },
-        {
-          "name": "triceps_pushdowns",
-          "reps": [
-            10,
-            10,
-            10
-          ],
-          "weight": [
-            50,
-            50,
-            50
-          ]
-        },
-        {
-          "name": "ez_bar_preacher_curls",
-          "reps": [
-            10,
-            10,
-            10
-          ],
-          "weight": [
-            50,
-            50,
-            50
-          ]
-        },
-        {
-          "name": "bent_over_double-arm_tricep_kickbacks",
-          "reps": [
-            10,
-            10,
-            10
-          ],
-          "weight": [
-            50,
-            50,
-            50
-          ]
-        }
-      ]
-    }
+    [
+      {
+        "target_muscles": [
+          "Chest"
+        ],
+        "exercises": [
+          {
+            "name": "barbell_bench_press",
+            "reps": [10, 10, 10],
+            "weight": [50, 50, 50]
+          },
+          {
+            "name": "incline_dumbbell_chest_press",
+            "reps": [10, 10, 10],
+            "weight": [50, 50, 50]
+          },
+          {
+            "name": "incline_dumbbell_flyes",
+            "reps": [10, 10, 10],
+            "weight": [ 50, 50, 50]
+          },
+          {
+            "name": "pushups",
+            "reps": [10, 10,  10, 10, 10],
+            "weight": []
+          }
+        ]
+      },
+      {
+        "target_muscles": [
+          "Back"
+        ],
+        "exercises": [
+          {
+            "name": "seated_low_cable_back_rows",
+            "reps": [10, 10, 10],
+            "weight": [50,50,50]
+          },
+          {
+            "name": "wide_grip_lat_pulldowns",
+            "reps": [10,10,10],
+            "weight": [50,50,50]
+          },
+          {
+            "name": "seated_machine_back_row",
+            "reps": [10,10,10],
+            "weight": [50,50,50]
+          },
+          {
+            "name": "one_arm_dumbbell_rows",
+            "reps": [
+              10,
+              10,
+              10,
+              10,
+              10
+            ],
+            "weight": [
+              50,
+              50,
+              50,
+              50,
+              50
+            ]
+          }
+        ]
+      },
+      {
+        "target_muscles": [
+          "Shoulders"
+        ],
+        "exercises": [
+          {
+            "name": "dumbbell_shoulder_press",
+            "reps": [
+              10,
+              10,
+              10
+            ],
+            "weight": [
+              50,
+              50,
+              50
+            ]
+          },
+          {
+            "name": "seated_lateral_shoulder_dumbbell_raise",
+            "reps": [
+              10,
+              10,
+              10
+            ],
+            "weight": [
+              50,
+              50,
+              50
+            ]
+          },
+          {
+            "name": "two_arm_dumbbell_front_shoulder_raises",
+            "reps": [
+              10,
+              10,
+              10
+            ],
+            "weight": [
+              50,
+              50,
+              50
+            ]
+          },
+          {
+            "name": "dumbbell_shoulder_press",
+            "reps": [
+              10,
+              10,
+              10,
+              10,
+              10
+            ],
+            "weight": [
+              50,
+              50,
+              50,
+              50,
+              50
+            ]
+          }
+        ]
+      },
+      {
+        "target_muscles": [
+          "Legs"
+        ],
+        "exercises": [
+          {
+            "name": "leg_press",
+            "reps": [
+              10,
+              10,
+              10
+            ],
+            "weight": [
+              50,
+              50,
+              50
+            ]
+          },
+          {
+            "name": "lying_leg_curls",
+            "reps": [
+              10,
+              10,
+              10
+            ],
+            "weight": [
+              50,
+              50,
+              50
+            ]
+          },
+          {
+            "name": "seated_machine_leg_extensions",
+            "reps": [
+              10,
+              10,
+              10
+            ],
+            "weight": [
+              50,
+              50,
+              50
+            ]
+          },
+          {
+            "name": "jump_squats",
+            "reps": [
+              10,
+              10,
+              10,
+              10,
+              10
+            ],
+            "weight": [
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "target_muscles": [
+          "Biceps",
+          "Triceps"
+        ],
+        "exercises": [
+          {
+            "name": "static_bicep_curls",
+            "reps": [
+              10,
+              10,
+              10
+            ],
+            "weight": [
+              50,
+              50,
+              50
+            ]
+          },
+          {
+            "name": "lying_dumbbell_tricep_extensions",
+            "reps": [
+              10,
+              10,
+              10
+            ],
+            "weight": [
+              50,
+              50,
+              50
+            ]
+          },
+          {
+            "name": "cable_curl",
+            "reps": [
+              10,
+              10,
+              10
+            ],
+            "weight": [
+              50,
+              50,
+              50
+            ]
+          },
+          {
+            "name": "triceps_pushdowns",
+            "reps": [
+              10,
+              10,
+              10
+            ],
+            "weight": [
+              50,
+              50,
+              50
+            ]
+          },
+          {
+            "name": "ez_bar_preacher_curls",
+            "reps": [
+              10,
+              10,
+              10
+            ],
+            "weight": [
+              50,
+              50,
+              50
+            ]
+          },
+          {
+            "name": "bent_over_double-arm_tricep_kickbacks",
+            "reps": [
+              10,
+              10,
+              10
+            ],
+            "weight": [
+              50,
+              50,
+              50
+            ]
+          }
+        ]
+      }
+    ]
   ]
 }

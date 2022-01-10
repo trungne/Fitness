@@ -1,16 +1,11 @@
 package com.main.fitness.ui.activities;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.content.BroadcastReceiver;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -33,7 +28,8 @@ import java.util.List;
 public class WorkoutSessionActivity extends AppCompatActivity {
     private static final String TAG = "WorkoutSessionActivity";
     public static final String WORKOUT_PROGRAM_FOLDER_PATH_KEY = "com.main.fitness.ui.activities.WorkoutSessionActivity.WORKOUT_PROGRAM_FOLDER_PATH_KEY";
-    public static final String CURRENT_SESSION_KEY = "com.main.fitness.ui.activities.WorkoutSessionActivity.CURRENT_SESSION_KEY";
+    public static final String CURRENT_WEEK_KEY = "com.main.fitness.ui.activities.WorkoutSessionActivity.CURRENT_WEEK_KEY";
+    public static final String CURRENT_DAY_KEY = "com.main.fitness.ui.activities.WorkoutSessionActivity.CURRENT_DAY_KEY";
 
     private AssetsViewModel assetsViewModel;
     private WorkoutRegistrationViewModel workoutRegistrationViewModel;
@@ -42,7 +38,7 @@ public class WorkoutSessionActivity extends AppCompatActivity {
 
     private void reload(int newSessionNumber){
         Intent intent = getIntent();
-        intent.putExtra(CURRENT_SESSION_KEY, newSessionNumber);
+        intent.putExtra(CURRENT_DAY_KEY, newSessionNumber);
         overridePendingTransition(0, 0);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         finish();
@@ -66,7 +62,10 @@ public class WorkoutSessionActivity extends AppCompatActivity {
         }
 
         String workoutProgramPath = intent.getStringExtra(WORKOUT_PROGRAM_FOLDER_PATH_KEY);
-        int day = intent.getIntExtra(CURRENT_SESSION_KEY, -1);
+        int day = intent.getIntExtra(CURRENT_DAY_KEY, -1);
+        int week = intent.getIntExtra(CURRENT_WEEK_KEY, -1);
+        Log.e(TAG + " Day: ", String.valueOf(day));
+        Log.e(TAG + " Week: ", String.valueOf(week));
 
         if (TextUtils.isEmpty(workoutProgramPath)) {
             finish();
@@ -75,7 +74,7 @@ public class WorkoutSessionActivity extends AppCompatActivity {
 
         this.workoutRegistrationViewModel = new ViewModelProvider(this).get(WorkoutRegistrationViewModel.class);
         this.assetsViewModel = new ViewModelProvider(this).get(AssetsViewModel.class);
-        this.assetsViewModel.getWorkoutSchedule(workoutProgramPath, day == -1 ? 0 : day).addOnCompleteListener(this, task -> {
+        this.assetsViewModel.getWorkoutSchedule(workoutProgramPath, week == -1 ? 0 : week, day == -1 ? 0 : day).addOnCompleteListener(this, task -> {
            if (!task.isSuccessful()){
                Toast.makeText(this, "Cannot get workout schedule", Toast.LENGTH_SHORT).show();
                return;
@@ -86,9 +85,9 @@ public class WorkoutSessionActivity extends AppCompatActivity {
            String workoutProgramName = schedule.getWorkoutProgramName();
             List<WorkoutSessionFragment> fragments = new ArrayList<>();
 
-            for (int i = 0; i < schedule.getSchedule().length; i++){
+            for (int i = 0; i < schedule.getSchedule()[week].length; i++){
                 boolean isCurrentSession = i == day;
-                WorkoutSessionFragment fragment = WorkoutSessionFragment.newInstance(workoutProgramName, workoutProgramPath, i, isCurrentSession);
+                WorkoutSessionFragment fragment = WorkoutSessionFragment.newInstance(workoutProgramName, workoutProgramPath, week, i, isCurrentSession);
 
                 fragment.setOnFinishSessionListener(sessionNumber -> {
                     int newSessionNumber = sessionNumber == schedule.getSchedule().length - 1 ? 0 : sessionNumber + 1;

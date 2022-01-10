@@ -5,13 +5,11 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 
-import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthException;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
+import com.main.fitness.data.Model.WeekAndDay;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -20,9 +18,8 @@ import java.util.concurrent.Executors;
 public class WorkoutRegistrationViewModel extends AndroidViewModel {
     private static final String PROGRAM_REGISTRATION_COLLECTION = "programRegistration";
     private static final String PROGRAM_NAME_FIELD = "programName";
-    private static final String PROGRAM_DAYS_PER_WEEK_FIELD = "daysPerWeek";
-    private static final String USER_ID_FIELD = "uid";
-    private static final String CURRENT_SESSION_OF_PROGRAM = "currentSession";
+    private static final String PROGRAM_CURRENT_WEEK = "currentWeek";
+    private static final String PROGRAM_CURRENT_DAY = "currentDay";
 
 
     private final FirebaseAuth mAuth;
@@ -38,31 +35,31 @@ public class WorkoutRegistrationViewModel extends AndroidViewModel {
     public Task<Void> updateCurrentSession(int currentSessionNumber){
         String uid = this.mAuth.getUid();
         HashMap<String, Object> data = new HashMap<>();
-        data.put(CURRENT_SESSION_OF_PROGRAM, currentSessionNumber);
+        data.put(PROGRAM_CURRENT_DAY, currentSessionNumber);
         return this.db.collection(PROGRAM_REGISTRATION_COLLECTION).document(Objects.requireNonNull(uid)).set(data, SetOptions.merge());
     }
 
-    public Task<Void> registerProgram(String uid, String programName, int programDaysPerWeek){
+    public Task<Void> registerProgram(String uid, String programName, int week, int day){
         HashMap<String, Object> registrationData = new HashMap<>();
         registrationData.put(PROGRAM_NAME_FIELD, programName);
-        registrationData.put(PROGRAM_DAYS_PER_WEEK_FIELD, programDaysPerWeek);
-        // when first registered, the current session is 0 by default
-        registrationData.put(CURRENT_SESSION_OF_PROGRAM, 0);
+        registrationData.put(PROGRAM_CURRENT_WEEK, week);
+        registrationData.put(PROGRAM_CURRENT_DAY, day);
         return this.db.collection(PROGRAM_REGISTRATION_COLLECTION).document(uid).set(registrationData, SetOptions.merge());
     }
 
-    public Task<Integer> getCurrentSessionDay(String uid){
+    public Task<WeekAndDay> getCurrentWeekAndDayOfWorkoutProgram(String uid){
         return this.db.collection(PROGRAM_REGISTRATION_COLLECTION).document(uid).get().continueWith(Executors.newSingleThreadExecutor(), task -> {
             if (!task.isSuccessful()){
                 throw new Exception("Cannot get current session day!");
             }
 
-            Integer day = task.getResult().get(CURRENT_SESSION_OF_PROGRAM, Integer.class);
+            Integer day = task.getResult().get(PROGRAM_CURRENT_DAY, Integer.class);
+            Integer week = task.getResult().get(PROGRAM_CURRENT_WEEK, Integer.class);
             if (day == null){
                 throw new Exception("Cannot get current session day!");
             }
             else {
-                return day;
+                return new WeekAndDay(week, day);
             }
         });
     }
