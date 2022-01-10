@@ -108,6 +108,8 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
     private Button mapFragmentButtonRun;
     private Button mapFragmentButtonStop;
     private Button mapFragmentButtonGetCurrentLocation;
+    private BottomNavigationView navBar;
+
 
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
@@ -148,6 +150,7 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
         mapFragmentButtonRun = v.findViewById(R.id.map_fragment_button_run);
         mapFragmentButtonStop = v.findViewById(R.id.map_fragment_button_stop_run);
         mapFragmentButtonGetCurrentLocation = v.findViewById(R.id.map_fragment_button_current_location);
+        navBar = v.findViewById(R.id.MainActivityBottomNavigationView);
 
         //Actions for the buttons
         mapFragmentButtonRun.setOnClickListener(this::startRunningButton);
@@ -295,6 +298,8 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
 
     @SuppressLint("SetTextI18n")
     private void stopRunningButton(View v) {
+        navBar = requireActivity().findViewById(R.id.MainActivityBottomNavigationView);
+        navBar.setVisibility(View.VISIBLE);
         showStopDialog();
     }
 
