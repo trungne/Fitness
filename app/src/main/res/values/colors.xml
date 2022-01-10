@@ -3,9 +3,13 @@
     <color name="red_100">#EE4444</color>
 
 
+
+    <color name="green_main3">#13C871</color>
     <color name="green_main2">#138961</color>
     <color name="green_main">#3DBE61</color>
 
+
+    <color name="grey_400">#AAACAD</color>
     <color name="grey_300">#83EDF1F5</color>
     <color name="grey_200">#E7E3E3</color>
     <color name="grey_100">#514E4E</color>

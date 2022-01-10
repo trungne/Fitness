@@ -83,8 +83,12 @@ public class WorkoutSessionActivity extends AppCompatActivity {
             ViewPagerAdapterForFragments<WorkoutSessionFragment> viewPagerAdapterForFragments = new ViewPagerAdapterForFragments<>(this, fragments);
             this.viewPager2.setAdapter(viewPagerAdapterForFragments);
             TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(this.tabLayout, this.viewPager2, (tab, position) -> {
+                boolean select= false;
+
                 if (position == day){
-                    tab.view.setBackgroundColor(getResources().getColor(R.color.colorPrimary, getTheme()));
+
+                    tab.view.setBackgroundColor(getResources().getColor(R.color.green_main, getTheme()));
+
                 }
                 tab.setText("Day " + (position + 1));
 

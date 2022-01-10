@@ -7,6 +7,9 @@
     tools:context=".ui.activities.WorkoutSessionActivity">
 
     <com.google.android.material.tabs.TabLayout
+        android:background="@color/grey_400"
+        app:tabSelectedTextColor="@color/white"
+        app:tabTextColor="@color/white"
         android:id="@+id/WorkoutSessionTabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

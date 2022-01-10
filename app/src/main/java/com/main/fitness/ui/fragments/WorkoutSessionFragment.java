@@ -172,7 +172,7 @@ public class WorkoutSessionFragment extends Fragment {
 
             if (isCurrentSession){
                 this.button.setText("Finish Session");
-                this.button.setBackgroundColor(getResources().getColor(R.color.colorPrimary, requireActivity().getTheme()));
+                this.button.setBackgroundResource(R.drawable.button_4);
             }
             else{
                 this.button.setText("Move To This Session");
