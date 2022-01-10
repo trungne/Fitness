@@ -80,8 +80,7 @@
                     android:layout_marginTop="30dp"
                     android:layout_marginEnd="10dp"
                     android:layout_weight="1"
-                    android:hint="user name..."
-                    android:text="User Name"
+                    android:hint="username"
                     tools:ignore="HardcodedText" />
 
             </TableRow>
@@ -107,8 +106,7 @@
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="10dp"
                     android:layout_weight="1"
-                    android:hint="10-digit phone number..."
-                    android:text="Phone"
+                    android:hint="10-digit phone number"
                     tools:ignore="HardcodedText" />
 
             </TableRow>
@@ -134,13 +132,12 @@
                     style="@style/titleText2"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:layout_marginTop="10dp"
                     android:layout_marginStart="7dp"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="20dp"
                     android:layout_weight="1"
-                    android:hint="email ..."
-                    android:text="Email"
+                    android:hint="email"
                     tools:ignore="HardcodedText" />
 
             </TableRow>
