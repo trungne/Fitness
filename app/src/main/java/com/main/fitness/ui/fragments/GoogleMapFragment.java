@@ -90,6 +90,7 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
     private double mapFragmentUserTravelledDistance;
     private Location prev;
     private Location current;
+    private String data;
 
     //Time
     DateTimeFormatter time = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
@@ -138,7 +139,6 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
         this.workoutRecordViewModel = new ViewModelProvider(requireActivity()).get(WorkoutRecordViewModel.class);
 
         Bundle bundle = this.getArguments();
-        String data;
 
         //Load the layout, textview, linearlayout, buttons
         mapFragmentSelectedDistanceTextView = v.findViewById(R.id.map_fragment_selected_distance);
@@ -206,19 +206,25 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
                         }
 
                         // TODO 1: Create a Running Record object
-                        String name = Objects.requireNonNull(FirebaseAuth.getInstance()
-                                .getCurrentUser()).getDisplayName();
                         endTime = LocalDateTime.now();
                         String finishTime = time.format(endTime);
                         String initialTime  = time.format(startTime);
                         end = Instant.now();
                         Duration duration = Duration.between(start, end);
+                        int totalDistance = Integer.parseInt(data);
+                        double travelledDistance = mapFragmentUserTravelledDistance;
+                        boolean isTrackCompleted = false;
+                        if (travelledDistance >= totalDistance) {
+                            isTrackCompleted = true;
+                        }
 
-                        RunningRecord runningRecord = new RunningRecord(name, initialTime, steps, duration, finishTime);
-                        // put time, step..... here
+                        RunningRecord runningRecord = new RunningRecord(totalDistance, travelledDistance,
+                                isTrackCompleted, initialTime, steps, duration, finishTime);
 
                         // upload running record to Firebase
                         this.workoutRecordViewModel.updateRunningRecord(runningRecord);
+
+
 
                         //Process the fragment removal
                         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();

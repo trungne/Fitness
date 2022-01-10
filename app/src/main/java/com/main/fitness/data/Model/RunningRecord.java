@@ -4,7 +4,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 public class RunningRecord {
-    private String name;
     private String time;
     private int step;
     private Duration duration;
@@ -13,10 +12,9 @@ public class RunningRecord {
     private boolean isTrackCompleted;
     private Double travelledDistance;
 
-    public RunningRecord(int totalDistance, String name, double travelledDistance, boolean isTrackCompleted,
+    public RunningRecord(int totalDistance, double travelledDistance, boolean isTrackCompleted,
                          String time, int step, Duration duration, String finishTime) {
         this.totalDistance = totalDistance;
-        this.name = name;
         this.travelledDistance = travelledDistance;
         this.isTrackCompleted = isTrackCompleted;
         this.time = time;
@@ -34,10 +32,6 @@ public class RunningRecord {
 
     public Double getTravelledDistance() {
         return travelledDistance;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public String getTime() {
