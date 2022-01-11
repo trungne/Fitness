@@ -327,8 +327,6 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
             mapFragmentButtonRun.setBackgroundColor(Color.RED);
             mapFragmentButtonRun.setText("STOP");
         } else if (mapFragmentButtonRun.getText().toString().equals("STOP")) {
-            navBar = requireActivity().findViewById(R.id.MainActivityBottomNavigationView);
-            navBar.setVisibility(View.VISIBLE);
             showStopDialog();
         }
 
