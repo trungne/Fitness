@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Custom shape foreground. -->
+    <item android:bottom="3dp" android:right="3dp">
+        <shape>
+            <solid android:color="@color/green_main" />
+            <corners android:radius="20dp" />
+            <padding android:top="20dp"/>
+"           <padding android:right="10dp"/>
+            <padding android:left="10dp"/>
+            <padding android:bottom="10dp"/>
+            <stroke android:color="@color/grey_100"
+                android:width="3dp"/>
+        </shape>
+
+    </item>
+
+</layer-list>

@@ -98,7 +98,11 @@ public class ScheduleActivity extends AppCompatActivity {
                 Button weekButton = new Button(this);
                 String text = "Week " + (week + 1);
                 weekButton.setText(text);
+                weekButton.setTextColor(getResources().getColor(R.color.white, getTheme()));
                 weekButton.setLayoutParams(LAYOUT_PARAMS);
+                weekButton.setTextSize(40);
+                weekButton.setBackgroundResource(R.drawable.button_5);
+
                 weekButton.setGravity(Gravity.CENTER);
 
                 int sessionWeek = week;
@@ -109,7 +113,7 @@ public class ScheduleActivity extends AppCompatActivity {
                 });
 
                 if (week == currentWeek){
-                    weekButton.setBackgroundColor(getResources().getColor(R.color.green_main, getTheme()));
+                    weekButton.setBackgroundResource(R.drawable.button_6);
                 }
 
                 this.weekLinearLayout.addView(weekButton);
