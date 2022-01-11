@@ -7,4 +7,9 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="no_internet">No Internet!</string>
+    <string name="answer1">fITech is a combination between fitness and technology as it is an application that helps the user improve their health.</string>
+    <string name="answer2">This is an app for anyone who wants to get fit or train themselves without any help from others. These exercises we provided are well-researched and known for any user to train safely.</string>
+    <string name="answer3">There are two main functions in this app: \n
+            + Run activity:  help the user to track their running progress and save them into records.
+        \n  + Gym activity: provide the user exercise guides and programs. </string>
 </resources>
