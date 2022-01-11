@@ -137,6 +137,7 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
         View v = inflater.inflate(R.layout.fragment_google_map,container,false);
         this.workoutRecordViewModel = new ViewModelProvider(requireActivity()).get(WorkoutRecordViewModel.class);
 
+        // TODO: use newInstance method to get arguments passed in
         Bundle bundle = this.getArguments();
 
         //Load the layout, textview, linearlayout, buttons
@@ -154,6 +155,7 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
         //Set data and set layout for linear layout
         try{
             //Data for textview
+            // TODO: DO NOT USE assert in production code
             assert bundle != null;
             data = bundle.getString("selectedRunningDistance");
             mapFragmentSelectedDistanceTextView.setText(data);
@@ -205,6 +207,7 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
                         mapFragmentButtonRun.setText("Click to run");
                         mapFragmentButtonRun.setBackgroundResource(R.drawable.button_4);
 
+                        // TODO: Create a function to reset step counter
                         //Remove the Step Detector listener and reset the counter to 0
                         steps = 0;
                         //We only unregister this listener when the sensor has been activated
@@ -220,17 +223,18 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
                         String initialTime  = time.format(startTime);
                         end = Instant.now();
                         Duration duration = Duration.between(start, end);
-                        int totalDistance = Integer.parseInt(data);
                         double travelledDistance = mapFragmentUserTravelledDistance;
-                        boolean isTrackCompleted = false;
-                        if (travelledDistance >= totalDistance) {
-                            isTrackCompleted = true;
-                        }
 
                         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
                         String uid = firebaseAuth.getCurrentUser().getUid();
 
-                        RunningRecord runningRecord = new RunningRecord(uid,initialTime,steps,duration,finishTime,totalDistance,isTrackCompleted,travelledDistance);
+                        RunningRecord runningRecord = new RunningRecord(
+                                uid,
+                                initialTime,
+                                steps,
+                                duration,
+                                finishTime,
+                                travelledDistance);
 
 
                         // upload running record to Firebase
@@ -241,10 +245,12 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
                         //Add data to the bundle for the map fragment
+
+                        // TODO: put these on newInstance method
                         Bundle bundle = new Bundle();
                         bundle.putString("userTravelledDistance",String.valueOf(mapFragmentUserTravelledDistance));
-                        bundle.putString("userTotalDistance",String.valueOf(totalDistance));
-                        bundle.putString("userTrackCompletedStatus",String.valueOf(isTrackCompleted));
+//                        bundle.putString("userTotalDistance",String.valueOf(totalDistance));
+//                        bundle.putString("userTrackCompletedStatus",String.valueOf(isTrackCompleted));
                         bundle.putString("userInitialTime",initialTime);
                         bundle.putString("userFinishedTime",finishTime);
                         bundle.putString("userSteps",String.valueOf(steps));
@@ -254,13 +260,14 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
                         notifyCompletedRunFragment.setArguments(bundle);
 
                         //Switch to Map Fragment
+                        // TODO: use replace
                         fragmentTransaction.remove(GoogleMapFragment.this);
                         fragmentTransaction.add(R.id.MainActivityFragmentContainer,notifyCompletedRunFragment);
                         fragmentTransaction.addToBackStack(null);
                         fragmentTransaction.commit();
-
                     }
                     //Catch null value
+                    // TODO: DO NOT CATCH NullPointerException!
                     catch (NullPointerException e){
                         e.printStackTrace();
                         Toast.makeText(requireActivity(), "Null Pointer Exception occurred !", Toast.LENGTH_SHORT).show();

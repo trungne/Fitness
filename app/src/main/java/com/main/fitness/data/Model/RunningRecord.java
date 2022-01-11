@@ -1,38 +1,39 @@
 package com.main.fitness.data.Model;
 
+import androidx.annotation.Nullable;
+
+import com.google.firebase.firestore.ServerTimestamp;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 public class RunningRecord {
     private String uid;
     private String time;
     private int step;
-    private Duration duration;
+
+
+    private Duration duration; // do not use custom data type
     private String finishTime;
-    private int totalDistance;
-    private boolean isTrackCompleted;
     private Double travelledDistance;
 
-    public RunningRecord(String uid, String time, int step, Duration duration, String finishTime, int totalDistance, boolean isTrackCompleted, Double travelledDistance) {
+    private @ServerTimestamp Date mTimestamp;
+
+    public RunningRecord(){
+        // required by firebase
+    }
+
+    public RunningRecord(String uid, String time, int step, Duration duration, String finishTime, Double travelledDistance) {
         this.uid = uid;
         this.time = time;
         this.step = step;
         this.duration = duration;
         this.finishTime = finishTime;
-        this.totalDistance = totalDistance;
-        this.isTrackCompleted = isTrackCompleted;
         this.travelledDistance = travelledDistance;
     }
     public String getUid() {
         return uid;
-    }
-
-    public int getTotalDistance() {
-        return totalDistance;
-    }
-
-    public boolean getIsTrackCompleted() {
-        return isTrackCompleted;
     }
 
     public Double getTravelledDistance() {
@@ -53,5 +54,14 @@ public class RunningRecord {
 
     public String getFinishTime() {
         return finishTime;
+    }
+
+    @ServerTimestamp
+    public Date getTimestamp() {
+        return mTimestamp;
+    }
+
+    public void setTimestamp(@Nullable Date mTimestamp) {
+        this.mTimestamp = mTimestamp;
     }
 }

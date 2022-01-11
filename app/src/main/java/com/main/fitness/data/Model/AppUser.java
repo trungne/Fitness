@@ -1,7 +1,5 @@
 package com.main.fitness.data.Model;
 
-import android.text.TextUtils;
-
 public class AppUser {
     private String uid;
     private String displayName;
