@@ -161,7 +161,7 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
             mapFragmentUserTravelledDistance = 0;
             mapFragmentTravelledDistanceTextView.setText("" + mapFragmentUserTravelledDistance);
             mapFragmentButtonRun.setText("Click to run");
-            mapFragmentButtonRun.setBackgroundColor(Color.GREEN);
+            mapFragmentButtonRun.setBackgroundResource(R.drawable.button_4);
 
             //Because we have not run yet, so we set the run boolean as false, steps counter is also 0
             stepDetectorSensorIsActivated = false;
@@ -203,7 +203,7 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
                         //Set the status of the button again
                         mapFragmentButtonGetCurrentLocation.setEnabled(true);
                         mapFragmentButtonRun.setText("Click to run");
-                        mapFragmentButtonRun.setBackgroundColor(Color.GREEN);
+                        mapFragmentButtonRun.setBackgroundResource(R.drawable.button_4);
 
                         //Remove the Step Detector listener and reset the counter to 0
                         steps = 0;
@@ -301,7 +301,7 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
             navBar.setVisibility(View.GONE);
 
             //Change the color of the button
-            mapFragmentButtonRun.setBackgroundColor(Color.RED);
+            mapFragmentButtonRun.setBackgroundResource(R.drawable.button_3);
             mapFragmentButtonRun.setText("STOP");
         }
 

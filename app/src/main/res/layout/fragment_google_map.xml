@@ -35,7 +35,7 @@
                 android:layout_margin="10dp"
                 android:background="@drawable/button_2"
                 android:text="My Location"
-                android:textAllCaps="false"
+
                 android:textColor="@color/white" />
 
             <LinearLayout
