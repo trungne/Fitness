@@ -18,7 +18,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,9 +38,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -57,12 +54,18 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.main.fitness.R;
 import com.main.fitness.data.Model.RunningRecord;
 import com.main.fitness.data.ViewModel.WorkoutRecordViewModel;
+import com.main.fitness.service.LocationUpdateService;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class GoogleMapFragment extends Fragment implements LocationListener {
@@ -105,6 +108,12 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
     private Button mapFragmentButtonRun;
     private Button mapFragmentButtonGetCurrentLocation;
     private BottomNavigationView navBar;
+
+
+    //For running in the background
+    Intent backgroundUpdatesIntent;
+    Boolean userOnRunningState = false;
+    ArrayList<LatLng> locationList;
 
 
 
@@ -197,8 +206,12 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
                 .setPositiveButton("Accept", (dialog, which) -> {
                     try{
 
+
                         //Stop updating user location
-                        stopLocationUpdates();
+                        if(getActivity() != null){
+                            EventBus.getDefault().unregister(this);
+                            getActivity().stopService(backgroundUpdatesIntent);
+                        }
 
                         //Set the status of the button again
                         mapFragmentButtonGetCurrentLocation.setEnabled(true);
@@ -273,7 +286,12 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
     //Start running button, we will also initialize the step counter sensor
     @SuppressLint("SetTextI18n")
     private void startRunningButton(View v){
-        //Ev
+
+        //Initialize the location list
+        locationList = new ArrayList<>();
+
+
+        //Condition
         if(mapFragmentButtonRun.getText().toString().equals("Click to run")){
             //Change the zoom in a-bit for closer look on the street
             mapFragmentButtonGetCurrentLocation.setEnabled(false);
@@ -295,7 +313,12 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
             start = Instant.now();
 
             //Start updating location
-            startLocationUpdate();
+            if(getActivity() != null){
+                EventBus.getDefault().register(this);
+                backgroundUpdatesIntent = new Intent(getActivity(), LocationUpdateService.class);
+                getActivity().startForegroundService(backgroundUpdatesIntent);
+            }
+
 
             navBar = requireActivity().findViewById(R.id.MainActivityBottomNavigationView);
             navBar.setVisibility(View.GONE);
@@ -303,6 +326,7 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
             //Change the color of the button
             mapFragmentButtonRun.setBackgroundColor(Color.RED);
             mapFragmentButtonRun.setText("STOP");
+            userOnRunningState = true;
         }
 
         else if(mapFragmentButtonRun.getText().toString().equals("STOP")){
@@ -313,52 +337,7 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
 
     }
 
-    //LOCATION UPDATES FUNCTIONS ------------------------
-    @SuppressLint("MissingPermission")
-    private void startLocationUpdate() {
 
-        //Location request configuration
-        locationRequest = LocationRequest.create()
-                .setInterval(UPDATE_INTERVAL)
-                .setFastestInterval(FASTEST_INTERVAL)
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setMaxWaitTime(MAX_WAIT_TIME);
-
-        //Request updates
-        client.requestLocationUpdates(locationRequest,locationCallback,Looper.myLooper());
-    }
-
-    @SuppressLint({"SourceLockedOrientationActivity", "SetTextI18n"})
-    @Override
-    public void onLocationChanged(Location lastLocation){
-
-        //open the map:
-        LatLng latLng = new LatLng(lastLocation.getLatitude(),lastLocation.getLongitude());
-
-        //Update location
-        prev = current;
-        current = lastLocation;
-
-        //Calculate
-        if (prev != null) {
-            mapFragmentUserTravelledDistance += ((prev.distanceTo(current)) / 1000);
-            //Format them into shorter string, to save space
-            DecimalFormat df = new DecimalFormat("#0.000");
-            mapFragmentTravelledDistanceTextView.setText("" + df.format(mapFragmentUserTravelledDistance));
-
-
-            //Draw the polyline
-            mMap.addPolyline(new PolylineOptions()
-                    .add(new LatLng(prev.getLatitude(), prev.getLongitude()), new LatLng(current.getLatitude(), current.getLongitude()))
-                    .width(10)
-                    .color(Color.RED));
-        }
-        //Move the camera to the new location point, this line put here without an if get activity != null is to check whether the
-        //onLocationChanged method is still being invoked after user chose to stop running
-        //Toast.makeText(requireActivity(), "Updated", Toast.LENGTH_SHORT).show();
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-
-    }
 
     //Function to force portrait mode on this fragment, onResume and onPause
     @Override
@@ -366,7 +345,6 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
         super.onResume();
         if (getActivity() != null) {
             getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
         }
     }
 
@@ -375,13 +353,9 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
         super.onPause();
         if (getActivity() != null) {
             getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+
         }
 
-    }
-
-    //Stop updating user location on interval
-    public void stopLocationUpdates(){
-        client.removeLocationUpdates(locationCallback);
     }
 
     //Function to check if the GPS Location is enabled in the settings
@@ -438,12 +412,14 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
                 prev = location;
                 current = location;
 
+                Toast.makeText(requireActivity(), "Prev -> " + "lat: " + prev.getLatitude() + "long: "  + prev.getLongitude(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(requireActivity(), "Current ->" + "lat: " + current.getLatitude() + " long :" + current.getLongitude(), Toast.LENGTH_SHORT).show();
                 //Adjust the camera
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                 mMap.addMarker(new MarkerOptions().icon(bitMapDescriptorFromVector(requireActivity(), R.drawable.my_location))
                         .position(latLng));
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17));
-                Toast.makeText(requireActivity(), "latitude:" + latitude + " longitude:" + longitude, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(requireActivity(), "latitude:" + latitude + " longitude:" + longitude, Toast.LENGTH_SHORT).show();
 
             }
             else {
@@ -504,12 +480,39 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
         }
     };
 
-    //***Location Call Back ***//
-    private final LocationCallback locationCallback = new LocationCallback() {
-        @Override
-        public void onLocationResult(@NonNull LocationResult locationResult) {
-            super.onLocationResult(locationResult);
-            onLocationChanged(locationResult.getLastLocation());
+
+    @SuppressLint("SetTextI18n")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(Location lastLocation) {
+        //open the map:
+        LatLng latLng = new LatLng(lastLocation.getLatitude(),lastLocation.getLongitude());
+
+        //Update location
+        prev = current;
+        current = lastLocation;
+
+        //Calculate
+        if (prev != null) {
+            mapFragmentUserTravelledDistance += ((prev.distanceTo(current)) / 1000);
+            //Format them into shorter string, to save space
+            DecimalFormat df = new DecimalFormat("#0.000");
+            mapFragmentTravelledDistanceTextView.setText("" + df.format(mapFragmentUserTravelledDistance));
+
+
+            //Draw the polyline
+            mMap.addPolyline(new PolylineOptions()
+                    .add(new LatLng(prev.getLatitude(), prev.getLongitude()), new LatLng(current.getLatitude(), current.getLongitude()))
+                    .width(10)
+                    .color(Color.RED));
         }
-    };
+        //Move the camera to the new location point, this line put here without an if get activity != null is to check whether the
+        //onLocationChanged method is still being invoked after user chose to stop running
+        //Toast.makeText(requireActivity(), "Updated", Toast.LENGTH_SHORT).show();
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+    }
+
+    @Override
+    public void onLocationChanged(@NonNull Location location) {
+
+    }
 }
