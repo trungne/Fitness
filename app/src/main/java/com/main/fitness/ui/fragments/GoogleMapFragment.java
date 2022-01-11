@@ -360,8 +360,6 @@ public class GoogleMapFragment extends Fragment {
             // notify user
             return false;
         }
-
-        Toast.makeText(requireActivity(), "Location is enabled :)", Toast.LENGTH_SHORT).show();
         return true;
     }
 
@@ -400,12 +398,18 @@ public class GoogleMapFragment extends Fragment {
                     if (task.isSuccessful()) {
                         // Task completed successfully
                         if(getActivity() != null){
-                            Location location = task.getResult();
-                            LatLng lastLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                            mMap.moveCamera(CameraUpdateFactory.newLatLng(lastLocation));
-                            mMap.addMarker(new MarkerOptions().icon(bitMapDescriptorFromVector(requireActivity(), R.drawable.my_location)).position(lastLocation));
-                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lastLocation, 17));
-                            Toast.makeText(requireActivity(), "You are here", Toast.LENGTH_SHORT).show();
+                            if(task.getResult() != null){
+                                Location location = task.getResult();
+                                LatLng lastLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                                mMap.moveCamera(CameraUpdateFactory.newLatLng(lastLocation));
+                                mMap.addMarker(new MarkerOptions().icon(bitMapDescriptorFromVector(requireActivity(), R.drawable.my_location)).position(lastLocation));
+                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lastLocation, 17));
+                                Toast.makeText(requireActivity(), "You are here", Toast.LENGTH_SHORT).show();
+                            }
+                            else{
+                                Toast.makeText(requireContext(), "Can't connect to user location !", Toast.LENGTH_LONG).show();
+                            }
+
                         }
                     } else {
                         // Task failed with an exception
@@ -454,6 +458,7 @@ public class GoogleMapFragment extends Fragment {
         }
     };
 
+    //Function to move the camera to the current user location
     private void moveCameraToCurrentLocation(View v){
         mMap.clear();
         getLocation();
