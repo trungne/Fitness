@@ -25,6 +25,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.main.fitness.R;
 import com.main.fitness.data.ViewModel.UserViewModel;
+import com.main.fitness.ui.fragments.GoogleMapFragment;
 import com.main.fitness.ui.fragments.GymFragment;
 import com.main.fitness.ui.fragments.RequireSignInFragment;
 import com.main.fitness.ui.fragments.RunningFragment;
@@ -74,8 +75,7 @@ public class MainActivity extends AppCompatActivity {
             else if (id == R.id.bottom_nav_running){
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.MainActivityFragmentContainer,
-                                RunningFragment.newInstance())
+                        .replace(R.id.MainActivityFragmentContainer,new GoogleMapFragment())
                         .commit();
                 return true;
             }
@@ -83,15 +83,6 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
 
-        // user not signed in
-//        if (!this.userViewModel.isLoggedIn()){
-//            getSupportFragmentManager()
-//                    .beginTransaction()
-//                    .replace(R.id.MainActivityFragmentContainer,
-//                            RequireSignInFragment.newInstance())
-//                    .commit();
-//            return;
-//        }
 
         if (this.userViewModel.isLoggedIn()) {
             // redirect to dashboard

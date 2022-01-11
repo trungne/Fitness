@@ -22,11 +22,9 @@ public class NotifyCompletedRunFragment extends Fragment {
 
     //XML components
     private TextView notifyFragmentTravelledDistance;
-    private TextView notifyFragmentTotalDistance;
     private TextView notifyFragmentInitialTime;
     private TextView notifyFragmentFinishedTime;
     private TextView notifyFragmentSteps;
-    private TextView notifyFragmentTrackCompleted;
     private TextView notifyFragmentDuration;
     private Button notifyFragmentFinishButton;
     private BottomNavigationView navBar;
@@ -62,12 +60,10 @@ public class NotifyCompletedRunFragment extends Fragment {
         Bundle bundle = this.getArguments();
 
         //Load xml components
-        notifyFragmentTotalDistance = v.findViewById(R.id.notify_fragment_total_distance);
         notifyFragmentTravelledDistance = v.findViewById(R.id.notify_fragment_travelled_distance);
         notifyFragmentInitialTime = v.findViewById(R.id.notify_fragment_initial_time);
         notifyFragmentFinishedTime = v.findViewById(R.id.notify_fragment_finished_time);
         notifyFragmentSteps = v.findViewById(R.id.notify_fragment_total_steps);
-        notifyFragmentTrackCompleted = v.findViewById(R.id.notify_fragment_track_completed);
         notifyFragmentDuration = v.findViewById(R.id.notify_fragment_duration);
         notifyFragmentFinishButton = v.findViewById(R.id.notify_fragment_button_finish);
 
@@ -84,15 +80,12 @@ public class NotifyCompletedRunFragment extends Fragment {
         try{
             //Data for textview
             assert bundle != null;
-            DecimalFormat df = new DecimalFormat("#.00");
-            double totalDistance = Double.parseDouble(bundle.getString("userTotalDistance"));
+            DecimalFormat df = new DecimalFormat("#0.00");
             double travelledDistance = Double.parseDouble(bundle.getString("userTravelledDistance"));
-            notifyFragmentTotalDistance.setText("" + df.format(totalDistance));
             notifyFragmentTravelledDistance.setText("" + df.format(travelledDistance));
             notifyFragmentInitialTime.setText(bundle.getString("userInitialTime"));
             notifyFragmentFinishedTime.setText(bundle.getString("userFinishedTime"));
             notifyFragmentSteps.setText(bundle.getString("userSteps"));
-            notifyFragmentTrackCompleted.setText(bundle.getString("userTrackCompletedStatus"));
             notifyFragmentDuration.setText(bundle.getString("userDuration"));
 
         }
@@ -108,9 +101,9 @@ public class NotifyCompletedRunFragment extends Fragment {
         navBar.setVisibility(View.VISIBLE);
         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.MainActivityFragmentContainer,UserFragment.newInstance());
         //Remove this fragment
-        fragmentManager.popBackStack();
-        fragmentManager.popBackStack();
+        fragmentTransaction.remove(NotifyCompletedRunFragment.this);
         fragmentManager.popBackStack();
         fragmentTransaction.commit();
     }

@@ -68,7 +68,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class GoogleMapFragment extends Fragment implements LocationListener {
+public class GoogleMapFragment extends Fragment {
 
     //Fields for location updates
     private static final int UPDATE_INTERVAL = 10 * 1000; // 10 seconds
@@ -103,7 +103,6 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
 
 
     //xml
-    private TextView mapFragmentSelectedDistanceTextView;
     private TextView mapFragmentTravelledDistanceTextView;
     private LinearLayout innerLinearLayoutMap;
     private Button mapFragmentButtonRun;
@@ -148,10 +147,7 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
         View v = inflater.inflate(R.layout.fragment_google_map, container, false);
         this.workoutRecordViewModel = new ViewModelProvider(requireActivity()).get(WorkoutRecordViewModel.class);
 
-        Bundle bundle = this.getArguments();
-
         //Load the layout, textview, linearlayout, buttons
-        mapFragmentSelectedDistanceTextView = v.findViewById(R.id.map_fragment_selected_distance);
         mapFragmentTravelledDistanceTextView = v.findViewById(R.id.map_fragment_travelled_distance);
         innerLinearLayoutMap = v.findViewById(R.id.map_inner_linear_layout);
         mapFragmentButtonRun = v.findViewById(R.id.map_fragment_button_run);
@@ -166,10 +162,6 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
 
         //Set data and set layout for linear layout
         try {
-            //Data for textview
-            assert bundle != null;
-            data = bundle.getString("selectedRunningDistance");
-            mapFragmentSelectedDistanceTextView.setText(data);
             //Because we just start running, we need to set the value as 0
             mapFragmentUserTravelledDistance = 0;
             mapFragmentTravelledDistanceTextView.setText("" + mapFragmentUserTravelledDistance);
@@ -236,17 +228,12 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
                         String initialTime = time.format(startTime);
                         end = Instant.now();
                         Duration duration = Duration.between(start, end);
-                        int totalDistance = Integer.parseInt(data);
                         double travelledDistance = mapFragmentUserTravelledDistance;
-                        boolean isTrackCompleted = false;
-                        if (travelledDistance >= totalDistance) {
-                            isTrackCompleted = true;
-                        }
 
                         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
                         String uid = firebaseAuth.getCurrentUser().getUid();
 
-                        RunningRecord runningRecord = new RunningRecord(uid, initialTime, steps, duration, finishTime, totalDistance, isTrackCompleted, travelledDistance);
+                        RunningRecord runningRecord = new RunningRecord(uid, initialTime, steps, duration, finishTime, travelledDistance);
 
 
                         // upload running record to Firebase
@@ -259,8 +246,6 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
                         //Add data to the bundle for the map fragment
                         Bundle bundle = new Bundle();
                         bundle.putString("userTravelledDistance", String.valueOf(mapFragmentUserTravelledDistance));
-                        bundle.putString("userTotalDistance", String.valueOf(totalDistance));
-                        bundle.putString("userTrackCompletedStatus", String.valueOf(isTrackCompleted));
                         bundle.putString("userInitialTime", initialTime);
                         bundle.putString("userFinishedTime", finishTime);
                         bundle.putString("userSteps", String.valueOf(steps));
@@ -307,6 +292,9 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
                 //Boolean is now true
                 stepDetectorSensorIsActivated = true;
             }
+            else{
+                Toast.makeText(requireContext(), "Your device does not have step detector sensor !", Toast.LENGTH_LONG).show();
+            }
 
             //Initial time
             startTime = LocalDateTime.now();
@@ -319,7 +307,7 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
                 getActivity().startForegroundService(backgroundUpdatesIntent);
             }
 
-
+            //Hide the bottom navigation bar
             navBar = requireActivity().findViewById(R.id.MainActivityBottomNavigationView);
             navBar.setVisibility(View.GONE);
 
@@ -411,12 +399,14 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
 
                     if (task.isSuccessful()) {
                         // Task completed successfully
-                        Location location = task.getResult();
-                        LatLng lastLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                        mMap.moveCamera(CameraUpdateFactory.newLatLng(lastLocation));
-                        mMap.addMarker(new MarkerOptions().icon(bitMapDescriptorFromVector(requireActivity(), R.drawable.my_location)).position(lastLocation));
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lastLocation, 17));
-                        Toast.makeText(requireActivity(), "You are here", Toast.LENGTH_SHORT).show();
+                        if(getActivity() != null){
+                            Location location = task.getResult();
+                            LatLng lastLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                            mMap.moveCamera(CameraUpdateFactory.newLatLng(lastLocation));
+                            mMap.addMarker(new MarkerOptions().icon(bitMapDescriptorFromVector(requireActivity(), R.drawable.my_location)).position(lastLocation));
+                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lastLocation, 17));
+                            Toast.makeText(requireActivity(), "You are here", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
                         // Task failed with an exception
                         Exception exception = task.getException();
@@ -465,6 +455,7 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
     };
 
     private void moveCameraToCurrentLocation(View v){
+        mMap.clear();
         getLocation();
     }
 
@@ -499,8 +490,4 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
     }
 
-    @Override
-    public void onLocationChanged(@NonNull Location location) {
-
-    }
 }
