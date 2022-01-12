@@ -7,6 +7,7 @@
     tools:context=".ui.activities.ShowRunningRecordActivity">
 
     <TextView
+        android:gravity="center"
         android:id="@+id/ShowRunningRecordStartTimeLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -17,31 +18,118 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:gravity="center"
         android:id="@+id/ShowRunningRecordStartTimeValue"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/ShowRunningRecordStartTimeLabel"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:gravity="center"
         android:id="@+id/ShowRunningRecordEndTimeLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="16dp"
         android:text="Finish"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ShowRunningRecordStartTimeLabel" />
 
     <TextView
-        android:id="@+id/ShowRunningRecordEndTimeValue"
+        android:gravity="center"
+        android:id="@+id/ShowRunningRecordFinishTimeValue"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/ShowRunningRecordEndTimeLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/ShowRunningRecordEndTimeLabel"
+        app:layout_constraintTop_toTopOf="@+id/ShowRunningRecordEndTimeLabel" />
+
+    <TextView
+        android:gravity="center"
+        android:id="@+id/ShowRunningRecordDurationLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Duration"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="62dp" />
+        app:layout_constraintTop_toBottomOf="@+id/ShowRunningRecordEndTimeLabel" />
+
+    <TextView
+        android:gravity="center"
+        android:id="@+id/ShowRunningRecordDurationValue"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/ShowRunningRecordDurationLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/ShowRunningRecordDurationLabel"
+        app:layout_constraintTop_toTopOf="@+id/ShowRunningRecordDurationLabel" />
+
+    <TextView
+        android:gravity="center"
+        android:id="@+id/ShowRunningRecordDistanceLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Distance"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ShowRunningRecordDurationLabel" />
+
+    <TextView
+        android:id="@+id/ShowRunningRecordDistanceValue"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="@+id/ShowRunningRecordDistanceLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/ShowRunningRecordDistanceLabel"
+        app:layout_constraintTop_toTopOf="@+id/ShowRunningRecordDistanceLabel" />
+
+    <TextView
+        android:gravity="center"
+        android:id="@+id/ShowRunningRecordStepsLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Steps"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ShowRunningRecordDistanceLabel" />
+
+    <TextView
+        android:gravity="center"
+        android:id="@+id/ShowRunningRecordStepsValue"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="0 (No sensors detected)"
+        app:layout_constraintBottom_toBottomOf="@+id/ShowRunningRecordStepsLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/ShowRunningRecordStepsLabel"
+        app:layout_constraintTop_toTopOf="@+id/ShowRunningRecordStepsLabel"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/ShowRunningRecordSaveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="Save"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/ShowRunningRecordCancelButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="Cancel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

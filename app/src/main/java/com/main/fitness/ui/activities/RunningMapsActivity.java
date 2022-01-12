@@ -64,7 +64,6 @@ public class RunningMapsActivity extends AppCompatActivity implements ActivityCo
     private static final int PERMISSION_REQUEST_LOCATION = 49;
 
     private RunningViewModel runningViewModel;
-    private WorkoutRecordViewModel workoutRecordViewModel;
 
     private GoogleMap mMap;
     protected FusedLocationProviderClient client;
@@ -152,7 +151,6 @@ public class RunningMapsActivity extends AppCompatActivity implements ActivityCo
 
 
         this.runningViewModel = new ViewModelProvider(this).get(RunningViewModel.class);
-        this.workoutRecordViewModel = new ViewModelProvider(this).get(WorkoutRecordViewModel.class);
 
         this.runningViewModel.isRunningLiveData().observe(this, isRunning -> {
             if (isRunning){
@@ -240,26 +238,19 @@ public class RunningMapsActivity extends AppCompatActivity implements ActivityCo
             return;
         }
 
-        String endTime = LocalDateTime.now().toString();
+        String finishTime = LocalDateTime.now().toString();
         String startTime = this.runningViewModel.getStartTime();
         Float distance = this.runningViewModel.getDistanceLiveData().getValue();
         Integer steps = this.runningViewModel.getStepsLiveData().getValue();
 
-        saveRecord(new RunningRecord(uid, startTime, endTime, distance, steps));
-        this.mMap.clear();
-        getLocation();
-    }
+        Intent saveRecordIntent = new Intent(this, ShowRunningRecordActivity.class);
+        saveRecordIntent.putExtra(ShowRunningRecordActivity.START_TIME_KEY, startTime);
+        saveRecordIntent.putExtra(ShowRunningRecordActivity.FINISH_TIME_KEY, finishTime);
+        saveRecordIntent.putExtra(ShowRunningRecordActivity.DISTANCE_KEY, distance);
+        saveRecordIntent.putExtra(ShowRunningRecordActivity.STEPS_KEY, steps);
+        startActivity(saveRecordIntent);
 
-    private void saveRecord(RunningRecord runningRecord){
-        new MaterialAlertDialogBuilder(this)
-                .setNeutralButton("Cancel", (dialog, which) -> {
-                    dialog.dismiss();
-                })
-                .setPositiveButton("Save session", (dialog, which) -> {
-                    this.workoutRecordViewModel.updateRunningRecord(runningRecord);
-                    dialog.dismiss();
-                })
-                .show();
+        this.runningViewModel.clearRunningData();
     }
 
     private boolean checkSensorPermission(){

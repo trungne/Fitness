@@ -63,6 +63,14 @@ public class RunningViewModel extends AndroidViewModel {
         };
     }
 
+    public void clearRunningData(){
+        this.locationList = new LinkedList<>();
+        this.locationListLiveData.setValue(this.locationList);
+        this.stepsLiveData.setValue(0);
+        this.isRunningLiveData.setValue(false);
+        this.distanceLiveData.setValue(0f);
+    }
+
 
     public void setRunning(boolean isRunning){
         this.isRunningLiveData.setValue(isRunning);
