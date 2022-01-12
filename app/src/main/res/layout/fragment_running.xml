@@ -17,26 +17,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <EditText
-            android:id="@+id/fragmentRunningDistance"
-            android:layout_width="283dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="200dp"
-            android:layout_marginBottom="100dp"
-            android:ems="10"
-            android:gravity="center"
-            android:hint="Enter running distance (Km)"
-            android:inputType="numberDecimal"
-            android:textColorHint="@color/grey_100" />
-
         <Button
             android:id="@+id/fragmentRunningRun"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
+            android:layout_width="246dp"
+            android:layout_height="62dp"
+            android:layout_marginVertical="300dp"
             android:layout_marginBottom="208dp"
             android:background="@drawable/button_1"
-            android:textColor="@color/white"
-            android:text="Let's run" />
+            android:text="Let's run"
+            android:textColor="@color/white" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

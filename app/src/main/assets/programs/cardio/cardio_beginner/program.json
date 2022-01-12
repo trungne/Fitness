@@ -4,5 +4,8 @@
   "daysPerWeek": 3,
   "goal": "Enhance stamina",
   "levels": ["BEGINNER"],
-  "overview": "Exercises on treadmill and bicycle"
+  "overview": "Exercises on treadmill and bicycle",
+  "schedule": {
+
+  }
 }

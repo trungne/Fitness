@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
 
-            if (id == R.id.bottom_nav_user){
+            if (id == R.id.bottom_nav_user) {
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.MainActivityFragmentContainer,

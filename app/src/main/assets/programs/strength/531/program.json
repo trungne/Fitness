@@ -1,8 +1,296 @@
 {
   "name": "5-3-1",
-  "duration": 0,
+  "duration": 3,
   "daysPerWeek": 4,
   "goal": "Build strength",
   "levels": ["BEGINNER", "INTERMEDIATE", "ADVANCED"],
-  "overview": "Focus on 4 main lifts: Bench Press, Back Squat, Shoulder Press, and Deadlift."
+  "overview": "Focus on 4 main lifts: Bench Press, Back Squat, Shoulder Press, and Deadlift.",
+  "schedule": [
+    [
+      {
+        "target_muscles": ["Chest", "Triceps"],
+        "exercises": [
+          {
+            "name": "barbell_bench_press",
+            "reps": [5, 5, 5],
+            "weight": [65, 75, 85]
+          },
+
+          {
+            "name": "dumbbell_flat_bench_press",
+            "reps": [5, 5, 5],
+            "weight": [75, 75, 75]
+          },
+
+          {
+            "name": "incline_dumbbell_chest_press",
+            "reps": [5, 5, 5],
+            "weight": [65, 65, 65]
+          }
+        ]
+      },
+
+      {
+        "target_muscles": ["Quads", "Calves", "Hamstring"],
+        "exercises": [
+          {
+            "name": "barbell_squats",
+            "reps": [5, 5, 5],
+            "weight": [65, 75, 85]
+          },
+
+          {
+            "name": "bulgarian_split_squats",
+            "reps": [5, 5, 5],
+            "weight": [65, 75, 85]
+          },
+
+          {
+            "name": "seated_calf_raises",
+            "reps": [5, 5, 5],
+            "weight": [65, 75, 85]
+          }
+        ]
+      },
+
+      {
+        "target_muscles": ["Upper Back", "Middle Back", "Lower Back"],
+        "exercises": [
+          {
+            "name": "barbell_deadlifts",
+            "reps": [5, 5, 5],
+            "weight": [65, 75, 85]
+          },
+
+          {
+            "name": "wide_grip_lat_pulldowns",
+            "reps": [5, 5, 5],
+            "weight": [65, 75, 85]
+          },
+
+          {
+            "name": "one_arm_dumbbell_rows",
+            "reps": [5, 5, 5],
+            "weight": [65, 75, 85]
+          }
+        ]
+      },
+
+      {
+        "target_muscles": ["Shoulders"],
+        "exercises": [
+          {
+            "name": "barbell_shoulder_press",
+            "reps": [5, 5, 5],
+            "weight": [65, 75, 85]
+          },
+
+          {
+            "name": "two_arm_dumbbell_front_shoulder_raises",
+            "reps": [5, 5, 5],
+            "weight": [65, 75, 85]
+          },
+
+          {
+            "name": "seated_lateral_shoulder_dumbbell_raise",
+            "reps": [5, 5, 5],
+            "weight": [65, 75, 85]
+          }
+        ]
+      }
+    ],
+
+
+    [
+      {
+        "target_muscles": ["Chest", "Triceps"],
+        "exercises": [
+          {
+            "name": "barbell_bench_press",
+            "reps": [3, 3, 3],
+            "weight": [70, 80, 90]
+          },
+
+          {
+            "name": "dumbbell_flat_bench_press",
+            "reps": [3, 3, 3],
+            "weight": [70, 80, 90]
+          },
+
+          {
+            "name": "incline_dumbbell_chest_press",
+            "reps": [3, 3, 3],
+            "weight": [70, 80, 90]
+          }
+        ]
+      },
+
+      {
+        "target_muscles": ["Quads", "Calves", "Hamstring"],
+        "exercises": [
+
+          {
+            "name": "barbell_squats",
+            "reps": [3, 3, 3],
+            "weight": [70, 80, 90]
+          },
+
+          {
+            "name": "bulgarian_split_squats",
+            "reps": [3, 3, 3],
+            "weight": [70, 80, 90]
+          },
+
+          {
+            "name": "seated_calf_raises",
+            "reps": [3, 3, 3],
+            "weight": [70, 80, 90]
+          }
+        ]
+      },
+
+      {
+        "target_muscles": ["Upper Back", "Middle Back", "Lower Back"],
+        "exercises": [
+          {
+            "name": "barbell_deadlifts",
+            "reps": [3, 3, 3],
+            "weight": [70, 80, 90]
+          },
+
+          {
+            "name": "wide_grip_lat_pulldowns",
+            "reps": [3, 3, 3],
+            "weight": [70, 80, 90]
+          },
+
+          {
+            "name": "one_arm_dumbbell_rows",
+            "reps": [3, 3, 3],
+            "weight": [70, 80, 90]
+          }
+        ]
+      },
+
+      {
+        "target_muscles": ["Shoulders"],
+        "exercises": [
+          {
+            "name": "barbell_shoulder_press",
+            "reps": [3, 3, 3],
+            "weight": [70, 80, 90]
+          },
+
+          {
+            "name": "two_arm_dumbbell_front_shoulder_raises",
+            "reps": [3, 3, 3],
+            "weight": [70, 80, 90]
+          },
+
+          {
+            "name": "seated_lateral_shoulder_dumbbell_raise",
+            "reps": [3, 3, 3],
+            "weight": [70, 80, 90]
+          }
+        ]
+      }
+    ],
+
+
+    [
+      {
+        "target_muscles": ["Chest", "Triceps"],
+        "exercises": [
+          {
+            "name": "barbell_bench_press",
+            "reps": [5, 3, 1],
+            "weight": [75, 85, 95]
+          },
+
+          {
+            "name": "dumbbell_flat_bench_press",
+            "reps": [5, 3, 1],
+            "weight": [75, 85, 95]
+          },
+
+          {
+            "name": "incline_dumbbell_chest_press",
+            "reps": [5, 3, 1],
+            "weight": [75, 85, 95]
+          }
+        ]
+      },
+
+      {
+        "target_muscles": ["Quads", "Calves", "Hamstring"],
+        "exercises": [
+
+          {
+            "name": "barbell_squats",
+            "reps": [5, 3, 1],
+            "weight": [75, 85, 95]
+          },
+
+          {
+            "name": "bulgarian_split_squats",
+            "reps": [5, 3, 1],
+            "weight": [75, 85, 95]
+          },
+
+          {
+            "name": "seated_calf_raises",
+            "reps": [5, 3, 1],
+            "weight": [75, 85, 95]
+          }
+        ]
+      },
+
+      {
+        "target_muscles": ["Upper Back", "Middle Back", "Lower Back"],
+        "exercises": [
+          {
+            "name": "barbell_deadlifts",
+            "reps": [5, 3, 1],
+            "weight": [75, 85, 95]
+          },
+
+          {
+            "name": "wide_grip_lat_pulldowns",
+            "reps": [5, 3, 1],
+            "weight": [75, 85, 95]
+          },
+
+          {
+            "name": "one_arm_dumbbell_rows",
+            "reps": [5, 3, 1],
+            "weight": [75, 85, 95]
+          }
+        ]
+      },
+
+      {
+        "target_muscles": ["Shoulders"],
+        "exercises": [
+          {
+            "name": "barbell_shoulder_press",
+            "reps": [5, 3, 1],
+            "weight": [75, 85, 95]
+          },
+
+          {
+            "name": "two_arm_dumbbell_front_shoulder_raises",
+            "reps": [5, 3, 1],
+            "weight": [75, 85, 95]
+          },
+
+          {
+            "name": "seated_lateral_shoulder_dumbbell_raise",
+            "reps": [5, 3, 1],
+            "weight": [75, 85, 95]
+          }
+        ]
+      }
+    ]
+  ]
+
 }

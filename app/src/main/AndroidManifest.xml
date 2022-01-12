@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:allowBackup="true"
@@ -20,20 +21,39 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Fitness">
         <activity
-            android:name=".ui.activities.gym.ExerciseDetailActivity"
-            android:parentActivityName=".ui.activities.gym.ExerciseBankActivity"
+            android:name=".ui.activities.ShowRunningRecordActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activities.gym.ProgramDetailActivity"
+            android:name=".ui.activities.RunningMapsActivity"
+            android:exported="false"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".ui.activities.ScheduleActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activities.gym.ProgramListActivity"
+            android:name=".ui.activities.MyRunRecordsActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activities.gym.ExerciseBankActivity"
+            android:name=".ui.activities.WorkoutSessionActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activities.gym.FAQAndTerminologyActivity"
+            android:name=".ui.activities.ExerciseDetailActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.activities.ExerciseBankActivity" />
+        <activity
+            android:name=".ui.activities.ProgramDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activities.ProgramListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activities.ExerciseBankActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activities.FAQAndTerminologyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activities.EditInformationActivity"
             android:exported="false" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -61,14 +81,13 @@
             android:name=".service.MyFirebaseMessagingService"
             android:enabled="true"
             android:exported="true" />
-
         <service
-            android:name=".service.LocationUpdateService"
-            android:enabled="true" />
+            android:name=".service.MyLocationUpdateService"
+            android:enabled="true"
+            android:exported="true"
+            android:foregroundServiceType="location"
+            android:stopWithTask="true" />
 
-        <activity
-            android:name=".ui.activities.DashboardActivity"
-            android:exported="true" />
         <activity
             android:name=".ui.activities.MainActivity"
             android:exported="true" />

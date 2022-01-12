@@ -1,76 +1,110 @@
 package com.main.fitness.service;
 
 import android.annotation.SuppressLint;
-import android.app.ActivityManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.graphics.Color;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Handler;
-import android.os.HandlerThread;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.Looper;
-import android.os.Parcelable;
-import android.os.PowerManager;
 import android.util.Log;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.GeoPoint;
-import com.main.fitness.data.Model.ParcelableGeoPoint;
-import com.main.fitness.ui.fragments.GoogleMapFragment;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.main.fitness.R;
+import com.main.fitness.ui.activities.MainActivity;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
+import org.greenrobot.eventbus.EventBus;
 
-public class LocationUpdateService extends Service implements LocationListener {
+/**
+ * Starts location updates on background and publish LocationUpdateEvent upon
+ * each new location result.
+ */
+public class LocationUpdateService extends Service {
 
-    private static final int UPDATE_INTERVAL = 10*1000; // 10 seconds
-    private static final int FASTEST_INTERVAL = 2*1000; // 2 seconds
-    private static final int MAX_WAIT_TIME = 1000;
-    private static final List<GeoPoint> points = new ArrayList<>();
-
-
-    protected FusedLocationProviderClient client;
-    private LocationManager locationManager;
+    //region data
+    private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 3000;
+    private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest locationRequest;
-    private GoogleMap mMap;
-    private Location prev;
-    private Location current;
-    private Location mLocation;
-    private LocationCallback mLocationCallback;
-    private PowerManager.WakeLock wakeLock;
-    private double mapFragmentUserTravelledDistance;
-    private TextView mapFragmentSelectedDistanceTextView;
-    private TextView mapFragmentTravelledDistanceTextView;
-    private NotificationManager mNotificationManager;
-    private Handler mServiceHandler;
-    private boolean mChangingConfiguration = false;
+    private LocationSettingsRequest locationSettingsRequest;
 
-    private final String TAG = "LocationUpdateService";
+    private static final String CHANNEL_ID = "channel1";
+    private NotificationManager notificationManager;
 
-    public LocationUpdateService() {
-        super();
+    //onCreate
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        initData();
+    }
+
+
+    private LocationCallback locationCallback = new LocationCallback() {
+        @Override
+        public void onLocationResult(LocationResult locationResult) {
+            super.onLocationResult(locationResult);
+            Location currentLocation = locationResult.getLastLocation();
+            Log.d("Locations update service is running: ", currentLocation.getLatitude() + "," + currentLocation.getLongitude());
+
+            EventBus.getDefault().post(currentLocation);
+
+        }
+    };
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+        prepareForegroundNotification();
+        startLocationUpdates();
+        return START_STICKY;
+    }
+
+    @SuppressLint("MissingPermission")
+    private void startLocationUpdates() {
+        mFusedLocationClient.requestLocationUpdates(this.locationRequest,
+                this.locationCallback, Looper.myLooper());
+    }
+
+    private void prepareForegroundNotification() {
+
+
+        //Check for android version
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel serviceChannel = new NotificationChannel(CHANNEL_ID,
+                    "Location Service Channel",
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(serviceChannel);
+        }
+
+        //Create intent
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,99,
+                notificationIntent, 0);
+
+
+
+        //Prepare the notification
+        Notification notification = new NotificationCompat.Builder(this,CHANNEL_ID)
+                .setContentTitle("Service running")
+                .setContentText("Your location service is working in background")
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setContentIntent(pendingIntent)
+                .build();
+
+        startForeground(100, notification);
     }
 
     @Nullable
@@ -79,111 +113,18 @@ public class LocationUpdateService extends Service implements LocationListener {
         return null;
     }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
+    private void initData() {
+        locationRequest = LocationRequest.create();
+        locationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-        client = LocationServices.getFusedLocationProviderClient(this);
-
-        createLocationRequest();
-        getLastLocation();
-
-        HandlerThread handlerThread = new HandlerThread(TAG);
-        handlerThread.start();
-        mServiceHandler = new Handler(handlerThread.getLooper());
-    }
-
-    private void getLastLocation() {
-        try {
-            client.getLastLocation()
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful() && task.getResult() != null) {
-                            mLocation = task.getResult();
-                        } else {
-                            Log.w(TAG, "Failed to get location.");
-                        }
-                    });
-        } catch (SecurityException unlikely) {
-            Log.e(TAG, "Lost location permission." + unlikely);
-        }
-    }
-
-    public void removeLocationUpdates() {
-        Log.i(TAG, "Removing location updates");
-        try {
-            client.removeLocationUpdates(mLocationCallback);
-            stopSelf();
-        } catch (SecurityException unlikely) {
-            Log.e(TAG, "Lost location permission. Could not remove updates. " + unlikely);
-        }
-    }
-
-    public void requestLocationUpdates() {
-        Log.i(TAG, "Requesting location updates");
-        startService(new Intent(getApplicationContext(), LocationUpdateService.class));
-        try {
-            client.requestLocationUpdates(locationRequest,
-                    mLocationCallback, Looper.myLooper());
-        } catch (SecurityException unlikely) {
-            Log.e(TAG, "Lost location permission. Could not request updates. " + unlikely);
-        }
-    }
-
-    private void createLocationRequest() {
-        locationRequest = LocationRequest.create()
-                .setInterval(UPDATE_INTERVAL)
-                .setFastestInterval(FASTEST_INTERVAL)
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setMaxWaitTime(MAX_WAIT_TIME);
-    }
-
-    @SuppressLint("MissingPermission")
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        new Thread(
-                () -> {
-                    while (true) {
-                        try {
-                            Thread.sleep(FASTEST_INTERVAL);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-        );
-        return START_STICKY;
-    }
-
-
-
-    @SuppressLint("SetTextI18n")
-    @Override
-    public void onLocationChanged(@NonNull Location location) {
-        //get the location change in the background and put it in the list
-        int lat = (int) (location.getLatitude() * 1E6);
-        int lng = (int) (location.getLongitude() * 1E6);
-        GeoPoint geoPoint = new GeoPoint(lat, lng);
-        points.add(geoPoint);
+        mFusedLocationClient =
+                LocationServices.getFusedLocationProviderClient(getApplicationContext());
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        //Send the list of points to GoogleMapFragMent
-        ArrayList<ParcelableGeoPoint> pointsExtra = new ArrayList<>();
-        for (GeoPoint point : points) {
-            pointsExtra.add(new ParcelableGeoPoint(point));
-        }
-        Intent intent = new Intent(LocationUpdateService.this, GoogleMapFragment.class);
-        intent.putParcelableArrayListExtra("geopoints", pointsExtra);
-
-        removeLocationUpdates();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mChangingConfiguration = true;
+        mFusedLocationClient.removeLocationUpdates(locationCallback);
     }
 }

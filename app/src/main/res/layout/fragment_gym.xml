@@ -13,29 +13,19 @@
     <Button
         android:id="@+id/gymStrength"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:background="@drawable/button_1"
         android:layout_marginTop="15dp"
         android:textColor="@color/white"
-        android:text="Strength"
+        android:text="Workout Programs"
 
-        />
-
-    <Button
-        android:id="@+id/gymCardio"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/button_1"
-        android:textColor="@color/white"
-        android:text="Cardio"
         />
 
     <Button
         android:id="@+id/gymExerciseBank"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@drawable/button_1"
+        android:layout_height="50dp"
+        android:background="@drawable/button_2"
         android:layout_marginTop="15dp"
         android:textColor="@color/white"
         android:text="Exercise Bank"
@@ -45,7 +35,7 @@
     <Button
         android:id="@+id/gymFAQAndTerminology"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:background="@drawable/button_1"
         android:text="FAQ and Terminology"
         android:layout_marginTop="15dp"

@@ -1,30 +1,30 @@
 package com.main.fitness.ui.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.main.fitness.R;
 import com.main.fitness.data.Model.AppUser;
 import com.main.fitness.data.ViewModel.UserViewModel;
-import com.main.fitness.ui.dialogs.ChooseUserLevelDialog;
+import com.main.fitness.ui.activities.EditInformationActivity;
+import com.main.fitness.ui.activities.MyRunRecordsActivity;
 
 import java.util.HashMap;
-import java.util.Map;
 
 
 public class UserFragment extends Fragment {
@@ -50,11 +50,12 @@ public class UserFragment extends Fragment {
 
     }
 
-    private Button signOutButton, updateProfileButton;
+    private Button signOutButton, updateProfileButton, runRecordsButton;
     private UserViewModel userViewModel;
 
-    private TextView  userScore,userEmail, userDifficultyLevel;
-    private EditText userDisplayName,userPhone;
+    private TextView  userEmail;
+    private TextView userDisplayName,userPhone;
+    private MaterialToolbar toolbar;
 
     private View rootView;
     @Override
@@ -63,22 +64,29 @@ public class UserFragment extends Fragment {
         this.rootView = inflater.inflate(R.layout.fragment_user, container, false);
 
         //Button wire
-        this.signOutButton = this.rootView.findViewById(R.id.UserFragmentSignoutButton);
+        this.signOutButton = this.rootView.findViewById(R.id.UserFragmentSignOutButton);
         this.signOutButton.setOnClickListener(this::signOut);
-        this.updateProfileButton = this.rootView.findViewById(R.id.UserFragmentUpdateButton);
+        this.updateProfileButton = this.rootView.findViewById(R.id.EditInfoActivityUpdateButton);
         this.updateProfileButton.setOnClickListener(this::updateUserProfile);
+        this.runRecordsButton = this.rootView.findViewById(R.id.UserFragmentRunRecordListButton);
+        this.runRecordsButton.setOnClickListener((this::viewRunRecordList));
 
         this.userViewModel = new ViewModelProvider(this)
                 .get(UserViewModel .class);
 
 
-
-        this.userScore = this.rootView.findViewById(R.id.fragmentUserScoreValue);
         this.userDisplayName = this.rootView.findViewById(R.id.fragmentUserDisplayNameValue);
         this.userEmail = this.rootView.findViewById(R.id.fragmentUserEmailValue);
         this.userPhone = this.rootView.findViewById(R.id.fragmentUserPhoneValue);
-        this.userDifficultyLevel = this.rootView.findViewById(R.id.fragmentUserDifficultyValue);
 
+
+        toolbar = this.rootView.findViewById(R.id.topAppBar);
+        toolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.userFragmentEditInfo) {
+                startActivity(new Intent(requireActivity(), EditInformationActivity.class));
+            }
+            return false;
+        });
 
 
         //Get All information of the current user
@@ -94,17 +102,16 @@ public class UserFragment extends Fragment {
                     this.userDisplayName.setText(appUser.getDisplayName());
                     this.userEmail.setText(appUser.getEmail());
                     this.userPhone.setText(appUser.getPhoneNumber());
-                    if(appUser.getUserLevel()!= null){
-                        this.userDifficultyLevel.setText(appUser.getUserLevel().getLevel());
-                    }
-                    if(appUser.getWorkoutScore() != null){
-                        this.userScore.setText(appUser.getWorkoutScore().toString());
-                    }
 
                     // set other attributes
                 });
 
         return this.rootView;
+    }
+    //View Run record list
+    private void viewRunRecordList(View view) {
+        Intent intent = new Intent(requireActivity(), MyRunRecordsActivity.class);
+        startActivity(intent);
     }
 
     // Update User Profile
@@ -133,7 +140,7 @@ public class UserFragment extends Fragment {
         }
     }
 
-    //Sign Out of the current accout
+    //Sign Out of the current account
     public void signOut(View v){
         AuthUI.getInstance()
                 .signOut(requireActivity())

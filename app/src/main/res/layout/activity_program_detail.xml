@@ -5,7 +5,37 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.activities.gym.ProgramDetailActivity">
+    tools:context=".ui.activities.ProgramDetailActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+
+        <ImageButton
+            android:id="@+id/activityProgramDetailBackButton"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:paddingTop="20dp"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_baseline_back"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:text="Program Detail:"
+            android:textColor="@color/blue_200"
+            android:textSize="30dp"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText,SpUsage" />
+
+
+    </LinearLayout>
 
     <TableLayout
         android:layout_width="match_parent"
@@ -31,8 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="30dp"
-                android:text="Name" />
+                android:layout_marginTop="30dp" />
 
         </TableRow>
 
@@ -53,7 +82,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_marginStart="20dp"
-                android:text="Goal"
 
                 />
 
@@ -77,7 +105,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_marginStart="20dp"
-                android:text="Duration"
 
                 />
         </TableRow>
@@ -100,7 +127,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_marginStart="20dp"
-                android:text="Days per week"
 
 
                 />
@@ -123,8 +149,7 @@
                 android:id="@+id/programDetailLevels"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
-                android:layout_marginStart="20dp"
-                android:text="Levels" />
+                android:layout_marginStart="20dp" />
         </TableRow>
 
         <TableRow>
@@ -141,14 +166,14 @@
 
 
         </TableRow>
+
         <TextView
             android:id="@+id/programDetailOverview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
-            android:paddingBottom="30dp"
-            android:text="Overview" />
+            android:paddingBottom="30dp" />
 
 
     </TableLayout>
@@ -169,7 +194,6 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:background="@drawable/button_1"
-            android:text="Start"
             android:textColor="@color/white" />
     </LinearLayout>
 

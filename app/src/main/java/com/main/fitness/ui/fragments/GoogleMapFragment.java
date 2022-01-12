@@ -54,19 +54,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.GeoPoint;
 import com.main.fitness.R;
-import com.main.fitness.data.Model.ParcelableGeoPoint;
-import com.main.fitness.data.Model.RunningRecord;
 import com.main.fitness.data.ViewModel.WorkoutRecordViewModel;
-import com.main.fitness.service.LocationUpdateService;
 
 import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class GoogleMapFragment extends Fragment implements LocationListener {
@@ -81,6 +76,7 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
     protected FusedLocationProviderClient client;
     private GoogleMap mMap;
     private LocationRequest locationRequest;
+    private Integer buttonCounter = 0;
 
     //For step counter running features
     private SensorManager sensorManager;
@@ -106,8 +102,9 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
     private TextView mapFragmentTravelledDistanceTextView;
     private LinearLayout innerLinearLayoutMap;
     private Button mapFragmentButtonRun;
-    private Button mapFragmentButtonStop;
     private Button mapFragmentButtonGetCurrentLocation;
+    private BottomNavigationView navBar;
+
 
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
@@ -125,8 +122,8 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
             //Get current location
             getLocation();
 
-            Intent locationUpdate = new Intent(requireContext(), LocationUpdateService.class);
-            requireContext().startService(locationUpdate);
+            //Set the running status as false;
+            buttonCounter = 0;
         }
     };
 
@@ -139,6 +136,7 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
         View v = inflater.inflate(R.layout.fragment_google_map,container,false);
         this.workoutRecordViewModel = new ViewModelProvider(requireActivity()).get(WorkoutRecordViewModel.class);
 
+        // TODO: use newInstance method to get arguments passed in
         Bundle bundle = this.getArguments();
 
         //Load the layout, textview, linearlayout, buttons
@@ -146,23 +144,25 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
         mapFragmentTravelledDistanceTextView = v.findViewById(R.id.map_fragment_travelled_distance);
         innerLinearLayoutMap = v.findViewById(R.id.map_inner_linear_layout);
         mapFragmentButtonRun = v.findViewById(R.id.map_fragment_button_run);
-        mapFragmentButtonStop = v.findViewById(R.id.map_fragment_button_stop_run);
         mapFragmentButtonGetCurrentLocation = v.findViewById(R.id.map_fragment_button_current_location);
+        navBar = v.findViewById(R.id.MainActivityBottomNavigationView);
 
         //Actions for the buttons
         mapFragmentButtonRun.setOnClickListener(this::startRunningButton);
-        mapFragmentButtonStop.setOnClickListener(this::stopRunningButton);
         mapFragmentButtonGetCurrentLocation.setOnClickListener(v1 -> getLocation());
 
         //Set data and set layout for linear layout
         try{
             //Data for textview
+            // TODO: DO NOT USE assert in production code
             assert bundle != null;
             data = bundle.getString("selectedRunningDistance");
             mapFragmentSelectedDistanceTextView.setText(data);
             //Because we just start running, we need to set the value as 0
             mapFragmentUserTravelledDistance = 0;
             mapFragmentTravelledDistanceTextView.setText("" + mapFragmentUserTravelledDistance);
+            mapFragmentButtonRun.setText("Click to run");
+            mapFragmentButtonRun.setBackgroundResource(R.drawable.button_4);
 
             //Because we have not run yet, so we set the run boolean as false, steps counter is also 0
             stepDetectorSensorIsActivated = false;
@@ -187,16 +187,26 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
     }
 
     //Show Stop dialog when user pressed the STOP button on the map screen
+    @SuppressLint("SetTextI18n")
     private void showStopDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-        builder.setMessage("Steps: " + steps + "\nDo you want to stop running?")
-                .setNegativeButton("Keep Running", (dialog, id) -> dialog.cancel())
+        builder.setMessage("Steps: " + steps + "\nDo you want to stop running?").setNegativeButton("Keep Running", (dialog, which) -> {
+            navBar = requireActivity().findViewById(R.id.MainActivityBottomNavigationView);
+            navBar.setVisibility(View.GONE);
+            dialog.cancel();
+        })
                 .setPositiveButton("Accept", (dialog, which) -> {
                     try{
 
                         //Stop updating user location
                         stopLocationUpdates();
 
+                        //Set the status of the button again
+                        mapFragmentButtonGetCurrentLocation.setEnabled(true);
+                        mapFragmentButtonRun.setText("Click to run");
+                        mapFragmentButtonRun.setBackgroundResource(R.drawable.button_4);
+
+                        // TODO: Create a function to reset step counter
                         //Remove the Step Detector listener and reset the counter to 0
                         steps = 0;
                         //We only unregister this listener when the sensor has been activated
@@ -212,47 +222,44 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
                         String initialTime  = time.format(startTime);
                         end = Instant.now();
                         Duration duration = Duration.between(start, end);
-                        int totalDistance = Integer.parseInt(data);
                         double travelledDistance = mapFragmentUserTravelledDistance;
-                        boolean isTrackCompleted = false;
-                        if (travelledDistance >= totalDistance) {
-                            isTrackCompleted = true;
-                        }
 
                         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
                         String uid = firebaseAuth.getCurrentUser().getUid();
 
-                        RunningRecord runningRecord = new RunningRecord(initialTime, steps,
-                                duration,finishTime,totalDistance,isTrackCompleted,travelledDistance,uid);
+
 
                         // upload running record to Firebase
-                        this.workoutRecordViewModel.updateRunningRecord(runningRecord);
+//                        this.workoutRecordViewModel.updateRunningRecord(runningRecord);
 
                         //Switch to the Travelled Fragment to display the final result
                         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
                         //Add data to the bundle for the map fragment
+
+                        // TODO: put these on newInstance method
                         Bundle bundle = new Bundle();
                         bundle.putString("userTravelledDistance",String.valueOf(mapFragmentUserTravelledDistance));
-                        bundle.putString("userTotalDistance",String.valueOf(totalDistance));
-                        bundle.putString("userTrackCompletedStatus",String.valueOf(isTrackCompleted));
+//                        bundle.putString("userTotalDistance",String.valueOf(totalDistance));
+//                        bundle.putString("userTrackCompletedStatus",String.valueOf(isTrackCompleted));
                         bundle.putString("userInitialTime",initialTime);
                         bundle.putString("userFinishedTime",finishTime);
                         bundle.putString("userSteps",String.valueOf(steps));
                         bundle.putString("userDuration",String.valueOf(duration.toMinutes()));
 
-                        TravelledStatusFragement travelledStatusFragement = new TravelledStatusFragement();
-                        travelledStatusFragement.setArguments(bundle);
+                        NotifyCompletedRunFragment notifyCompletedRunFragment = new NotifyCompletedRunFragment();
+                        notifyCompletedRunFragment.setArguments(bundle);
 
                         //Switch to Map Fragment
-                        fragmentTransaction.add(R.id.MainActivityFragmentContainer,travelledStatusFragement);
-                        //fragmentTransaction.remove(this);
+                        // TODO: use replace
+                        fragmentTransaction.remove(GoogleMapFragment.this);
+                        fragmentTransaction.add(R.id.MainActivityFragmentContainer,notifyCompletedRunFragment);
+                        fragmentTransaction.addToBackStack(null);
                         fragmentTransaction.commit();
-                        fragmentManager.popBackStack();
-
                     }
                     //Catch null value
+                    // TODO: DO NOT CATCH NullPointerException!
                     catch (NullPointerException e){
                         e.printStackTrace();
                         Toast.makeText(requireActivity(), "Null Pointer Exception occurred !", Toast.LENGTH_SHORT).show();
@@ -265,37 +272,46 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
     //Start running button, we will also initialize the step counter sensor
     @SuppressLint("SetTextI18n")
     private void startRunningButton(View v){
-        //Change the zoom in a-bit for closer look on the street
-        mapFragmentButtonRun.setEnabled(false);
-        mapFragmentButtonRun.setText("Running");
-        mapFragmentButtonGetCurrentLocation.setEnabled(false);
+        //Ev
+        if(mapFragmentButtonRun.getText().toString().equals("Click to run")){
+            //Change the zoom in a-bit for closer look on the street
+            mapFragmentButtonGetCurrentLocation.setEnabled(false);
 
 
-        //initialize the step DETECTOR SENSOR and the STEP counter global variable
-        steps = 0;
-        sensorManager = (SensorManager) requireContext().getSystemService(Context.SENSOR_SERVICE); //Can be Context.SENSOR_SERVICE or AppCombatActivity.SENSOR_SERVICE
-        stepDetectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
-        if(stepDetectorSensor != null){
-            sensorManager.registerListener(stepDetectorSensorEventListener,stepDetectorSensor,10);
-            //sensorManager.requestTriggerSensor(stepDetectorTriggerEventListener,stepDetectorSensor);
-            //Boolean is now true
-            stepDetectorSensorIsActivated = true;
+            //initialize the step DETECTOR SENSOR and the STEP counter global variable
+            steps = 0;
+            sensorManager = (SensorManager) requireContext().getSystemService(Context.SENSOR_SERVICE); //Can be Context.SENSOR_SERVICE or AppCombatActivity.SENSOR_SERVICE
+            stepDetectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+            if(stepDetectorSensor != null){
+                sensorManager.registerListener(stepDetectorSensorEventListener,
+                        stepDetectorSensor,
+                        10);
+                //sensorManager.requestTriggerSensor(stepDetectorTriggerEventListener,stepDetectorSensor);
+                //Boolean is now true
+                stepDetectorSensorIsActivated = true;
+            }
+
+            //Initial time
+            startTime = LocalDateTime.now();
+            start = Instant.now();
+
+            //Start updating location
+            startLocationUpdate();
+
+            navBar = requireActivity().findViewById(R.id.MainActivityBottomNavigationView);
+            navBar.setVisibility(View.GONE);
+
+            //Change the color of the button
+            mapFragmentButtonRun.setBackgroundResource(R.drawable.button_3);
+            mapFragmentButtonRun.setText("STOP");
         }
 
-        //Initial time
-        startTime = LocalDateTime.now();
-        start = Instant.now();
+        else if(mapFragmentButtonRun.getText().toString().equals("STOP")){
+            navBar = requireActivity().findViewById(R.id.MainActivityBottomNavigationView);
+            navBar.setVisibility(View.VISIBLE);
+            showStopDialog();
+        }
 
-        //Start updating location
-        startLocationUpdate();
-
-        BottomNavigationView navBar = requireActivity().findViewById(R.id.MainActivityBottomNavigationView);
-        navBar.setVisibility(View.GONE);
-    }
-
-    @SuppressLint("SetTextI18n")
-    private void stopRunningButton(View v) {
-        showStopDialog();
     }
 
     //LOCATION UPDATES FUNCTIONS ------------------------
@@ -319,7 +335,7 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
 
         //open the map:
         LatLng latLng = new LatLng(lastLocation.getLatitude(),lastLocation.getLongitude());
-
+        // TODO: use viewmodel to update location
         //Update location
         prev = current;
         current = lastLocation;
@@ -352,24 +368,6 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
         if (getActivity() != null) {
             getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        }
-
-
-        //Receive the points from LocationUpdateService
-        ArrayList<ParcelableGeoPoint> pointsExtra = getActivity().getIntent().getParcelableArrayListExtra("geopoints");
-        PolylineOptions polylineOptions = new PolylineOptions();
-        if (pointsExtra != null) {
-            for (ParcelableGeoPoint point : pointsExtra) {
-                double lat = point.getGeoPoint().getLatitude();
-                double lng = point.getGeoPoint().getLongitude();
-                LatLng latLng = new LatLng(lat, lng);
-                polylineOptions.add(latLng)
-                        .width(5)
-                        .color(Color.RED);
-            }
-            mMap.addPolyline(polylineOptions);
-        } else {
-            Toast.makeText(getContext(), "pointsExtra is null", Toast.LENGTH_LONG).show();
         }
     }
 

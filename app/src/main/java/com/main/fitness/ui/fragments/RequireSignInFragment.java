@@ -22,13 +22,9 @@ import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.main.fitness.R;
 import com.main.fitness.data.ViewModel.UserViewModel;
-//import com.main.fitness.ui.activities.DashboardActivity;
-import com.main.fitness.ui.activities.MainActivity;
 
 import java.util.Arrays;
 import java.util.List;
@@ -124,9 +120,7 @@ public class RequireSignInFragment extends Fragment {
     public void createSignInIntent() {
         Log.d(TAG, "createSignInIntent: called");
         List<AuthUI.IdpConfig> providers = Arrays.asList(
-                new AuthUI.IdpConfig.EmailBuilder().build(),
-                new AuthUI.IdpConfig.PhoneBuilder().build(),
-                new AuthUI.IdpConfig.GoogleBuilder().build());
+                new AuthUI.IdpConfig.EmailBuilder().build());
         Intent signInIntent = AuthUI.getInstance()
                 .createSignInIntentBuilder()
                 .setAvailableProviders(providers)

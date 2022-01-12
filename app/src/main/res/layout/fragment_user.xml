@@ -7,13 +7,12 @@
     tools:context=".ui.fragments.UserFragment">
 
     <Button
-        android:id="@+id/UserFragmentSignoutButton"
-        android:layout_width="200dp"
+        android:id="@+id/UserFragmentSignOutButton"
+        android:layout_width="230dp"
         android:layout_height="48dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/button_1"
+        android:background="@drawable/button_3"
         android:text="Sign out"
-        android:textAllCaps="false"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -24,12 +23,26 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/UserFragmentSignoutButton"
+        app:layout_constraintBottom_toTopOf="@+id/UserFragmentSignOutButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/topAppBar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:menu="@menu/fragment_user_top_app_bar"
+                style="@style/Widget.MaterialComponents.Toolbar.Primary"/>
+
+        </com.google.android.material.appbar.AppBarLayout>
 
 
         <TextView
@@ -39,6 +52,7 @@
             android:paddingTop="20dp"
             android:paddingBottom="20dp"
             android:text="User Profile"
+            android:layout_marginTop="50dp"
             android:textColor="@color/blue_200"
             android:textSize="30sp"
             android:textStyle="bold"
@@ -71,7 +85,7 @@
                     android:textStyle="bold"
                     tools:ignore="HardcodedText" />
 
-                <EditText
+                <TextView
                     android:id="@+id/fragmentUserDisplayNameValue"
                     style="@style/titleText2"
                     android:layout_width="match_parent"
@@ -80,8 +94,7 @@
                     android:layout_marginTop="30dp"
                     android:layout_marginEnd="10dp"
                     android:layout_weight="1"
-                    android:hint="user name..."
-                    android:text="User Name"
+                    android:hint="username"
                     tools:ignore="HardcodedText" />
 
             </TableRow>
@@ -99,7 +112,7 @@
                     android:textStyle="bold"
                     tools:ignore="HardcodedText" />
 
-                <EditText
+                <TextView
                     android:id="@+id/fragmentUserPhoneValue"
                     style="@style/titleText2"
                     android:layout_width="match_parent"
@@ -107,39 +120,12 @@
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="10dp"
                     android:layout_weight="1"
-                    android:hint="10-digit phone number..."
-                    android:text="Phone"
+                    android:hint="10-digit phone number"
                     tools:ignore="HardcodedText" />
 
             </TableRow>
 
-            <TableRow>
 
-                <TextView
-                    android:id="@+id/fragmentUserDifficultyLabel"
-                    style="@style/titleText1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="48dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="10dp"
-                    android:text="Difficulty: "
-                    android:textStyle="bold"
-                    tools:ignore="HardcodedText" />
-
-                <TextView
-                    android:id="@+id/fragmentUserDifficultyValue"
-                    style="@style/titleText2"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginStart="7dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_weight="1"
-                    android:hint="difficulty ..."
-                    android:text="Not Selected"
-                    tools:ignore="HardcodedText" />
-
-            </TableRow>
 
             <TableRow>
 
@@ -149,7 +135,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
                     android:layout_marginStart="20dp"
-
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="20dp"
                     android:text="Email: "
                     android:textStyle="bold"
                     tools:ignore="HardcodedText" />
@@ -160,55 +147,44 @@
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:layout_marginStart="7dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="20dp"
                     android:layout_weight="1"
-                    android:hint="email ..."
-                    android:text="Email"
+                    android:hint="email"
                     tools:ignore="HardcodedText" />
 
             </TableRow>
 
-            <TableRow>
 
-                <TextView
-                    android:id="@+id/fragmentUserScoreLabel"
-                    style="@style/titleText1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="48dp"
-                    android:layout_marginStart="20dp"
-                    android:text="Score: "
-                    android:textStyle="bold"
-                    tools:ignore="HardcodedText" />
-
-                <TextView
-                    android:id="@+id/fragmentUserScoreValue"
-                    style="@style/titleText2"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginStart="7dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_weight="1"
-                    android:hint="score ..."
-                    android:text="0 ( Work out to increase score ! )"
-                    tools:ignore="HardcodedText" />
-
-            </TableRow>
 
         </TableLayout>
 
         <Button
-            android:id="@+id/UserFragmentUpdateButton"
-            android:layout_width="200dp"
+            android:id="@+id/EditInfoActivityUpdateButton"
+            android:layout_width="230dp"
             android:layout_height="48dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="30dp"
             android:background="@drawable/button_2"
             android:text="Update Profile"
-            android:textAllCaps="false"
+
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tableLayout" />
+
+        <Button
+            android:id="@+id/UserFragmentRunRecordListButton"
+            android:layout_width="230dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/button_1"
+            android:text="Run Records"
+
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/EditInfoActivityUpdateButton" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
