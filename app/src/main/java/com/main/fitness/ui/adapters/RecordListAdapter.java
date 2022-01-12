@@ -51,10 +51,10 @@ public class RecordListAdapter extends ArrayAdapter<RunningRecord> {
             TextView finishDate = convertView.findViewById(R.id.finishDateTimeValue);
 
             // convert the string to LocalDateTime and format it according to the DATE_TIME_FORMATTER
-            LocalDateTime endTime = LocalDateTime.parse(recordItem.getEndTime());
+            LocalDateTime endTime = LocalDateTime.parse(recordItem.getFinishTime());
             String endTimeString = endTime.format(DATE_TIME_FORMATTER); // set this to text view
 
-            finishDate.setText(recordItem.getEndTime()+"");
+            finishDate.setText(recordItem.getFinishTime()+"");
 
             TextView duration = convertView.findViewById(R.id.durationValue);
 //            duration.setText(recordItem.getDuration()+"");

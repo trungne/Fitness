@@ -3,12 +3,10 @@ package com.main.fitness.data.Model;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.ServerTimestamp;
 
-import java.time.LocalDateTime;
-
 public class RunningRecord {
     private String uid;
     private String startTime;
-    private String endTime;
+    private String finishTime;
     private Float distance;
     private Integer steps;
 
@@ -19,10 +17,10 @@ public class RunningRecord {
 
     }
 
-    public RunningRecord(String uid, String startTime, String endTime, Float distance, Integer steps){
+    public RunningRecord(String uid, String startTime, String finishTime, Float distance, Integer steps){
         this.uid = uid;
         this.startTime = startTime;
-        this.endTime = endTime;
+        this.finishTime = finishTime;
         this.distance = distance;
         this.steps = steps;
     }
@@ -48,8 +46,8 @@ public class RunningRecord {
         return steps;
     }
 
-    public String getEndTime() {
-        return endTime;
+    public String getFinishTime() {
+        return finishTime;
     }
 
     public void setUid(String uid) {
@@ -60,8 +58,8 @@ public class RunningRecord {
         this.distance = distance;
     }
 
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
+    public void setFinishTime(String finishTime) {
+        this.finishTime = finishTime;
     }
 
     public void setStartTime(String startTime) {
