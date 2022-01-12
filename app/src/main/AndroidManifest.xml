@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:allowBackup="true"
@@ -19,6 +20,9 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.Fitness">
+        <activity
+            android:name=".ui.activities.RunningMapsActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.activities.ScheduleActivity"
             android:exported="false" />
@@ -68,6 +72,11 @@
 
         <service
             android:name=".service.MyFirebaseMessagingService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <service android:name=".service.MyLocationUpdateService"
+            android:foregroundServiceType="location"
             android:enabled="true"
             android:exported="true" />
 

@@ -17,18 +17,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <EditText
-            android:id="@+id/fragmentRunningDistance"
-            android:layout_width="283dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="200dp"
-            android:layout_marginBottom="100dp"
-            android:ems="10"
-            android:gravity="center"
-            android:hint="Enter running distance (Km)"
-            android:inputType="numberDecimal"
-            android:textColorHint="@color/grey_100" />
-
         <Button
             android:id="@+id/fragmentRunningRun"
             android:layout_width="230dp"

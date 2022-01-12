@@ -291,7 +291,9 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
             sensorManager = (SensorManager) requireContext().getSystemService(Context.SENSOR_SERVICE); //Can be Context.SENSOR_SERVICE or AppCombatActivity.SENSOR_SERVICE
             stepDetectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
             if(stepDetectorSensor != null){
-                sensorManager.registerListener(stepDetectorSensorEventListener,stepDetectorSensor,10);
+                sensorManager.registerListener(stepDetectorSensorEventListener,
+                        stepDetectorSensor,
+                        10);
                 //sensorManager.requestTriggerSensor(stepDetectorTriggerEventListener,stepDetectorSensor);
                 //Boolean is now true
                 stepDetectorSensorIsActivated = true;
@@ -341,7 +343,7 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
 
         //open the map:
         LatLng latLng = new LatLng(lastLocation.getLatitude(),lastLocation.getLongitude());
-
+        // TODO: use viewmodel to update location
         //Update location
         prev = current;
         current = lastLocation;

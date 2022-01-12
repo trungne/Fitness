@@ -1,6 +1,7 @@
 package com.main.fitness.ui.fragments;
 
 import android.Manifest;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.core.app.ActivityCompat;
@@ -18,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.main.fitness.R;
+import com.main.fitness.ui.activities.RunningMapsActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,7 +47,6 @@ public class RunningFragment extends Fragment {
     }
 
     private View view;
-    private EditText fragmentRunningDistance;
     private Button fragmentRunningRun;
     private LinearLayout running_linear_layout;
 
@@ -58,7 +59,6 @@ public class RunningFragment extends Fragment {
 
         //Set up the view
         View view = inflater.inflate(R.layout.fragment_running, container, false);
-        fragmentRunningDistance = view.findViewById(R.id.fragmentRunningDistance);
         fragmentRunningRun = view.findViewById(R.id.fragmentRunningRun);
         running_linear_layout = view.findViewById(R.id.running_linear_layout);
 
@@ -68,38 +68,8 @@ public class RunningFragment extends Fragment {
     }
 
     private void run(View view) {
-        //User enter or not?
-        if (TextUtils.isEmpty(fragmentRunningDistance.getText().toString())) {
-            Toast.makeText(requireActivity(), "Please enter the distance you want to run first!", Toast.LENGTH_SHORT).show();
-        }
-
-        else if (Double.parseDouble(fragmentRunningDistance.getText().toString()) <= 0) {
-            Toast.makeText(requireActivity(), "The distance must be bigger than 0", Toast.LENGTH_SHORT).show();
-        }
-
-        else {
-            //direct to map fragment
-            try{
-                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-                //Add data to the bundle for the map fragment
-                String userSelectedRunningDistance = fragmentRunningDistance.getText().toString();
-                Bundle bundle = new Bundle();
-                bundle.putString("selectedRunningDistance",userSelectedRunningDistance);
-                GoogleMapFragment mapFragment = new GoogleMapFragment();
-                mapFragment.setArguments(bundle);
-
-                //Switch to Map Fragment
-                fragmentTransaction.replace(R.id.MainActivityFragmentContainer, mapFragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-            }
-            //Catch null value
-            catch (NullPointerException e){
-                Toast.makeText(requireActivity(), "Null Pointer Exception occurred !", Toast.LENGTH_SHORT).show();
-            }
-
+        if (getActivity() != null){
+            startActivity(new Intent(requireActivity(), RunningMapsActivity.class));
         }
     }
 
@@ -108,6 +78,5 @@ public class RunningFragment extends Fragment {
         ActivityCompat.requestPermissions(requireActivity(), new String[]{
                 Manifest.permission.ACCESS_FINE_LOCATION
         }, 1);
-
     }
 }
