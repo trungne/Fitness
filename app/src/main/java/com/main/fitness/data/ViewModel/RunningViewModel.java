@@ -6,11 +6,9 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.location.Location;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.LinkedList;
@@ -27,15 +25,17 @@ public class RunningViewModel extends AndroidViewModel {
 
     private SensorEventListener sensorEventListener;
 
+    private MutableLiveData<Boolean> isRunningLiveData;
 
-    private boolean isRunning;
+    private String startTime;
+    // end time will be decided later by the application
 
 
     public RunningViewModel(@NonNull Application application) {
         super(application);
         this.mApplication = application;
 
-        this.isRunning = false;
+        this.isRunningLiveData = new MutableLiveData<>(false);
 
         // distance live data
         this.distanceLiveData = new MutableLiveData<>(0f);
@@ -63,11 +63,21 @@ public class RunningViewModel extends AndroidViewModel {
         };
     }
 
+
     public void setRunning(boolean isRunning){
-        this.isRunning = isRunning;
+        this.isRunningLiveData.setValue(isRunning);
     }
-    public boolean isRunning(){
-        return isRunning;
+
+    public void setStartTime(String time){
+        this.startTime = time;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public MutableLiveData<Boolean> isRunningLiveData(){
+        return this.isRunningLiveData;
     }
 
     public MutableLiveData<Float> getDistanceLiveData() {
@@ -111,5 +121,9 @@ public class RunningViewModel extends AndroidViewModel {
         this.locationListLiveData.setValue(this.locationList);
     }
 
-
+    @Override
+    protected void onCleared() {
+        Log.e(TAG, "onCleared called");
+        super.onCleared();
+    }
 }

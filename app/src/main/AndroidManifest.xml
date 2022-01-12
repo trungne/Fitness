@@ -21,8 +21,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Fitness">
         <activity
-            android:name=".ui.activities.RunningMapsActivity"
+            android:name=".ui.activities.ShowRunningRecordActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.activities.RunningMapsActivity"
+            android:exported="false"
+            android:launchMode="singleInstance" />
         <activity
             android:name=".ui.activities.ScheduleActivity"
             android:exported="false" />
@@ -74,11 +78,12 @@
             android:name=".service.MyFirebaseMessagingService"
             android:enabled="true"
             android:exported="true" />
-
-        <service android:name=".service.MyLocationUpdateService"
-            android:foregroundServiceType="location"
+        <service
+            android:name=".service.MyLocationUpdateService"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true"
+            android:foregroundServiceType="location"
+            android:stopWithTask="true" />
 
         <activity
             android:name=".ui.activities.MainActivity"

@@ -1,23 +1,18 @@
 package com.main.fitness.data.ViewModel;
 
 import android.app.Application;
-import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 
-import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.main.fitness.data.Model.RunningRecord;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -41,13 +36,8 @@ public class WorkoutRecordViewModel extends AndroidViewModel {
         this.mAth = FirebaseAuth.getInstance();
     }
 
-
-    // TODO: finish this later when runningrecord class is complete
-    public Task<Void> updateRunningRecord(RunningRecord runningRecord){
-        String uid = Objects.requireNonNull(this.mAth.getUid());
-        HashMap<String, Object> data = new HashMap<>();
-        data.put(USER_ID_FIELD, uid);
-        return null;
+    public Task<Void> updateRunningRecord(RunningRecord record){
+        return this.db.collection(RUNNING_RECORD_COLLECTION).document().set(record, SetOptions.merge());
     }
 
     public Task<List<RunningRecord>> getRunningRecords(){

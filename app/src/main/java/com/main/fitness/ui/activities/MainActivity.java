@@ -83,16 +83,6 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
 
-        // user not signed in
-//        if (!this.userViewModel.isLoggedIn()){
-//            getSupportFragmentManager()
-//                    .beginTransaction()
-//                    .replace(R.id.MainActivityFragmentContainer,
-//                            RequireSignInFragment.newInstance())
-//                    .commit();
-//            return;
-//        }
-
         if (this.userViewModel.isLoggedIn()) {
             // redirect to dashboard
             getSupportFragmentManager()

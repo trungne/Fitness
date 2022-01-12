@@ -55,7 +55,6 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.main.fitness.R;
-import com.main.fitness.data.Model.RunningRecord;
 import com.main.fitness.data.ViewModel.WorkoutRecordViewModel;
 
 import java.text.DecimalFormat;
@@ -228,17 +227,10 @@ public class GoogleMapFragment extends Fragment implements LocationListener {
                         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
                         String uid = firebaseAuth.getCurrentUser().getUid();
 
-                        RunningRecord runningRecord = new RunningRecord(
-                                uid,
-                                initialTime,
-                                steps,
-                                duration,
-                                finishTime,
-                                travelledDistance);
 
 
                         // upload running record to Firebase
-                        this.workoutRecordViewModel.updateRunningRecord(runningRecord);
+//                        this.workoutRecordViewModel.updateRunningRecord(runningRecord);
 
                         //Switch to the Travelled Fragment to display the final result
                         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();

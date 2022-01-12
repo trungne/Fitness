@@ -24,32 +24,45 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.main.fitness.R;
 import com.main.fitness.ui.activities.MainActivity;
+import com.main.fitness.ui.activities.RunningMapsActivity;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.time.LocalDateTime;
+
 public class MyLocationUpdateService extends Service {
+    private static final String TAG = "MyLocationUpdateService";
     //region data
-    private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 3000;
+    private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 5000;
+    private static final long MINIMUM_UPDATE_DISTANCE = 1;
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest locationRequest;
     private LocationSettingsRequest locationSettingsRequest;
 
-    private static final String CHANNEL_ID = "channel1";
+    private static final String CHANNEL_ID = "MyLocationUpdateService";
     private NotificationManager notificationManager;
 
+    private Location latestLocation;
     //onCreate
     @Override
     public void onCreate() {
         super.onCreate();
         initData();
+        Log.e(TAG, "OnCreated");
     }
 
 
-    private LocationCallback locationCallback = new LocationCallback() {
+    private final LocationCallback locationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
             super.onLocationResult(locationResult);
             Location currentLocation = locationResult.getLastLocation();
+            if(latestLocation != null && latestLocation.distanceTo(currentLocation) < MINIMUM_UPDATE_DISTANCE){
+                return;
+            }
+
+            latestLocation = currentLocation;
+
             Log.d("Locations update service is running: ", currentLocation.getLatitude() + "," + currentLocation.getLongitude());
 
             EventBus.getDefault().post(currentLocation);
@@ -60,39 +73,41 @@ public class MyLocationUpdateService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         prepareForegroundNotification();
         startLocationUpdates();
+        Log.e(TAG, LocalDateTime.now().toString());
         return START_STICKY;
     }
 
     @SuppressLint("MissingPermission")
     private void startLocationUpdates() {
-        mFusedLocationClient.requestLocationUpdates(this.locationRequest,
+        this.mFusedLocationClient.requestLocationUpdates(this.locationRequest,
                 this.locationCallback, Looper.myLooper());
     }
 
     private void prepareForegroundNotification() {
-
-
         //Check for android version
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel serviceChannel = new NotificationChannel(CHANNEL_ID,
                     "Location Service Channel",
                     NotificationManager.IMPORTANCE_DEFAULT
             );
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(serviceChannel);
+            this.notificationManager = getSystemService(NotificationManager.class);
+            this.notificationManager.createNotificationChannel(serviceChannel);
         }
 
         //Create intent
-        Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,99,
-                notificationIntent, 0);
+        Intent notificationIntent = new Intent(this, RunningMapsActivity.class);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,
+                99,
+                notificationIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
 
 
 
         //Prepare the notification
         Notification notification = new NotificationCompat.Builder(this,CHANNEL_ID)
-                .setContentTitle("Service running")
-                .setContentText("Your location service is working in background")
+                .setContentTitle("fITness")
+                .setContentText("We're counting your distance!")
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentIntent(pendingIntent)
                 .build();
@@ -105,6 +120,7 @@ public class MyLocationUpdateService extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
+
 
     private void initData() {
         locationRequest = LocationRequest.create();
@@ -119,5 +135,6 @@ public class MyLocationUpdateService extends Service {
     public void onDestroy() {
         super.onDestroy();
         mFusedLocationClient.removeLocationUpdates(locationCallback);
+        Log.e(TAG, "OnDestroy");
     }
 }

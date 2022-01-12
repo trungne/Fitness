@@ -15,9 +15,14 @@ import androidx.annotation.NonNull;
 import com.main.fitness.R;
 import com.main.fitness.data.Model.RunningRecord;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class RecordListAdapter extends ArrayAdapter<RunningRecord> {
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss");
+
+
     private List<RunningRecord> runningRecords;
     private Context context;
 
@@ -41,16 +46,22 @@ public class RecordListAdapter extends ArrayAdapter<RunningRecord> {
         if( convertView != null){
 
             TextView startDate = convertView.findViewById(R.id.startDateTimeValue);
-            startDate.setText(recordItem.getTime()+"");
+            startDate.setText(recordItem.getStartTime()+"");
 
             TextView finishDate = convertView.findViewById(R.id.finishDateTimeValue);
-            finishDate.setText(recordItem.getFinishTime()+"");
+
+            // convert the string to LocalDateTime and format it according to the DATE_TIME_FORMATTER
+            LocalDateTime endTime = LocalDateTime.parse(recordItem.getEndTime());
+            String endTimeString = endTime.format(DATE_TIME_FORMATTER); // set this to text view
+
+            finishDate.setText(recordItem.getEndTime()+"");
 
             TextView duration = convertView.findViewById(R.id.durationValue);
-            duration.setText(recordItem.getDuration()+"");
+//            duration.setText(recordItem.getDuration()+"");
+            // calculate duration from start end end
 
             TextView steps = convertView.findViewById(R.id.stepsValue);
-            steps.setText("("+recordItem.getStep()+" steps)");
+            steps.setText("("+recordItem.getSteps()+" steps)");
 
 //            TextView track = convertView.findViewById(R.id.trackValue);
 //            track.setText(recordItem.getTravelledDistance()+"/"+recordItem.getTotalDistance());

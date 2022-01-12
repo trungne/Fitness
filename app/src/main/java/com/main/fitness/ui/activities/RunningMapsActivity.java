@@ -2,28 +2,29 @@ package com.main.fitness.ui.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,35 +38,85 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.main.fitness.R;
+import com.main.fitness.data.Model.RunningRecord;
 import com.main.fitness.data.ViewModel.RunningViewModel;
+import com.main.fitness.data.ViewModel.WorkoutRecordViewModel;
 import com.main.fitness.service.MyLocationUpdateService;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-public class RunningMapsActivity extends AppCompatActivity implements OnMapReadyCallback{
+public class RunningMapsActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback, OnMapReadyCallback  {
     private static final String TAG = "RunningMapsActivity";
+    private static final int PERMISSION_REQUEST_SENSOR = 99;
+    private static final int PERMISSION_REQUEST_LOCATION = 49;
+
+    private RunningViewModel runningViewModel;
+    private WorkoutRecordViewModel workoutRecordViewModel;
+
     private GoogleMap mMap;
     protected FusedLocationProviderClient client;
-    private RunningViewModel runningViewModel;
     private Intent backgroundUpdatesIntent;
 
-
-    private TextView distanceTextView, stepTextView;
+    private TextView distanceTextView, stepTextView, stepLabel;
     private Button runButton;
     private FloatingActionButton currentLocationButton;
 
-
     private SensorManager sensorManager;
+    private Marker mMarker;
+    
+    // callback to handle request permission for sensor and location
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_REQUEST_SENSOR) {
+            // Request for camera permission.
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission has been granted. Start sensor.
+                startSensor();
+            } else {
+                // Permission request was denied.
+                stepLabel.setVisibility(View.GONE);
+                stepTextView.setVisibility(View.GONE);
+                Toast.makeText(this, "Permission denied!", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        if (requestCode == PERMISSION_REQUEST_LOCATION){
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission has been granted. Start sensor.
+                getLocation();
+            } else {
+                // Permission request was denied.
+                new MaterialAlertDialogBuilder(this)
+                        .setTitle("Location required!")
+                        .setMessage("You must enable location to use this service.")
+                        .setPositiveButton("Turn on location", (dialog, which) -> {
+                            getLocation();
+                            dialog.dismiss();
+                        })
+                        .setNeutralButton("Go Back", (dialog, which) -> {
+                            finish();
+                            dialog.dismiss();
+                        })
+                        .show();
+            }
+        }
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +132,14 @@ public class RunningMapsActivity extends AppCompatActivity implements OnMapReady
 
 
         this.distanceTextView = findViewById(R.id.RunningActivityDistanceValue);
+
         this.stepTextView = findViewById(R.id.RunningActivityStepValue);
+        this.stepLabel = findViewById(R.id.RunningActitivtyStepLabel);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            stepLabel.setVisibility(View.GONE);
+            stepTextView.setVisibility(View.GONE);
+        }
 
         this.currentLocationButton = findViewById(R.id.RunningActivityMyLocatioButton);
         this.currentLocationButton.setOnClickListener(v -> getLocation());
@@ -91,23 +149,29 @@ public class RunningMapsActivity extends AppCompatActivity implements OnMapReady
             mapFragment.getMapAsync(this);
         }
 
-        this.runningViewModel = new ViewModelProvider(this).get(RunningViewModel.class);
 
-        if (this.runningViewModel.isRunning()){
-            this.runButton.setText("Stop");
-            this.runButton.setOnClickListener(v -> {
-                stopRunning();
-            });
-        }
-        else{
-            this.runButton.setText("Run");
-            this.runButton.setOnClickListener(v -> {
-                startRunning();
-            });
-        }
+
+        this.runningViewModel = new ViewModelProvider(this).get(RunningViewModel.class);
+        this.workoutRecordViewModel = new ViewModelProvider(this).get(WorkoutRecordViewModel.class);
+
+        this.runningViewModel.isRunningLiveData().observe(this, isRunning -> {
+            if (isRunning){
+                this.runButton.setText("Stop");
+                this.runButton.setOnClickListener(v -> {
+                    askForStopConfirmation();
+                });
+            }
+            else{
+                this.runButton.setText("Run");
+                this.runButton.setOnClickListener(v -> {
+                    startRunning();
+                });
+            }
+        });
 
 
         this.runningViewModel.getLocationListLiveData().observe(this, locations -> {
+            Log.e(TAG, "getLocationListLiveData Listener called");
             if (locations.size() < 2){
                 return;
             }
@@ -116,10 +180,10 @@ public class RunningMapsActivity extends AppCompatActivity implements OnMapReady
             Location current = locations.get(size - 1);
 
             updateRunningPolyline(prev, current);
+            redrawCurrentLocationMarker(new LatLng(current.getLatitude(), current.getLongitude()));
         });
 
         this.runningViewModel.getStepsLiveData().observe(this, integer -> {
-            Toast.makeText(this, "new steps: " + integer, Toast.LENGTH_SHORT).show();
             this.stepTextView.setText(String.valueOf(integer));
         });
         this.runningViewModel.getDistanceLiveData().observe(this, aFloat -> {
@@ -129,19 +193,37 @@ public class RunningMapsActivity extends AppCompatActivity implements OnMapReady
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        // mMap is not initialized when the activity is first created
-        if (this.mMap != null){
-            this.mMap.clear();
-        }
+    protected void onResume() {
+        super.onResume();
+        redrawPolyline();
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        redraw();
+    public void onBackPressed() {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle("Cancel Running?")
+                .setMessage("You haven't finished the session. Do you want to cancel it?")
+                .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    stopRunning();
+                    dialog.dismiss();
+                    super.onBackPressed();
+                })
+                .show();
+    }
 
+    private void askForStopConfirmation(){
+        new MaterialAlertDialogBuilder(this)
+                .setTitle("Finish Running?")
+                .setMessage("Do you want to finish this session?")
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    dialog.dismiss();
+                    stopRunning();
+                })
+                .setNegativeButton("No", (dialog, which) -> {
+                    dialog.dismiss();
+                })
+                .show();
     }
 
     private void stopRunning(){
@@ -149,33 +231,94 @@ public class RunningMapsActivity extends AppCompatActivity implements OnMapReady
         this.currentLocationButton.setEnabled(true);
         this.runningViewModel.setRunning(false);
 
-        // start running result activity
+        EventBus.getDefault().unregister(this);
+        stopService(this.backgroundUpdatesIntent);
+
+
+        String uid = FirebaseAuth.getInstance().getUid();
+        if (TextUtils.isEmpty(uid)){
+            return;
+        }
+
+        String endTime = LocalDateTime.now().toString();
+        String startTime = this.runningViewModel.getStartTime();
+        Float distance = this.runningViewModel.getDistanceLiveData().getValue();
+        Integer steps = this.runningViewModel.getStepsLiveData().getValue();
+
+        saveRecord(new RunningRecord(uid, startTime, endTime, distance, steps));
+        this.mMap.clear();
+        getLocation();
+    }
+
+    private void saveRecord(RunningRecord runningRecord){
+        new MaterialAlertDialogBuilder(this)
+                .setNeutralButton("Cancel", (dialog, which) -> {
+                    dialog.dismiss();
+                })
+                .setPositiveButton("Save session", (dialog, which) -> {
+                    this.workoutRecordViewModel.updateRunningRecord(runningRecord);
+                    dialog.dismiss();
+                })
+                .show();
+    }
+
+    private boolean checkSensorPermission(){
+        //Check for permission
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+
+            //If permission is not accepted
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) {
+                //Request permission
+                ActivityCompat.requestPermissions(this, new String[]{
+                        Manifest.permission.ACTIVITY_RECOGNITION
+                }, PERMISSION_REQUEST_SENSOR);
+            } else {
+                return true;
+            }
+        }
+
+
+        return false;
+    }
+
+    private boolean checkLocationPermission(){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            //Request permission
+            ActivityCompat.requestPermissions(this, new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION
+            }, PERMISSION_REQUEST_LOCATION);
+            return false;
+        } else {
+            return true;
+        }
     }
 
 
     private void startRunning(){
         // disable current location button
         this.currentLocationButton.setEnabled(false);
+        this.runningViewModel.setRunning(true);
+        this.runningViewModel.setStartTime(LocalDateTime.now().toString());
+
+        EventBus.getDefault().unregister(this);
         EventBus.getDefault().register(this);
+
         startForegroundService(backgroundUpdatesIntent);
         startSensor();
 
-        this.runningViewModel.setRunning(true);
     }
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        Log.i(TAG, "MAP READY!!!!!!!!!!!!!!");
         this.mMap = googleMap;
         this.client = LocationServices.getFusedLocationProviderClient(this);
         this.mMap.getUiSettings().setZoomControlsEnabled(true);
-        redraw();
+        redrawPolyline();
         getLocation();
     }
 
-    private void redraw(){
+    private void redrawPolyline(){
         if (this.mMap == null){
-            Log.e(TAG, "Map not ready!");
             return;
         }
 
@@ -190,14 +333,13 @@ public class RunningMapsActivity extends AppCompatActivity implements OnMapReady
             Location prev = locations.get(i);
             Location current = locations.get(i + 1);
             updateRunningPolyline(prev, current);
-
         }
     }
 
     @SuppressLint("MissingPermission")
     public void getLocation(){
 
-        if (isLocationEnabled()) {
+        if (checkLocationPermission()) {
             LocationManager locationManager = (LocationManager)  getSystemService(Context.LOCATION_SERVICE);
             Criteria criteria = new Criteria();
             String bestProvider = String.valueOf(locationManager.getBestProvider(criteria, true)).toString();
@@ -210,56 +352,29 @@ public class RunningMapsActivity extends AppCompatActivity implements OnMapReady
 
                 //Adjust the camera
                 this.mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                this.mMap.addMarker(
-                        new MarkerOptions()
-                                .icon(bitMapDescriptorFromVector(this, R.drawable.my_location))
-                                .position(latLng));
                 this.mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17));
+                redrawCurrentLocationMarker(latLng);
             }
         }
         else{
             // handle location not enabled
             Toast.makeText(this, "Please turn on location to use this service!", Toast.LENGTH_LONG).show();
-            requestTurnOnLocation();
         }
     }
 
-
-    //Function to check if the GPS Location is enabled in the settings
-    public boolean isLocationEnabled(){
-        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        boolean gpsEnabled = false;
-        boolean networkEnabled = false;
-        try {
-            gpsEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-            networkEnabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+    private void redrawCurrentLocationMarker(LatLng latLng){
+        if (this.mMap == null){
+            return;
         }
-        catch(Exception ex) {
-            ex.printStackTrace();
+        if (this.mMarker != null){
+            this.mMarker.remove();
         }
 
-        //If both boolean is returned with false
-        if(!gpsEnabled && !networkEnabled) {
-            // notify user
-            requestTurnOnLocation();
-            return false;
-        }
-
-        return true;
+        this.mMarker = this.mMap.addMarker(new MarkerOptions()
+                .icon(bitMapDescriptorFromVector(this, R.drawable.my_location))
+                .position(latLng));
     }
 
-    private void requestTurnOnLocation(){
-        new MaterialAlertDialogBuilder(this)
-                .setMessage("Location is currently off")
-                .setPositiveButton("Open Location Settings", (dialog, which) -> {
-                    startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                    dialog.dismiss();
-                })
-                .setNeutralButton("Cancel", (dialog, which) -> {
-                    dialog.dismiss();
-                })
-                .show();
-    }
 
     //Help to add new image for icon
     private static BitmapDescriptor bitMapDescriptorFromVector(Context context, int vectorResId) {
@@ -276,7 +391,6 @@ public class RunningMapsActivity extends AppCompatActivity implements OnMapReady
     @SuppressLint("SetTextI18n")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(Location lastLocation) {
-        //open the map:
         this.runningViewModel.updateLocation(lastLocation);
     }
 
@@ -299,24 +413,14 @@ public class RunningMapsActivity extends AppCompatActivity implements OnMapReady
     }
 
     private void startSensor(){
-        Sensor stepDetectorSensor = this.sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
-        if (stepDetectorSensor != null){
-            Toast.makeText(this, "You device supports step detector sensor", Toast.LENGTH_SHORT).show();
-            this.sensorManager.registerListener(this.runningViewModel.getSensorEventListener(), stepDetectorSensor, 10);
-        }
-        else{
-            Toast.makeText(this, "Step detector sensor is not activated", Toast.LENGTH_SHORT).show();
-            new MaterialAlertDialogBuilder(this)
-                    .setMessage("Please turn on your step detector sensor")
-                    .setPositiveButton("Go To Settings", (dialog, which) -> {
-                        startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS));
-                        dialog.dismiss();
-                    })
-                    .setNeutralButton("Cancel", (dialog, which) -> {
-                        dialog.dismiss();
-                    })
-                    .show();
-            this.stepTextView.setText("No step detector found!");
+        if(checkSensorPermission()){
+            Sensor stepDetectorSensor = this.sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+            if (stepDetectorSensor != null){
+                Toast.makeText(this, "Step detector sensor enabled!", Toast.LENGTH_SHORT).show();
+                this.sensorManager.registerListener(this.runningViewModel.getSensorEventListener(), stepDetectorSensor, 10);
+                stepLabel.setVisibility(View.VISIBLE);
+                stepTextView.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -326,6 +430,4 @@ public class RunningMapsActivity extends AppCompatActivity implements OnMapReady
             this.sensorManager.unregisterListener(this.runningViewModel.getSensorEventListener(), stepDetectorSensor);
         }
     }
-
-
 }

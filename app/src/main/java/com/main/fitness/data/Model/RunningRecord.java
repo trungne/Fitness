@@ -1,67 +1,78 @@
 package com.main.fitness.data.Model;
 
-import androidx.annotation.Nullable;
-
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.ServerTimestamp;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public class RunningRecord {
     private String uid;
-    private String time;
-    private int step;
+    private String startTime;
+    private String endTime;
+    private Float distance;
+    private Integer steps;
 
-
-    private Duration duration; // do not use custom data type
-    private String finishTime;
-    private Double travelledDistance;
-
-    private @ServerTimestamp Date mTimestamp;
+    private @ServerTimestamp
+    Timestamp timestamp;
 
     public RunningRecord(){
-        // required by firebase
+
     }
 
-    public RunningRecord(String uid, String time, int step, Duration duration, String finishTime, Double travelledDistance) {
+    public RunningRecord(String uid, String startTime, String endTime, Float distance, Integer steps){
         this.uid = uid;
-        this.time = time;
-        this.step = step;
-        this.duration = duration;
-        this.finishTime = finishTime;
-        this.travelledDistance = travelledDistance;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.distance = distance;
+        this.steps = steps;
     }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
     public String getUid() {
         return uid;
     }
 
-    public Double getTravelledDistance() {
-        return travelledDistance;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public int getStep() {
-        return step;
-    }
-
-    public Duration getDuration() {
-        return duration;
-    }
-
-    public String getFinishTime() {
-        return finishTime;
-    }
-
     @ServerTimestamp
-    public Date getTimestamp() {
-        return mTimestamp;
+    public Timestamp getTimestamp() {
+        return timestamp;
     }
 
-    public void setTimestamp(@Nullable Date mTimestamp) {
-        this.mTimestamp = mTimestamp;
+    public Float getDistance() {
+        return distance;
+    }
+
+    public Integer getSteps() {
+        return steps;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public void setDistance(Float distance) {
+        this.distance = distance;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setSteps(Integer steps) {
+        this.steps = steps;
+    }
+
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
     }
 }
