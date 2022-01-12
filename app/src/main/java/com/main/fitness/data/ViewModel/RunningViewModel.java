@@ -23,16 +23,23 @@ public class RunningViewModel extends AndroidViewModel {
     private List<Location> locationList;
 
     private MutableLiveData<Integer> stepsLiveData;
+    private MutableLiveData<Float> distanceLiveData;
 
     private SensorEventListener sensorEventListener;
+
 
     public RunningViewModel(@NonNull Application application) {
         super(application);
         this.mApplication = application;
+        // distance live data
+        this.distanceLiveData = new MutableLiveData<>(0f);
+
+        // location live data
         this.locationList = new LinkedList<>();
         this.locationListLiveData = new MutableLiveData<>();
         this.locationListLiveData.setValue(this.locationList);
 
+        // step live data
         this.stepsLiveData = new MutableLiveData<>(0);
         this.sensorEventListener = new SensorEventListener() {
             @Override
@@ -48,6 +55,10 @@ public class RunningViewModel extends AndroidViewModel {
 
             }
         };
+    }
+
+    public MutableLiveData<Float> getDistanceLiveData() {
+        return distanceLiveData;
     }
 
     public SensorEventListener getSensorEventListener() {
@@ -78,8 +89,14 @@ public class RunningViewModel extends AndroidViewModel {
             }
         }
 
+        if (size > 2){
+            float distance = this.locationList.get(size - 1).distanceTo(newLocation);
+            this.distanceLiveData.setValue(this.getDistanceLiveData().getValue() + distance);
+        }
+
         this.locationList.add(newLocation);
         this.locationListLiveData.setValue(this.locationList);
+
     }
 
 

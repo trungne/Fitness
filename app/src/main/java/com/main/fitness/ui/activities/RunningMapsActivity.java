@@ -66,8 +66,6 @@ public class RunningMapsActivity extends AppCompatActivity implements OnMapReady
 
     private SensorManager sensorManager;
 
-    private float distance;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,8 +74,6 @@ public class RunningMapsActivity extends AppCompatActivity implements OnMapReady
         this.backgroundUpdatesIntent = new Intent(this, MyLocationUpdateService.class);
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-
-        this.distance = 0f;
 
         // init views
         this.runButton = findViewById(R.id.RunningActivityButton);
@@ -110,6 +106,9 @@ public class RunningMapsActivity extends AppCompatActivity implements OnMapReady
 
         this.runningViewModel.getStepsLiveData().observe(this, integer -> {
             this.stepTextView.setText(String.valueOf(integer));
+        });
+        this.runningViewModel.getDistanceLiveData().observe(this, aFloat -> {
+            this.distanceTextView.setText(String.valueOf(aFloat));
         });
 
     }
@@ -271,15 +270,17 @@ public class RunningMapsActivity extends AppCompatActivity implements OnMapReady
         //Toast.makeText(requireActivity(), "Updated", Toast.LENGTH_SHORT).show();
         LatLng latLng = new LatLng(current.getLatitude(), current.getLongitude());
         this.mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        distance += prev.distanceTo(current);
-        this.distanceTextView.setText(String.valueOf(distance));
-
     }
 
     private void startSensor(){
         Sensor stepDetectorSensor = this.sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
         if (stepDetectorSensor != null){
+            Toast.makeText(this, "You device supports step detector sensor", Toast.LENGTH_SHORT).show();
             this.sensorManager.registerListener(this.runningViewModel.getSensorEventListener(), stepDetectorSensor, 10);
+        }
+        else{
+            Toast.makeText(this, "You device does not step detector sensor", Toast.LENGTH_SHORT).show();
+            this.stepTextView.setText("No step detector found!");
         }
     }
 
