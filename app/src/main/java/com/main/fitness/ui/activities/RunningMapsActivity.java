@@ -248,9 +248,12 @@ public class RunningMapsActivity extends AppCompatActivity implements ActivityCo
         saveRecordIntent.putExtra(ShowRunningRecordActivity.FINISH_TIME_KEY, finishTime);
         saveRecordIntent.putExtra(ShowRunningRecordActivity.DISTANCE_KEY, distance);
         saveRecordIntent.putExtra(ShowRunningRecordActivity.STEPS_KEY, steps);
-        startActivity(saveRecordIntent);
+
 
         this.runningViewModel.clearRunningData();
+        this.mMap.clear();
+        getLocation();
+        startActivity(saveRecordIntent);
     }
 
     private boolean checkSensorPermission(){
@@ -287,6 +290,7 @@ public class RunningMapsActivity extends AppCompatActivity implements ActivityCo
 
     private void startRunning(){
         // disable current location button
+        getLocation();
         this.currentLocationButton.setEnabled(false);
         this.runningViewModel.setRunning(true);
         this.runningViewModel.setStartTime(LocalDateTime.now().toString());

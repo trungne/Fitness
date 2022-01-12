@@ -131,7 +131,6 @@ public class RunningViewModel extends AndroidViewModel {
 
     @Override
     protected void onCleared() {
-        Log.e(TAG, "onCleared called");
         super.onCleared();
     }
 }
