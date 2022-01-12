@@ -28,9 +28,15 @@ public class RunningViewModel extends AndroidViewModel {
     private SensorEventListener sensorEventListener;
 
 
+    private boolean isRunning;
+
+
     public RunningViewModel(@NonNull Application application) {
         super(application);
         this.mApplication = application;
+
+        this.isRunning = false;
+
         // distance live data
         this.distanceLiveData = new MutableLiveData<>(0f);
 
@@ -55,6 +61,13 @@ public class RunningViewModel extends AndroidViewModel {
 
             }
         };
+    }
+
+    public void setRunning(boolean isRunning){
+        this.isRunning = isRunning;
+    }
+    public boolean isRunning(){
+        return isRunning;
     }
 
     public MutableLiveData<Float> getDistanceLiveData() {
@@ -96,7 +109,6 @@ public class RunningViewModel extends AndroidViewModel {
 
         this.locationList.add(newLocation);
         this.locationListLiveData.setValue(this.locationList);
-
     }
 
 

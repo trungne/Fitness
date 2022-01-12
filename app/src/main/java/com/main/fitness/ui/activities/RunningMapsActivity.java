@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -77,9 +78,7 @@ public class RunningMapsActivity extends AppCompatActivity implements OnMapReady
 
         // init views
         this.runButton = findViewById(R.id.RunningActivityButton);
-        this.runButton.setOnClickListener(v -> {
-            startRunning();
-        });
+
 
         this.distanceTextView = findViewById(R.id.RunningActivityDistanceValue);
         this.stepTextView = findViewById(R.id.RunningActivityStepValue);
@@ -93,6 +92,21 @@ public class RunningMapsActivity extends AppCompatActivity implements OnMapReady
         }
 
         this.runningViewModel = new ViewModelProvider(this).get(RunningViewModel.class);
+
+        if (this.runningViewModel.isRunning()){
+            this.runButton.setText("Stop");
+            this.runButton.setOnClickListener(v -> {
+                stopRunning();
+            });
+        }
+        else{
+            this.runButton.setText("Run");
+            this.runButton.setOnClickListener(v -> {
+                startRunning();
+            });
+        }
+
+
         this.runningViewModel.getLocationListLiveData().observe(this, locations -> {
             if (locations.size() < 2){
                 return;
@@ -105,6 +119,7 @@ public class RunningMapsActivity extends AppCompatActivity implements OnMapReady
         });
 
         this.runningViewModel.getStepsLiveData().observe(this, integer -> {
+            Toast.makeText(this, "new steps: " + integer, Toast.LENGTH_SHORT).show();
             this.stepTextView.setText(String.valueOf(integer));
         });
         this.runningViewModel.getDistanceLiveData().observe(this, aFloat -> {
@@ -129,13 +144,23 @@ public class RunningMapsActivity extends AppCompatActivity implements OnMapReady
 
     }
 
+    private void stopRunning(){
+        stopSensor();
+        this.currentLocationButton.setEnabled(true);
+        this.runningViewModel.setRunning(false);
+
+        // start running result activity
+    }
+
+
     private void startRunning(){
         // disable current location button
         this.currentLocationButton.setEnabled(false);
         EventBus.getDefault().register(this);
         startForegroundService(backgroundUpdatesIntent);
-
         startSensor();
+
+        this.runningViewModel.setRunning(true);
     }
 
     @Override
@@ -155,17 +180,18 @@ public class RunningMapsActivity extends AppCompatActivity implements OnMapReady
         }
 
         List<Location> locations = this.runningViewModel.getLocationListLiveData().getValue();
+
         // redraw
         if (locations == null){
             return;
         }
+
         for (int i = 0 ; i < locations.size() - 1; i++){
             Location prev = locations.get(i);
             Location current = locations.get(i + 1);
             updateRunningPolyline(prev, current);
 
         }
-
     }
 
     @SuppressLint("MissingPermission")
@@ -279,7 +305,17 @@ public class RunningMapsActivity extends AppCompatActivity implements OnMapReady
             this.sensorManager.registerListener(this.runningViewModel.getSensorEventListener(), stepDetectorSensor, 10);
         }
         else{
-            Toast.makeText(this, "You device does not step detector sensor", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Step detector sensor is not activated", Toast.LENGTH_SHORT).show();
+            new MaterialAlertDialogBuilder(this)
+                    .setMessage("Please turn on your step detector sensor")
+                    .setPositiveButton("Go To Settings", (dialog, which) -> {
+                        startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS));
+                        dialog.dismiss();
+                    })
+                    .setNeutralButton("Cancel", (dialog, which) -> {
+                        dialog.dismiss();
+                    })
+                    .show();
             this.stepTextView.setText("No step detector found!");
         }
     }
