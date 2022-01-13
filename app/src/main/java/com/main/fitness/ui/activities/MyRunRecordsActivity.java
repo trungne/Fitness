@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -60,21 +61,13 @@ public class MyRunRecordsActivity extends AppCompatActivity {
     private void fillDataToRunningRecordsList(){
 
         runningRecords = new ArrayList<>();
-        Task<List<RunningRecord>> taskRetrieveData = workoutRecordViewModel.getRunningRecords().addOnCompleteListener(new OnCompleteListener<List<RunningRecord>>() {
+        Task<List<RunningRecord>> task = workoutRecordViewModel.getRunningRecords().addOnCompleteListener(new OnCompleteListener<List<RunningRecord>>() {
             @Override
             public void onComplete(@NonNull Task<List<RunningRecord>> task) {
-                runningRecords = task.getResult();
-                Log.d("NOTICE MEE !!!!!", "filling array list" + "Size is at: " +  runningRecords.size());
-                if(runningRecords.size() >= 1){
-                    Log.i("Data: " , runningRecords.get(0).getStartTime() + " and " + runningRecords.get(0).getFinishTime());
-                }
+                runningRecords.addAll(task.getResult());
                 recordListAdapter.notifyDataSetChanged();
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.i("FAILURE","failure detected on retrieving data !");
-            }
         });
+        Toast.makeText(this, "Size" + runningRecords.size(), Toast.LENGTH_SHORT).show();
     }
 }

@@ -57,23 +57,11 @@ public class RecordListAdapter extends ArrayAdapter<RunningRecord> {
             finishDate.setText(recordItem.getFinishTime()+"");
 
             TextView duration = convertView.findViewById(R.id.durationValue);
-//            duration.setText(recordItem.getDuration()+"");
-            // calculate duration from start end end
 
             TextView steps = convertView.findViewById(R.id.stepsValue);
             steps.setText("("+recordItem.getSteps()+" steps)");
 
-//            TextView track = convertView.findViewById(R.id.trackValue);
-//            track.setText(recordItem.getTravelledDistance()+"/"+recordItem.getTotalDistance());
-
             TextView condition = convertView.findViewById(R.id.booleanValue);
-
-//            condition.setText(recordItem.getIsTrackCompleted()+"");
-//            if(recordItem.getIsTrackCompleted()){
-//                condition.setTextColor( R.color.green_main);
-//            }else{
-//                condition.setTextColor( R.color.red_100);
-//            }
         }
         return convertView;
     }
