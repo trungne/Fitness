@@ -21,7 +21,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public class RecordListAdapter extends ArrayAdapter<RunningRecord> {
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
 
     private List<RunningRecord> runningRecords;
@@ -46,28 +46,27 @@ public class RecordListAdapter extends ArrayAdapter<RunningRecord> {
         RunningRecord recordItem = runningRecords.get(position);
         if( convertView != null){
 
-            TextView startDate = convertView.findViewById(R.id.startDateTimeValue);
-            startDate.setText(recordItem.getStartTime()+"");
-
-            TextView finishDate = convertView.findViewById(R.id.finishDateTimeValue);
-
-            // convert the string to LocalDateTime and format it according to the DATE_TIME_FORMATTER
-            LocalDateTime endTime = LocalDateTime.parse(recordItem.getFinishTime());
-            String endTimeString = endTime.format(DATE_TIME_FORMATTER); // set this to text view
-
-            finishDate.setText(recordItem.getFinishTime()+"");
-
             LocalDateTime start = LocalDateTime.parse(recordItem.getStartTime());
             LocalDateTime finish = LocalDateTime.parse(recordItem.getFinishTime());
 
-            long seconds = ChronoUnit.SECONDS.between(start, finish) % 60;
+            //Display start date and time
+            TextView startDate = convertView.findViewById(R.id.startDateTimeValue);
+            String startTimeText = start.format(DATE_TIME_FORMATTER);
+            startDate.setText(startTimeText+"");
 
+            //Display finish date and time
+            TextView finishDate = convertView.findViewById(R.id.finishDateTimeValue);
+            String finishTimeText = finish.format(DATE_TIME_FORMATTER);
+            finishDate.setText(finishTimeText+"");
+
+            //Calculate and display runtime duration
+
+            long seconds = ChronoUnit.SECONDS.between(start, finish) % 60;
             // only get the minutes
             long minutes = ChronoUnit.MINUTES.between(start, finish) % 60;
             // no need for modular % 24, I don't think anyone is gonna use this app for more than 24 hours
             // if they did, let them crash the app, they deserve it
             long hours = ChronoUnit.HOURS.between(start, finish);
-
 
             String secondsText = seconds + (seconds == 1 ? " Second" : " Seconds");
 
@@ -85,11 +84,12 @@ public class RecordListAdapter extends ArrayAdapter<RunningRecord> {
 
             TextView duration = convertView.findViewById(R.id.durationValue);
             duration.setText(durationText+"");
-            // calculate duration from start end end
 
+            // Steps display
             TextView steps = convertView.findViewById(R.id.stepsValue);
             steps.setText("("+recordItem.getSteps()+" steps)");
 
+            //Total run distance
             TextView track = convertView.findViewById(R.id.trackValue);
             track.setText(recordItem.getDistance()+ " m");
 
