@@ -1,0 +1,38 @@
+[
+  {"question": "What is fITech?",
+  "answer": "fITech is a combination between fitness and technology as it is an application that helps the user improve their health."},
+
+  {"question": "Who can use fITech?",
+    "answer": "This is an app for anyone who wants to get fit or train themselves without any help from others. These exercises we provided are well-researched and known for any user to train safely."},
+
+  {"question": "What are main features in fITech?",
+    "answer": "There are two main functions in this app: \n + Run activity: help the user to track their running progress and save them into records.\n + Gym activity: provide the user exercise guides and programs."
+  },
+
+  {"question":  "How old do you have to be to workout in the gym?",
+  "answer": "There isn’t a set age limit. However, just like any other sport, you need to abide to safest practices and most importantly, eat healthily and give your body enough rest after each session."},
+
+  {"question":  "Which program should I follow?",
+    "answer": "In each program, there is a section that shows level (Beginner, Intermediate, Advanced). \nIf you're new to the gym, We suggest you follow a beginner program. \nIf you're fairly experienced with the gym, go for Intermediate or even Advanced. Remember that each program has its own benefits, choose what feels best for you."},
+
+  {"question":  "Why can't I follow two programs at the same time?",
+    "answer": "We believe that each program has its own unique philosophy and only works best when you commit to it. Therefore, following more than one program at the same time would not be ideal for you. \nFurthermore, resting is very important. Don't overwork yourself."},
+
+  {"question":  "When a program states 4 days a week, which days should I go to the gym?",
+    "answer": "You can split these 4 days evenly through out the week or find 4 days which are most convenient for you. \nAs long as you commit to 4 days per week at the gym, you're good to go."},
+
+  {"question":  "What should I do if I finish a program?",
+    "answer": "If you feel that the program doesn't fit you, you can choose another one.\nHowever, in most cases, you would want to start over but with an increased Training Max."},
+
+  {"question":  "What is Training Max?",
+    "answer": "The amount of weight where you can perform the exercise at most once or twice with the correct form."},
+
+  {"question":  "What is Reps?",
+    "answer": "Repetition, the number of times you perform the exercise."},
+
+  {"question":  "In a workout program, what is the percentage shown in weight?",
+    "answer": "As each person's strength varies, we cannot provide a fixed number in terms of how much you should lift. These percentages are based on your Training Max (See Training Max). If your Training Max for bench press is 50kg, then 50% means you need to perform the set with 25kg."},
+
+  {"question":  "What about diet?",
+    "answer": "We're working on this feature at the moment, stay tuned for new updates!"}
+]

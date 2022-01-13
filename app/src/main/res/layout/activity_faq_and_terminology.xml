@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="10dp"
         android:orientation="horizontal">
 
 
@@ -36,73 +36,19 @@
 
 
     </LinearLayout>
-    <LinearLayout
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/FAQActivityRecycleView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_margin="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
+
         android:background="@drawable/custom_form2"
-        >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/titleText1"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:textStyle="bold"
-            android:text="What is fITech ?"
-            ></TextView>
+        android:orientation="vertical" >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginTop="5dp"
-            android:text="@string/answer1"
-            ></TextView>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/titleText1"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:textStyle="bold"
-            android:text="Who can use fITech ?"
-            ></TextView>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginTop="5dp"
-            android:text="@string/answer2"
-            ></TextView>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/titleText1"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:textStyle="bold"
-            android:text="What are main features in fITech ?"
-            ></TextView>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginTop="5dp"
-            android:text="@string/answer3"
-            ></TextView>
-
-    </LinearLayout>
-
+    </androidx.recyclerview.widget.RecyclerView>
 
 
 </LinearLayout>

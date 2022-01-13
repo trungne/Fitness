@@ -37,6 +37,7 @@ public class AssetsViewModel extends AndroidViewModel {
 
     private static final String EXERCISE_BANK_FOLDER_PATH = "exercise_bank"; // relative path
     private static final String PROGRAMS_FOLDER_PATH = "programs";
+    private static final String FAQ_FOLDER_PATH = "faq";
 
     private final Application application;
     private final AssetManager mAssetManager;
@@ -46,15 +47,37 @@ public class AssetsViewModel extends AndroidViewModel {
         this.mAssetManager = application.getAssets();
     }
 
+    // FAQ
+    public Task<String[][]> getFAQs(){
+        final TaskCompletionSource<String[][]> taskCompletionSource = new TaskCompletionSource<>();
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        executorService.execute(() -> {
+            String jsonFilePath = FileUtils.getJSONFilePath(this.mAssetManager, FAQ_FOLDER_PATH);
+            String jsonString = FileUtils.getStringFromFile(this.mAssetManager, jsonFilePath);
+
+            try {
+                JSONArray questionArray = new JSONArray(jsonString);
+                String[][] faqs = new String[questionArray.length()][];
+                for (int i = 0; i < questionArray.length(); i++){
+                    JSONObject jsonObject = questionArray.getJSONObject(i);
+                    faqs[i] = new String[2];
+                    faqs[i][0] = jsonObject.getString("question");
+                    faqs[i][1] = jsonObject.getString("answer");
+                }
+                taskCompletionSource.setResult(faqs);
+            } catch (JSONException jsonException) {
+                taskCompletionSource.setException(jsonException);
+            }
+        });
+        return taskCompletionSource.getTask();
+    }
+
     /* SCHEDULE PROGRAM SECTION
      *
      *
      *
      *
      *  */
-
-
-
     public Task<WorkoutSchedule> getWorkoutSchedule(String path, int week, int day){
         final TaskCompletionSource<WorkoutSchedule> taskCompletionSource = new TaskCompletionSource<>();
         ExecutorService e = Executors.newSingleThreadExecutor();

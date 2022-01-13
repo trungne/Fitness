@@ -44,6 +44,7 @@ public class WorkoutRecordViewModel extends AndroidViewModel {
         String uid = Objects.requireNonNull(this.mAth.getUid());
         return this.db.collection(RUNNING_RECORD_COLLECTION)
                 .whereEqualTo(USER_ID_FIELD, uid)
+                .orderBy("timestamp")
                 .get()
                 .continueWith(Executors.newSingleThreadExecutor(), task -> {
                     if (!task.isSuccessful() || task.getResult() == null){

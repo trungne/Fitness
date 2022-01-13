@@ -40,31 +40,6 @@ public class UserViewModel extends AndroidViewModel {
         this.db = FirebaseFirestore.getInstance();
         this.mAuth = FirebaseAuth.getInstance();
     }
-//    /** @param doc the document snapshot to convert to AppUser object
-//     * @return AppUser an AppUser, throw error if the document doesn't exist
-//     * */
-//    private static AppUser convertDocumentSnapshotToAppUser(@NonNull DocumentSnapshot doc) throws Exception {
-//        String uid = doc.get(UID_FIELD, String.class);
-//        String email = doc.get(EMAIL_FIELD, String.class);
-//        if (TextUtils.isEmpty(uid) || TextUtils.isEmpty(email)) {
-//            throw new Exception("Document doesn't exists");
-//        }
-//        String displayName = doc.get(DISPLAY_NAME_FIELD, String.class);
-//        String photoUrl = doc.get(PHOTO_URL_FIELD, String.class);
-//        String phoneNumber = doc.get(PHONE_NUMBER_FIELD, String.class);
-//        Integer workoutScore = doc.get(WORKOUT_SCORE_FIELD, Integer.class);
-//        if (workoutScore == null){
-//            workoutScore = 0;
-//        }
-//        String userExperienceString = doc.get(USER_EXPERIENCE_FIELD, String.class);
-//        UserLevel userLevel = UserLevel.fromString(userExperienceString);
-//
-//        return new AppUser(uid, displayName, email, photoUrl, phoneNumber, workoutScore, userLevel);
-//    }
-
-    public Task<AuthResult> signInWithEmailAndPassword(String email, String password){
-        return this.mAuth.signInWithEmailAndPassword(email, password);
-    }
 
     public boolean isLoggedIn(){
         return this.mAuth.getCurrentUser() != null;
