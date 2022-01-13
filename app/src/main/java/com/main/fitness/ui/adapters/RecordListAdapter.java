@@ -17,6 +17,7 @@ import com.main.fitness.data.Model.RunningRecord;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public class RecordListAdapter extends ArrayAdapter<RunningRecord> {
@@ -56,24 +57,42 @@ public class RecordListAdapter extends ArrayAdapter<RunningRecord> {
 
             finishDate.setText(recordItem.getFinishTime()+"");
 
+            LocalDateTime start = LocalDateTime.parse(recordItem.getStartTime());
+            LocalDateTime finish = LocalDateTime.parse(recordItem.getFinishTime());
+
+            long seconds = ChronoUnit.SECONDS.between(start, finish) % 60;
+
+            // only get the minutes
+            long minutes = ChronoUnit.MINUTES.between(start, finish) % 60;
+            // no need for modular % 24, I don't think anyone is gonna use this app for more than 24 hours
+            // if they did, let them crash the app, they deserve it
+            long hours = ChronoUnit.HOURS.between(start, finish);
+
+
+            String secondsText = seconds + (seconds == 1 ? " Second" : " Seconds");
+
+            String hoursText = "";
+            if (hours >= 1){
+                hoursText = hours + (hours == 1 ? " Hour " : " Hours ");
+            }
+
+            String minutesText = "";
+            if (minutes >= 1){
+                minutesText = minutes + (minutes == 1 ? " Minute " : " Minutes ");
+            }
+
+            String durationText = hoursText + minutesText + secondsText;
+
             TextView duration = convertView.findViewById(R.id.durationValue);
-//            duration.setText(recordItem.getDuration()+"");
+            duration.setText(durationText+"");
             // calculate duration from start end end
 
             TextView steps = convertView.findViewById(R.id.stepsValue);
             steps.setText("("+recordItem.getSteps()+" steps)");
 
-//            TextView track = convertView.findViewById(R.id.trackValue);
-//            track.setText(recordItem.getTravelledDistance()+"/"+recordItem.getTotalDistance());
+            TextView track = convertView.findViewById(R.id.trackValue);
+            track.setText(recordItem.getDistance()+ " m");
 
-            TextView condition = convertView.findViewById(R.id.booleanValue);
-
-//            condition.setText(recordItem.getIsTrackCompleted()+"");
-//            if(recordItem.getIsTrackCompleted()){
-//                condition.setTextColor( R.color.green_main);
-//            }else{
-//                condition.setTextColor( R.color.red_100);
-//            }
         }
         return convertView;
     }

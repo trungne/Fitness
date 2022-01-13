@@ -83,8 +83,17 @@ public class UserFragment extends Fragment {
             }
             return false;
         });
+        getUserData();
+        return this.rootView;
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getUserData();
+    }
 
+    public void getUserData(){
         //Get All information of the current user
         String uid = this.userViewModel.getFirebaseUser().getUid();
         this.userViewModel.getUser(uid)
@@ -101,9 +110,8 @@ public class UserFragment extends Fragment {
 
                     // set other attributes
                 });
-
-        return this.rootView;
     }
+
 
     //Sign Out of the current account
     public void signOut(View v){

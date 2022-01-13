@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="20dp"
         android:paddingBottom="20dp"
-        android:text="User Profile"
+        android:text="Manage Profile"
         android:layout_marginTop="50dp"
         android:textColor="@color/blue_200"
         android:textSize="30sp"
@@ -100,7 +100,7 @@
                 android:textStyle="bold"
                 tools:ignore="HardcodedText" />
 
-            <EditText
+            <TextView
                 android:id="@+id/EditInfoActivityNewUserEmailValue"
                 style="@style/titleText2"
                 android:layout_width="match_parent"
@@ -135,10 +135,12 @@
 
     <Button
         android:id="@+id/EditInfoActivityExitButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="230dp"
+        android:layout_height="48dp"
+        android:textColor="@color/white"
         android:layout_marginBottom="108dp"
-        android:text="Exit"
+        android:text="Return"
+        android:background="@drawable/button_3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/EditInfoActivityUpdateButton"
         app:layout_constraintStart_toStartOf="@+id/EditInfoActivityUpdateButton" />

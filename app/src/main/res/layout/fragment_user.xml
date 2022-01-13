@@ -37,9 +37,12 @@
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/topAppBar"
+                android:background="@color/green_main"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:menu="@menu/fragment_user_top_app_bar"
+                app:title="Menu"
+                app:titleTextColor="@color/white"
                 style="@style/Widget.MaterialComponents.Toolbar.Primary"/>
 
         </com.google.android.material.appbar.AppBarLayout>
@@ -135,7 +138,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
                     android:layout_marginStart="20dp"
-                    android:layout_marginTop="10dp"
+
                     android:layout_marginBottom="20dp"
                     android:text="Email: "
                     android:textStyle="bold"
@@ -147,7 +150,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:layout_marginStart="7dp"
-                    android:layout_marginTop="10dp"
+
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="20dp"
                     android:layout_weight="1"

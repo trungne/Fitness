@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ui.fragments.RunningFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -12,32 +13,29 @@
         android:id="@+id/running_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_horizontal"
+        android:gravity="center"
+        android:layout_margin="15dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
         <Button
             android:id="@+id/fragmentRunningRun"
-            android:layout_width="246dp"
-            android:layout_height="62dp"
-            android:layout_marginVertical="300dp"
-            android:layout_marginBottom="208dp"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
             android:background="@drawable/button_1"
             android:text="Let's run"
             android:textColor="@color/white" />
 
         <Button
             android:id="@+id/RunningFragmentRunRecordListButton"
-            android:layout_width="230dp"
+            android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:background="@drawable/button_1"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/button_2"
             android:text="Run Records"
-
             android:textColor="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="463dp" />
+            />
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

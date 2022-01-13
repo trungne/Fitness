@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.main.fitness.R;
+import com.main.fitness.data.Model.AppUser;
 import com.main.fitness.data.ViewModel.UserViewModel;
 import com.main.fitness.ui.fragments.UserFragment;
 
@@ -19,7 +21,7 @@ import java.util.HashMap;
 
 public class EditInformationActivity extends AppCompatActivity {
 
-    private EditText userEmail;
+    private TextView userEmail;
     private EditText userDisplayName,userPhone;
     private UserViewModel userViewModel;
     private Button updateProfileButton, exitProfileButton;
@@ -37,6 +39,24 @@ public class EditInformationActivity extends AppCompatActivity {
 
         this.userViewModel = new ViewModelProvider(this).get(UserViewModel .class);
 
+        //Get All information of the current user
+        String uid = this.userViewModel.getFirebaseUser().getUid();
+        this.userViewModel.getUser(uid)
+                .addOnCompleteListener(this, task -> {
+                    if (!task.isSuccessful() || task.getResult() == null){
+                        //handle
+                        return;
+                    }
+
+                    AppUser appUser = task.getResult();
+                    this.userDisplayName.setText(appUser.getDisplayName());
+                    this.userEmail.setText(appUser.getEmail());
+                    this.userPhone.setText(appUser.getPhoneNumber());
+
+                    // set other attributes
+                });
+
+
         updateProfileButton.setOnClickListener(this::updateUserProfile);
         exitProfileButton.setOnClickListener(this::exitUserProfile);
     }
@@ -44,15 +64,13 @@ public class EditInformationActivity extends AppCompatActivity {
     private void updateUserProfile(View view) {
         if (userDisplayName.getText().length() == 0 && userPhone.getText().length() == 0
                 && userEmail.getText().length() == 0) {
-            Toast.makeText(this, "Please insert a name or a phone or an email.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please insert name and phone ", Toast.LENGTH_SHORT).show();
         }
-        if (userDisplayName.getText().length() != 0 || userPhone.getText().length() != 0) {
-            if (userDisplayName.getText().length() != 0 && userDisplayName.getText().length() < 2) {
+        else {
+            if(userDisplayName.getText().length() < 1){
                 Toast.makeText(this, "Please insert a name.", Toast.LENGTH_SHORT).show();
-            } else if (userPhone.getText().length() > 1 && userPhone.getText().length() != 10) {
+            } else if( userPhone.getText().length() != 10){
                 Toast.makeText(this, "Please insert 10-digit phone number.", Toast.LENGTH_SHORT).show();
-            } else if (userEmail.getText().length() != 0 && !userEmail.getText().toString().contains("@")) {
-                Toast.makeText(this, "Please insert a valid email.", Toast.LENGTH_SHORT).show();
             } else {
                 HashMap<String, Object> newUser = new HashMap<>();
                 newUser.put( UserViewModel.DISPLAY_NAME_FIELD , userDisplayName.getText().toString());
@@ -64,6 +82,7 @@ public class EditInformationActivity extends AppCompatActivity {
                         return;
                     }
                     Toast.makeText(EditInformationActivity.this, "Update User's profile successful!", Toast.LENGTH_SHORT).show();
+                    finish();
                 });
             }
         }
