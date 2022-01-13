@@ -127,7 +127,6 @@ public class ShowRunningRecordActivity extends AppCompatActivity {
                     .setMessage("Your data will be lost. Are you sure?")
                     .setPositiveButton("Yes", (dialog, which) -> {
                         dialog.dismiss();
-                        startActivity(new Intent(this, MainActivity.class));
                         finish();
                     })
                     .setNeutralButton("Cancel", (dialog, which) -> {
@@ -161,7 +160,6 @@ public class ShowRunningRecordActivity extends AppCompatActivity {
         this.workoutRecordViewModel.updateRunningRecord(r).addOnCompleteListener(this, task -> {
             if (task.isSuccessful()){
                 Toast.makeText(this, "Saved successfully!", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(this, MainActivity.class));
                 finish();
             }
             else{
