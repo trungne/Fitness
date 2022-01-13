@@ -78,7 +78,7 @@ public class AssetsViewModel extends AndroidViewModel {
      *
      *
      *  */
-    public Task<WorkoutSchedule> getWorkoutSchedule(String path, int week, int day){
+    public Task<WorkoutSchedule> getWorkoutSchedule(String path){
         final TaskCompletionSource<WorkoutSchedule> taskCompletionSource = new TaskCompletionSource<>();
         ExecutorService e = Executors.newSingleThreadExecutor();
         e.execute(() -> {
@@ -89,10 +89,6 @@ public class AssetsViewModel extends AndroidViewModel {
                 JSONArray weekArray = json.getJSONArray("schedule");
                 String workoutProgram = json.getString("name");
 
-                if (week >= weekArray.length() || week < 0){
-                    throw new IllegalArgumentException("Invalid week");
-                }
-
                 WorkoutSession[][] schedule = new WorkoutSession[weekArray.length()][];
                 for (int _week = 0; _week < weekArray.length(); _week++){
                     JSONArray dayArray = weekArray.getJSONArray(_week);
@@ -102,7 +98,7 @@ public class AssetsViewModel extends AndroidViewModel {
                     }
                     schedule[_week] = sessions;
                 }
-                WorkoutSchedule workoutSchedule = new WorkoutSchedule(workoutProgram, schedule, week, day);
+                WorkoutSchedule workoutSchedule = new WorkoutSchedule(workoutProgram, schedule);
 
                 taskCompletionSource.setResult(workoutSchedule);
 

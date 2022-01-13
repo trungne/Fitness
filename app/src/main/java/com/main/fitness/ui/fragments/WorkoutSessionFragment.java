@@ -117,7 +117,7 @@ public class WorkoutSessionFragment extends Fragment {
     }
 
     private void showSession(){
-        this.assetsViewModel.getWorkoutSchedule(workoutProgramPath, week, day).addOnCompleteListener(requireActivity(), task -> {
+        this.assetsViewModel.getWorkoutSchedule(workoutProgramPath).addOnCompleteListener(requireActivity(), task -> {
             if (!task.isSuccessful()){
                 Toast.makeText(requireActivity(), "Cannot load session!", Toast.LENGTH_SHORT).show();
                 return;

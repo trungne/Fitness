@@ -90,34 +90,10 @@ public class ProgramDetailActivity extends AppCompatActivity {
         }
     }
 
-    private void startWorkoutSessionActivity(int week, int day){
+    private void startWorkoutSessionActivity(){
         Intent intent = new Intent(this, ScheduleActivity.class);
         intent.putExtra(ScheduleActivity.WORKOUT_PROGRAM_FOLDER_PATH_KEY, w.getFolderPath());
-        intent.putExtra(ScheduleActivity.CURRENT_DAY_KEY, day);
-        intent.putExtra(ScheduleActivity.CURRENT_WEEK_KEY, week);
         startActivity(intent);
-    }
-
-    private void startWorkoutSessionActivity(){
-        startWorkoutSessionActivity(0,0);
-    }
-
-    private void resumeWorkoutSession(){
-        if (this.userViewModel.getFirebaseUser() == null){
-            return;
-        }
-        String uid = this.userViewModel.getFirebaseUser().getUid();
-        this.workoutRegistrationViewModel.getCurrentWeekAndDayOfWorkoutProgram(uid).addOnCompleteListener(this, task -> {
-           if (!task.isSuccessful()){
-               Toast.makeText(this, "Failed to your data", Toast.LENGTH_SHORT).show();
-               showDialogProceedWithoutCurrentSessionInfo();
-               return;
-           }
-
-           int day = task.getResult().getDay();
-           int week = task.getResult().getWeek();
-           startWorkoutSessionActivity(week, day);
-        });
     }
 
     private void showDialogProceedWithoutCurrentSessionInfo(){
@@ -155,7 +131,8 @@ public class ProgramDetailActivity extends AppCompatActivity {
         uid = this.userViewModel.getFirebaseUser().getUid();
 
         this.workoutRegistrationViewModel.getCurrentProgramName(uid).addOnCompleteListener(this, task -> {
-           if (!task.isSuccessful()){
+            // user hasn't registered for any programs
+            if (!task.isSuccessful()){
                this.trainButton.setText("Start");
                this.trainButton.setOnClickListener(v -> {
                    registerAndStartWorkoutSession();
@@ -167,7 +144,7 @@ public class ProgramDetailActivity extends AppCompatActivity {
            if (programName.equals(w.getName())){
                this.trainButton.setText("Resume");
                this.trainButton.setOnClickListener(v -> {
-                   resumeWorkoutSession();
+                   startWorkoutSessionActivity();
                });
            }
            else{
