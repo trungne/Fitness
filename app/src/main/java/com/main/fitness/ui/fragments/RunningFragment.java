@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.main.fitness.R;
+import com.main.fitness.ui.activities.MyRunRecordsActivity;
 import com.main.fitness.ui.activities.RunningMapsActivity;
 
 /**
@@ -48,6 +49,7 @@ public class RunningFragment extends Fragment {
 
     private View view;
     private Button fragmentRunningRun;
+    private Button fragmentDisplayRunRecord;
     private LinearLayout running_linear_layout;
 
     @Override
@@ -61,8 +63,10 @@ public class RunningFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_running, container, false);
         fragmentRunningRun = view.findViewById(R.id.fragmentRunningRun);
         running_linear_layout = view.findViewById(R.id.running_linear_layout);
+        fragmentDisplayRunRecord = view.findViewById(R.id.RunningFragmentRunRecordListButton);
 
         fragmentRunningRun.setOnClickListener(this::run);
+        fragmentDisplayRunRecord.setOnClickListener(this::displayRunRecord);
 
         return view;
     }
@@ -70,6 +74,13 @@ public class RunningFragment extends Fragment {
     private void run(View view) {
         if (getActivity() != null){
             startActivity(new Intent(requireActivity(), RunningMapsActivity.class));
+        }
+    }
+
+    private void displayRunRecord(View v){
+        if(getActivity() != null){
+            Intent intent = new Intent(requireActivity(), MyRunRecordsActivity.class);
+            startActivity(intent);
         }
     }
 
