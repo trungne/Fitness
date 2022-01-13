@@ -159,32 +159,6 @@
 
 
         </TableLayout>
-
-        <Button
-            android:id="@+id/EditInfoActivityUpdateButton"
-            android:layout_width="230dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/button_2"
-            android:text="Update Profile"
-
-            android:textColor="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tableLayout" />
-
-        <Button
-            android:id="@+id/UserFragmentRunRecordListButton"
-            android:layout_width="230dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/button_1"
-            android:text="Run Records"
-
-            android:textColor="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/EditInfoActivityUpdateButton" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -50,7 +50,7 @@ public class UserFragment extends Fragment {
 
     }
 
-    private Button signOutButton, updateProfileButton, runRecordsButton;
+    private Button signOutButton;
     private UserViewModel userViewModel;
 
     private TextView  userEmail;
@@ -66,10 +66,6 @@ public class UserFragment extends Fragment {
         //Button wire
         this.signOutButton = this.rootView.findViewById(R.id.UserFragmentSignOutButton);
         this.signOutButton.setOnClickListener(this::signOut);
-        this.updateProfileButton = this.rootView.findViewById(R.id.EditInfoActivityUpdateButton);
-        this.updateProfileButton.setOnClickListener(this::updateUserProfile);
-        this.runRecordsButton = this.rootView.findViewById(R.id.UserFragmentRunRecordListButton);
-        this.runRecordsButton.setOnClickListener((this::viewRunRecordList));
 
         this.userViewModel = new ViewModelProvider(this)
                 .get(UserViewModel .class);
@@ -107,37 +103,6 @@ public class UserFragment extends Fragment {
                 });
 
         return this.rootView;
-    }
-    //View Run record list
-    private void viewRunRecordList(View view) {
-        Intent intent = new Intent(requireActivity(), MyRunRecordsActivity.class);
-        startActivity(intent);
-    }
-
-    // Update User Profile
-    private void updateUserProfile(View view) {
-        if(userDisplayName.getText().length() < 1){
-            Toast.makeText(requireActivity(), "Please insert a name.", Toast.LENGTH_SHORT).show();
-        } else if( userPhone.getText().length() != 10){
-            Toast.makeText(requireActivity(), "Please insert 10-digit phone number.", Toast.LENGTH_SHORT).show();
-        } else {
-            HashMap<String, Object> newUser = new HashMap<>();
-            newUser.put( UserViewModel.DISPLAY_NAME_FIELD , userDisplayName.getText().toString());
-            newUser.put( UserViewModel.PHONE_NUMBER_FIELD , userPhone.getText().toString());
-            String uid = this.userViewModel.getFirebaseUser().getUid();
-            //Update User information
-            this.userViewModel.updateAppUser(uid, newUser).addOnCompleteListener(requireActivity(), new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if (!task.isSuccessful()){
-                        // handle
-                        return;
-                    }
-                    Toast.makeText(requireActivity(), "Update User's profile successful!", Toast.LENGTH_SHORT).show();
-                }
-            });
-
-        }
     }
 
     //Sign Out of the current account

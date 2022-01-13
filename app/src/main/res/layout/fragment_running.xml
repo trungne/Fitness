@@ -26,6 +26,18 @@
             android:background="@drawable/button_1"
             android:text="Let's run"
             android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/RunningFragmentRunRecordListButton"
+            android:layout_width="230dp"
+            android:layout_height="48dp"
+            android:background="@drawable/button_1"
+            android:text="Run Records"
+
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:layout_editor_absoluteY="463dp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

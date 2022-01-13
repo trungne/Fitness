@@ -68,6 +68,5 @@ public class MyRunRecordsActivity extends AppCompatActivity {
                 recordListAdapter.notifyDataSetChanged();
             }
         });
-        Toast.makeText(this, "Size" + runningRecords.size(), Toast.LENGTH_SHORT).show();
     }
 }
