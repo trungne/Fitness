@@ -107,7 +107,7 @@ public class ShowRunningRecordActivity extends AppCompatActivity {
         this.finishTimeView.setText(finishTimeText);
 
         String distanceText = DECIMAL_FORMAT.format(distance);
-        this.distanceView.setText(distanceText);
+        this.distanceView.setText(distanceText+ " m");
 
         if (steps > 0){
             this.stepsView.setText(String.valueOf(steps));
