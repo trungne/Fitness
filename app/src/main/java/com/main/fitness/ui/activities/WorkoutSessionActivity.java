@@ -100,11 +100,15 @@ public class WorkoutSessionActivity extends AppCompatActivity {
                 fragment.setOnFinishSessionListener((mWeek, mDay) -> {
                     int newWeek = mWeek;
                     int newDay = mDay;
+
+                    // the last session of the workout program
                     if (mDay == schedule.getSchedule()[mWeek].length - 1
                             && mWeek == schedule.getSchedule().length - 1) {
                         newDay = 0;
                         newWeek = 0;
                     }
+
+                    // the last session of a week
                     else if (mDay == schedule.getSchedule()[mWeek].length - 1 ){
                         newDay = 0;
                         newWeek++;
@@ -115,20 +119,22 @@ public class WorkoutSessionActivity extends AppCompatActivity {
 
                     int finalNewDay = newDay;
                     int finalNewWeek = newWeek;
-                    workoutRegistrationViewModel.updateCurrentSession(newWeek, newDay).addOnCompleteListener(this, updateTask -> {
+                    workoutRegistrationViewModel.updateCurrentSession(finalNewWeek, finalNewDay).addOnCompleteListener(this, updateTask -> {
+                        if (!updateTask.isSuccessful()){
+                            Toast.makeText(this, "Cannot record data!", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         new MaterialAlertDialogBuilder(this)
                                 .setTitle("Session Finished")
                                 .setMessage("Well Done! You have finished today's session!")
-                                .setPositiveButton("Back To Home Screen", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Intent resultIntent = new Intent();
-                                        resultIntent.putExtra(ScheduleActivity.CURRENT_DAY_KEY, finalNewDay);
-                                        resultIntent.putExtra(ScheduleActivity.CURRENT_WEEK_KEY, finalNewWeek);
-                                        setResult(Activity.RESULT_OK, resultIntent);
-                                        dialog.dismiss();
-                                        finish();
-                                    }
+                                .setCancelable(false)
+                                .setPositiveButton("Back To Home Screen", (dialog, which) -> {
+                                    Intent resultIntent = new Intent();
+                                    resultIntent.putExtra(ScheduleActivity.CURRENT_DAY_KEY, finalNewDay);
+                                    resultIntent.putExtra(ScheduleActivity.CURRENT_WEEK_KEY, finalNewWeek);
+                                    setResult(Activity.RESULT_OK, resultIntent);
+                                    dialog.dismiss();
+                                    finish();
                                 })
                                 .setNeutralButton("Cancel", (dialog, which) -> {
                                     reload(finalNewWeek, finalNewDay);
@@ -142,6 +148,10 @@ public class WorkoutSessionActivity extends AppCompatActivity {
 
                 fragment.setOnSkipToSessionListener((mWeek, mDay) -> {
                     workoutRegistrationViewModel.updateCurrentSession(mWeek, mDay).addOnCompleteListener(this, updateTask -> {
+                        if (!updateTask.isSuccessful()){
+                            Toast.makeText(this, "Cannot skip!", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         reload(mWeek, mDay);
                     });
 
@@ -161,7 +171,10 @@ public class WorkoutSessionActivity extends AppCompatActivity {
             tabLayoutMediator.attach();
 
             if (day != -1){
-                scrollToTabAfterLayout(day);
+                tabLayout.selectTab(tabLayout.getTabAt(day));
+            }
+            else{
+                Log.e(TAG, "Cannot scroll!");
             }
         });
     }

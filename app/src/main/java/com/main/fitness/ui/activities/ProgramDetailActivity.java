@@ -137,11 +137,8 @@ public class ProgramDetailActivity extends AppCompatActivity {
             return;
         }
         String uid = this.userViewModel.getFirebaseUser().getUid();
-        Tasks.whenAll(
-                this.workoutRegistrationViewModel.unregisterCurrentProgram(uid),
-                this.workoutRegistrationViewModel.registerProgram(uid, w.getName(), 0, 0)
-        ).addOnCompleteListener(this, allTasks -> {
-            if (allTasks.isSuccessful()){
+        this.workoutRegistrationViewModel.registerProgram(uid, w.getName(), 0, 0).addOnCompleteListener(this, registerTask -> {
+            if (registerTask.isSuccessful()){
                 startWorkoutSessionActivity();
             }
             else{
