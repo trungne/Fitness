@@ -256,6 +256,7 @@ public class RunningMapsActivity extends AppCompatActivity implements ActivityCo
         this.mMap.clear();
         getLocation();
         startActivity(saveRecordIntent);
+        finish();
     }
 
     private boolean checkSensorPermission(){

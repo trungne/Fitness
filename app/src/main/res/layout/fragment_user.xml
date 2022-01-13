@@ -7,7 +7,7 @@
     tools:context=".ui.fragments.UserFragment">
 
     <Button
-        android:id="@+id/UserFragmentSignoutButton"
+        android:id="@+id/UserFragmentSignOutButton"
         android:layout_width="230dp"
         android:layout_height="48dp"
         android:layout_marginBottom="16dp"
@@ -23,12 +23,26 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/UserFragmentSignoutButton"
+        app:layout_constraintBottom_toTopOf="@+id/UserFragmentSignOutButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/topAppBar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:menu="@menu/fragment_user_top_app_bar"
+                style="@style/Widget.MaterialComponents.Toolbar.Primary"/>
+
+        </com.google.android.material.appbar.AppBarLayout>
 
 
         <TextView
@@ -38,6 +52,7 @@
             android:paddingTop="20dp"
             android:paddingBottom="20dp"
             android:text="User Profile"
+            android:layout_marginTop="50dp"
             android:textColor="@color/blue_200"
             android:textSize="30sp"
             android:textStyle="bold"
@@ -70,7 +85,7 @@
                     android:textStyle="bold"
                     tools:ignore="HardcodedText" />
 
-                <EditText
+                <TextView
                     android:id="@+id/fragmentUserDisplayNameValue"
                     style="@style/titleText2"
                     android:layout_width="match_parent"
@@ -97,7 +112,7 @@
                     android:textStyle="bold"
                     tools:ignore="HardcodedText" />
 
-                <EditText
+                <TextView
                     android:id="@+id/fragmentUserPhoneValue"
                     style="@style/titleText2"
                     android:layout_width="match_parent"
@@ -144,32 +159,6 @@
 
 
         </TableLayout>
-
-        <Button
-            android:id="@+id/UserFragmentUpdateButton"
-            android:layout_width="230dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/button_2"
-            android:text="Update Profile"
-
-            android:textColor="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tableLayout" />
-
-        <Button
-            android:id="@+id/UserFragmentRunRecordListButton"
-            android:layout_width="230dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/button_1"
-            android:text="Run Records"
-
-            android:textColor="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/UserFragmentUpdateButton" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -26,7 +26,7 @@
         <activity
             android:name=".ui.activities.RunningMapsActivity"
             android:exported="false"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTask" />
         <activity
             android:name=".ui.activities.ScheduleActivity"
             android:exported="false" />
@@ -51,6 +51,9 @@
             android:exported="false" />
         <activity
             android:name=".ui.activities.FAQAndTerminologyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activities.EditInformationActivity"
             android:exported="false" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
