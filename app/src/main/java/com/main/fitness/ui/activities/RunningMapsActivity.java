@@ -155,12 +155,14 @@ public class RunningMapsActivity extends AppCompatActivity implements ActivityCo
         this.runningViewModel.isRunningLiveData().observe(this, isRunning -> {
             if (isRunning){
                 this.runButton.setText("Stop");
+                this.runButton.setBackgroundResource(R.drawable.button_3);
                 this.runButton.setOnClickListener(v -> {
                     askForStopConfirmation();
                 });
             }
             else{
                 this.runButton.setText("Run");
+                this.runButton.setBackgroundResource(R.drawable.button_4);
                 this.runButton.setOnClickListener(v -> {
                     startRunning();
                 });

@@ -1,135 +1,192 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ui.activities.ShowRunningRecordActivity">
 
+
+
+
     <TextView
-        android:gravity="center"
-        android:id="@+id/ShowRunningRecordStartTimeLabel"
+        android:id="@+id/fragmentUserProfileLable"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Start: "
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="30dp"
+        android:text="Running Result:"
+        android:textColor="@color/blue_200"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:layout_gravity="center_horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/ShowRunningRecordStartTimeLabel"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:gravity="center"
-        android:id="@+id/ShowRunningRecordStartTimeValue"
-        android:layout_width="0dp"
+    <TableLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/ShowRunningRecordStartTimeLabel"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_margin="15dp"
+        android:background="@drawable/custom_form2"
+        >
+        <TableRow>
+            <TextView
+                android:id="@+id/ShowRunningRecordStartTimeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="40dp"
+                android:textColor="@color/blue_200"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:text="Start: "
+             />
+            <TextView
+                android:id="@+id/ShowRunningRecordStartTimeValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:textSize="18sp"
+                android:layout_marginTop="40dp"
 
-    <TextView
-        android:gravity="center"
-        android:id="@+id/ShowRunningRecordEndTimeLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Finish"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ShowRunningRecordStartTimeLabel" />
+                 />
+        </TableRow>
 
-    <TextView
-        android:gravity="center"
-        android:id="@+id/ShowRunningRecordFinishTimeValue"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/ShowRunningRecordEndTimeLabel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/ShowRunningRecordEndTimeLabel"
-        app:layout_constraintTop_toTopOf="@+id/ShowRunningRecordEndTimeLabel" />
+        <TableRow>
 
-    <TextView
-        android:gravity="center"
-        android:id="@+id/ShowRunningRecordDurationLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Duration"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ShowRunningRecordEndTimeLabel" />
+            <TextView
 
-    <TextView
-        android:gravity="center"
-        android:id="@+id/ShowRunningRecordDurationValue"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/ShowRunningRecordDurationLabel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/ShowRunningRecordDurationLabel"
-        app:layout_constraintTop_toTopOf="@+id/ShowRunningRecordDurationLabel" />
+                android:id="@+id/ShowRunningRecordEndTimeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:text="Finish:"
+                android:textColor="@color/blue_200"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-    <TextView
-        android:gravity="center"
-        android:id="@+id/ShowRunningRecordDistanceLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Distance"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ShowRunningRecordDurationLabel" />
+            <TextView
+                android:id="@+id/ShowRunningRecordFinishTimeValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:textSize="18sp"
+                android:layout_marginTop="10dp"
+                />
+        </TableRow>
 
-    <TextView
-        android:id="@+id/ShowRunningRecordDistanceValue"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="@+id/ShowRunningRecordDistanceLabel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/ShowRunningRecordDistanceLabel"
-        app:layout_constraintTop_toTopOf="@+id/ShowRunningRecordDistanceLabel" />
+        <TableRow>
 
-    <TextView
-        android:gravity="center"
-        android:id="@+id/ShowRunningRecordStepsLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Steps"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ShowRunningRecordDistanceLabel" />
+            <TextView
+                android:id="@+id/ShowRunningRecordDurationLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/blue_200"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:text="Duration:" />
 
-    <TextView
-        android:gravity="center"
-        android:id="@+id/ShowRunningRecordStepsValue"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="0 (No sensors detected)"
-        app:layout_constraintBottom_toBottomOf="@+id/ShowRunningRecordStepsLabel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/ShowRunningRecordStepsLabel"
-        app:layout_constraintTop_toTopOf="@+id/ShowRunningRecordStepsLabel"
-        app:layout_constraintVertical_bias="0.0" />
+            <TextView
+                android:id="@+id/ShowRunningRecordDurationValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:textSize="18sp"
+                android:layout_marginTop="10dp"
+                />
+        </TableRow>
 
-    <Button
-        android:id="@+id/ShowRunningRecordSaveButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="Save"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <TableRow>
+            <TextView
+                android:id="@+id/ShowRunningRecordDistanceLabel"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/blue_200"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:text="Distance:" />
 
-    <Button
-        android:id="@+id/ShowRunningRecordCancelButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="Cancel"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/ShowRunningRecordDistanceValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:textSize="18sp"
+                android:layout_marginTop="10dp"
+                />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:id="@+id/ShowRunningRecordStepsLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="40dp"
+                android:textColor="@color/blue_200"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:text="Steps:" />
+
+            <TextView
+
+                android:id="@+id/ShowRunningRecordStepsValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:textSize="18sp"
+                android:text="0 (No sensors detected)" />
+        </TableRow>
+
+    </TableLayout>
+
+
+
+
+
+
+
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center_horizontal|bottom"
+        >
+        <Button
+            android:id="@+id/ShowRunningRecordSaveButton"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="40dp"
+            android:layout_marginBottom="16dp"
+            android:text="Save"
+            android:textColor="@color/white"
+            android:background="@drawable/button_4" />
+
+        <Button
+            android:id="@+id/ShowRunningRecordCancelButton"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginBottom="16dp"
+            android:text="Cancel"
+            android:textColor="@color/white"
+            android:background="@drawable/button_3" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

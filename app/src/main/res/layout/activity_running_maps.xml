@@ -15,9 +15,11 @@
 
     <Button
         android:id="@+id/RunningActivityButton"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
+        android:background="@drawable/button_4"
+        android:textColor="@color/white"
         android:text="Run"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -31,9 +33,10 @@
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
         android:clickable="true"
+        android:backgroundTint="@color/blue_200"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/button_1" />
+        app:srcCompat="@drawable/navigate_my_location" />
 
     <TextView
         android:id="@+id/RunningActivityDistanceLabel"
@@ -42,6 +45,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="Distance"
+        android:textColor="@color/green_main"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -50,6 +54,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:textColor="@color/green_main"
         app:layout_constraintBottom_toBottomOf="@+id/RunningActivityDistanceLabel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/RunningActivityDistanceLabel"
@@ -61,6 +66,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        android:textColor="@color/green_main"
         android:text="Steps"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/RunningActivityDistanceLabel" />
@@ -70,6 +76,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:textColor="@color/green_main"
         app:layout_constraintBottom_toBottomOf="@+id/RunningActitivtyStepLabel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/RunningActitivtyStepLabel"
