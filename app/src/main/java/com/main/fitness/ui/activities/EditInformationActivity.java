@@ -70,7 +70,6 @@ public class EditInformationActivity extends AppCompatActivity {
     }
 
     private void exitUserProfile(View view) {
-        startActivity(new Intent(this, UserFragment.class));
         finish();
     }
 }
