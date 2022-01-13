@@ -1,20 +1,32 @@
 package com.main.fitness.ui.activities;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.firebase.ui.auth.data.model.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.main.fitness.R;
 import com.main.fitness.data.Model.WorkoutProgram;
 import com.main.fitness.data.ViewModel.AssetsViewModel;
+import com.main.fitness.data.ViewModel.UserViewModel;
 import com.main.fitness.ui.adapters.WorkoutProgramAdapter;
 
 import java.util.List;
@@ -30,6 +42,10 @@ public class ProgramListActivity extends AppCompatActivity {
     private RecyclerView programListRecycleView;
     private AssetsViewModel assetsViewModel;
     private ImageButton backButton;
+
+
+    private UserViewModel userViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,18 +54,32 @@ public class ProgramListActivity extends AppCompatActivity {
         this.assetsViewModel = new ViewModelProvider(this).get(AssetsViewModel.class);
         this.backButton = findViewById(R.id.activityProgramListBackButton);
         //Back button
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        backButton.setOnClickListener(v -> finish());
 
         Intent intent = getIntent();
-        if (intent == null || TextUtils.isEmpty(intent.getStringExtra(PROGRAMS_KEY))){
+        if (TextUtils.isEmpty(intent.getStringExtra(PROGRAMS_KEY))){
             finish();
             return;
         }
+        this.userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+
+        this.userViewModel.checkIfHasReadFAQ().addOnCompleteListener(this, task -> {
+            if (!task.isSuccessful() || !task.getResult().exists()){
+                Log.e(TAG, "snackbar show");
+                Snackbar snackbar = Snackbar
+
+                        .make(getWindow().getDecorView().getRootView(),
+                                "It seems that you're new here! Check out the FAQ", Snackbar.LENGTH_INDEFINITE);
+                snackbar.setAnchorView(findViewById(R.id.ProgramListSnackbarAnchor));
+                snackbar.setAction("Go", v -> {
+                   startActivity(new Intent(this, FAQAndTerminologyActivity.class));
+                });
+                snackbar.show();
+
+            }
+        });
+
+
         String type;
 
         if (intent.getStringExtra(PROGRAMS_KEY).equals(CARDIO_PROGRAMS)){
@@ -87,8 +117,6 @@ public class ProgramListActivity extends AppCompatActivity {
             });
         });
     }
-
-
 
 
 

@@ -7,9 +7,10 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 import com.main.fitness.data.Model.AppUser;
@@ -20,6 +21,7 @@ import java.util.concurrent.Executors;
 public class UserViewModel extends AndroidViewModel {
     // collection contains documents, which have user id as their unique id,
     private static final String USER_COLLECTION = "users";
+    private static final String HAS_READ_FAQ_COLLECTION = "hasReadFAQ";
 
     // fields in a document
     public static final String UID_FIELD = "uid";
@@ -39,6 +41,18 @@ public class UserViewModel extends AndroidViewModel {
         this.application = application;
         this.db = FirebaseFirestore.getInstance();
         this.mAuth = FirebaseAuth.getInstance();
+    }
+
+    public Task<Void> readFAQ(){
+        String uid = this.mAuth.getUid();
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("timestamp", FieldValue.serverTimestamp());
+        return this.db.collection(HAS_READ_FAQ_COLLECTION).document(uid).set(data, SetOptions.merge());
+    }
+
+    public Task<DocumentSnapshot> checkIfHasReadFAQ(){
+        String uid = this.mAuth.getUid();
+        return this.db.collection(HAS_READ_FAQ_COLLECTION).document(uid).get();
     }
 
     public boolean isLoggedIn(){
