@@ -78,10 +78,6 @@
         </activity>
 
         <service
-            android:name=".service.MyFirebaseMessagingService"
-            android:enabled="true"
-            android:exported="true" />
-        <service
             android:name=".service.MyLocationUpdateService"
             android:enabled="true"
             android:exported="true"

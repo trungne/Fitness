@@ -6,7 +6,6 @@ public class AppUser {
     private String email;
     private String photoUrl;
     private String phoneNumber;
-    private Integer workoutScore;
 
     public AppUser(){} // Needed for Firebase
 
@@ -18,7 +17,6 @@ public class AppUser {
                 ", email='" + email + '\'' +
                 ", photoUrl='" + photoUrl + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
-                ", workoutScore=" + workoutScore +
                 '}';
     }
 
@@ -43,9 +41,6 @@ public class AppUser {
         return this.phoneNumber;
     }
 
-    public Integer getWorkoutScore() {
-        return this.workoutScore;
-    }
 
 
     // setters
@@ -69,7 +64,4 @@ public class AppUser {
         this.phoneNumber = phoneNumber;
     }
 
-    public void setWorkoutScore(Integer workoutScore) {
-        this.workoutScore = workoutScore;
-    }
 }
