@@ -1,35 +1,27 @@
 package com.main.fitness.ui.activities;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.AttributeSet;
 import android.util.Log;
-import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.firebase.ui.auth.data.model.User;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.main.fitness.R;
 import com.main.fitness.data.Model.WorkoutProgram;
 import com.main.fitness.data.ViewModel.AssetsViewModel;
 import com.main.fitness.data.ViewModel.UserViewModel;
+import com.main.fitness.data.ViewModel.WorkoutRegistrationViewModel;
 import com.main.fitness.ui.adapters.WorkoutProgramAdapter;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class ProgramListActivity extends AppCompatActivity {
     private static final String TAG = "ProgramListActivity";
@@ -45,6 +37,7 @@ public class ProgramListActivity extends AppCompatActivity {
 
 
     private UserViewModel userViewModel;
+    private WorkoutRegistrationViewModel workoutRegistrationViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +45,9 @@ public class ProgramListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_program_list);
         this.programListRecycleView = findViewById(R.id.ProgramListRecycleView);
         this.assetsViewModel = new ViewModelProvider(this).get(AssetsViewModel.class);
+        this.workoutRegistrationViewModel = new ViewModelProvider(this).get(WorkoutRegistrationViewModel.class);
+        this.userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+
         this.backButton = findViewById(R.id.activityProgramListBackButton);
         //Back button
         backButton.setOnClickListener(v -> finish());
@@ -61,7 +57,6 @@ public class ProgramListActivity extends AppCompatActivity {
             finish();
             return;
         }
-        this.userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
         this.userViewModel.checkIfHasReadFAQ().addOnCompleteListener(this, task -> {
             if (!task.isSuccessful() || !task.getResult().exists()){
@@ -75,7 +70,6 @@ public class ProgramListActivity extends AppCompatActivity {
                    startActivity(new Intent(this, FAQAndTerminologyActivity.class));
                 });
                 snackbar.show();
-
             }
         });
 
@@ -93,7 +87,16 @@ public class ProgramListActivity extends AppCompatActivity {
             return;
         }
 
-        this.assetsViewModel.getWorkoutPrograms(type).addOnCompleteListener(this, task -> {
+        String uid = this.userViewModel.getFirebaseUser().getUid();
+        AtomicReference<String> currentProgramName = new AtomicReference<>("");
+        this.workoutRegistrationViewModel
+                .getCurrentProgramName(uid)
+                .continueWithTask(task -> {
+                    if (task.isSuccessful()){
+                        currentProgramName.set(task.getResult());
+                    }
+                    return this.assetsViewModel.getWorkoutPrograms(type);
+                }).addOnCompleteListener(this, task -> {
             if (!task.isSuccessful()){
                 Toast.makeText(this, "Cannot load programs", Toast.LENGTH_SHORT).show();
                 return;
@@ -102,7 +105,9 @@ public class ProgramListActivity extends AppCompatActivity {
             List<WorkoutProgram> workoutProgramList = task.getResult();
             this.programListRecycleView = findViewById(R.id.ProgramListRecycleView);
             this.programListRecycleView.setLayoutManager(new LinearLayoutManager(this));
-            WorkoutProgramAdapter adapter = new WorkoutProgramAdapter(workoutProgramList);
+
+            WorkoutProgramAdapter adapter = new WorkoutProgramAdapter(this, workoutProgramList, currentProgramName.get());
+
             this.programListRecycleView.setAdapter(adapter);
             adapter.setOnViewClickListener(folderPath -> {
                 this.assetsViewModel.getWorkoutProgram(folderPath).addOnCompleteListener(this, task1 -> {

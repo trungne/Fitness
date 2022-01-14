@@ -1,9 +1,12 @@
 package com.main.fitness.ui.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -143,6 +146,9 @@ public class ProgramDetailActivity extends AppCompatActivity {
            String programName = task.getResult();
            if (programName.equals(w.getName())){
                this.trainButton.setText("Resume");
+//               Drawable img = getResources().getDrawable(R.drawable.button_4, getTheme());
+               Drawable img = ContextCompat.getDrawable(this, R.drawable.button_4);
+               this.trainButton.setBackground(img);
                this.trainButton.setOnClickListener(v -> {
                    startWorkoutSessionActivity();
                });

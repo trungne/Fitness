@@ -1,6 +1,7 @@
 package com.main.fitness.ui.adapters;
 
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +19,13 @@ import java.util.List;
 public class WorkoutProgramAdapter extends RecyclerView.Adapter<WorkoutProgramAdapter.WorkoutProgramHolder> {
     private List<WorkoutProgram> workoutProgramList;
     private OnViewWithFilePathClickListener mListener;
+    private String currentProgramName;
+    private Context context;
 
-    public WorkoutProgramAdapter(List<WorkoutProgram> workoutProgramList){
+    public WorkoutProgramAdapter(Context context, List<WorkoutProgram> workoutProgramList, String currentProgramName){
+        this.context = context;
         this.workoutProgramList = workoutProgramList;
+        this.currentProgramName = currentProgramName;
     }
 
     public void setOnViewClickListener(OnViewWithFilePathClickListener listener){
@@ -40,6 +45,13 @@ public class WorkoutProgramAdapter extends RecyclerView.Adapter<WorkoutProgramAd
         WorkoutProgram workoutProgram = this.workoutProgramList.get(position);
         holder.programName.setText(workoutProgram.getName());
         holder.programBanner.setImageDrawable(workoutProgram.getBanner());
+        if (workoutProgram.getName().equals(this.currentProgramName)){
+            holder.programName.setTextColor(context.getResources().getColor(R.color.green_main, context.getTheme()));
+            holder.programBanner.setAlpha(0.8f);
+        }
+        else{
+            holder.programName.setBackgroundColor(context.getResources().getColor(R.color.blur, context.getTheme()));
+        }
         holder.programBanner.setOnClickListener(v -> {
             if (this.mListener == null){
                 return;
