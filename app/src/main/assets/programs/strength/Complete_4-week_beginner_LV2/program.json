@@ -1,0 +1,668 @@
+{
+  "name": "Complete 4-week beginner Level 2",
+  "duration": 4,
+  "daysPerWeek": 6,
+  "goal": "Strength, Hypertrophy, Fat Loss",
+  "levels": ["BEGINNER"],
+  "overview": "Muscle Endurance, Strength Training",
+  "schedule": [
+    [
+      {
+        "target_muscles": ["Full body"],
+        "exercises": [
+          {
+            "name": "dumbbell_flat_bench_press",
+            "reps": [8, 10, 12],
+            "weight": [65, 75, 85]
+          },
+
+          {
+            "name": "wide_grip_lat_pulldowns",
+            "reps": [8, 10, 12],
+            "weight": [75, 75, 75]
+          },
+
+          {
+            "name": "dumbbell_shoulder_press",
+            "reps": [8, 10, 12],
+            "weight": [65, 65, 65]
+          }
+
+        ,
+          {
+            "name": "leg_press",
+            "reps": [8, 10, 12],
+            "weight": [75, 75, 75]
+          }
+        ,
+          {
+            "name": "lying_leg_curls",
+            "reps": [8, 10, 12],
+            "weight": [75, 75, 75]
+          }
+        ,
+          {
+            "name": "triceps_pushdowns",
+            "reps": [8, 10, 12],
+            "weight": [75, 75, 75]
+          }
+        ,
+          {
+            "name": "static_bicep_curls",
+            "reps": [8, 10, 12],
+            "weight": [75, 75, 75]
+          }
+        ]
+      }, {
+      "target_muscles": ["Full body"],
+      "exercises": [
+        {
+          "name": "dumbbell_flat_bench_press",
+          "reps": [8, 10, 12],
+          "weight": [65, 75, 85]
+        },
+
+        {
+          "name": "wide_grip_lat_pulldowns",
+          "reps": [8, 10, 12],
+          "weight": [75, 75, 75]
+        },
+
+        {
+          "name": "dumbbell_shoulder_press",
+          "reps": [8, 10, 12],
+          "weight": [65, 65, 65]
+        }
+
+      ,
+        {
+          "name": "leg_press",
+          "reps": [8, 10, 12],
+          "weight": [75, 75, 75]
+        }
+      ,
+        {
+          "name": "lying_leg_curls",
+          "reps": [8, 10, 12],
+          "weight": [75, 75, 75]
+        }
+      ,
+        {
+          "name": "triceps_pushdowns",
+          "reps": [8, 10, 12],
+          "weight": [75, 75, 75]
+        }
+      ,
+        {
+          "name": "static_bicep_curls",
+          "reps": [8, 10, 12],
+          "weight": [75, 75, 75]
+        }
+      ]
+    },
+      {
+        "target_muscles": ["Full body"],
+        "exercises": [
+          {
+            "name": "dumbbell_flat_bench_press",
+            "reps": [8, 10, 12],
+            "weight": [65, 75, 85]
+          },
+
+          {
+            "name": "wide_grip_lat_pulldowns",
+            "reps": [8, 10, 12],
+            "weight": [75, 75, 75]
+          },
+
+          {
+            "name": "dumbbell_shoulder_press",
+            "reps": [8, 10, 12],
+            "weight": [65, 65, 65]
+          }
+
+        ,
+          {
+            "name": "leg_press",
+            "reps": [8, 10, 12],
+            "weight": [75, 75, 75]
+          }
+        ,
+          {
+            "name": "lying_leg_curls",
+            "reps": [8, 10, 12],
+            "weight": [75, 75, 75]
+          }
+        ,
+          {
+            "name": "triceps_pushdowns",
+            "reps": [8, 10, 12],
+            "weight": [75, 75, 75]
+          }
+        ,
+          {
+            "name": "static_bicep_curls",
+            "reps": [8, 10, 12],
+            "weight": [75, 75, 75]
+          }
+        ]
+      }
+    ],
+
+
+    [
+      {
+        "target_muscles": ["Upper Body"],
+        "exercises": [
+          {
+            "name": "incline_dumbbell_flyes",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          },
+
+          {
+            "name": "barbell_bench_press",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          },
+
+          {
+            "name": "wide_grip_lat_pulldowns",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          }
+        ,
+
+          {
+            "name": "dumbbell_shoulder_press",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          }
+        ,
+
+          {
+            "name": "triceps_pushdowns",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          }
+        ,
+
+          {
+            "name": "barbell_curls",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          }
+        ,
+
+          {
+            "name": "ez_bar_preacher_curls",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          }
+        ,
+
+          {
+            "name": "seated_lateral_shoulder_dumbbell_raise",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          }
+        ]
+      },
+
+      {
+        "target_muscles": ["Lower Body"],
+        "exercises": [
+
+          {
+            "name": "leg_press",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          },
+
+          {
+            "name": "lying_leg_curls",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          },
+
+          {
+            "name": "seated_leg_curls",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          },
+
+          {
+            "name": "seated_calf_raises",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          }
+        ,
+
+          {
+            "name": "standing_dumbbell_calf_raises",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          }
+        ]
+      }, {
+      "target_muscles": ["Upper Body"],
+      "exercises": [
+        {
+          "name": "incline_dumbbell_flyes",
+          "reps": [10, 12, 15],
+          "weight": [75, 75, 75]
+        },
+
+        {
+          "name": "barbell_bench_press",
+          "reps": [10, 12, 15],
+          "weight": [75, 75, 75]
+        },
+
+        {
+          "name": "wide_grip_lat_pulldowns",
+          "reps": [10, 12, 15],
+          "weight": [75, 75, 75]
+        }
+      ,
+
+        {
+          "name": "dumbbell_shoulder_press",
+          "reps": [10, 12, 15],
+          "weight": [75, 75, 75]
+        }
+      ,
+
+        {
+          "name": "triceps_pushdowns",
+          "reps": [10, 12, 15],
+          "weight": [75, 75, 75]
+        }
+      ,
+
+        {
+          "name": "barbell_curls",
+          "reps": [10, 12, 15],
+          "weight": [75, 75, 75]
+        }
+      ,
+
+        {
+          "name": "ez_bar_preacher_curls",
+          "reps": [10, 12, 15],
+          "weight": [75, 75, 75]
+        }
+      ,
+
+        {
+          "name": "seated_lateral_shoulder_dumbbell_raise",
+          "reps": [10, 12, 15],
+          "weight": [75, 75, 75]
+        }
+      ]
+    }
+    ],
+
+
+    [
+      {
+        "target_muscles": ["Legs", "Back", "Chest"],
+        "exercises": [
+
+          {
+            "name": "incline_barbell_bench_chest_press",
+            "reps": [10, 10, 12, 15],
+            "weight": [75, 75, 75, 75]
+          },
+
+          {
+            "name": "incline_dumbbell_flyes",
+            "reps": [10, 10, 12, 15],
+            "weight": [75, 75, 75, 75]
+          },
+
+          {
+            "name": "dumbbell_shoulder_press",
+            "reps": [10, 10, 12, 15],
+            "weight": [75, 75, 75, 75]
+          },
+
+          {
+            "name": "lying_dumbbell_tricep_extensions",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          }
+        ,
+
+          {
+            "name": "tricep_dumbbell_kickbacks",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          }
+        ]
+      },
+
+      {
+        "target_muscles": ["Back", "Chest", "Biceps"],
+        "exercises": [
+
+          {
+            "name": "barbell_curls",
+            "reps": [10, 10, 12, 15],
+            "weight": [75, 75, 75, 75]
+          },
+
+          {
+            "name": "static_bicep_curls",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          },
+
+
+          {
+            "name": "one_arm_dumbbell_preacher_curl",
+            "reps": [10, 10, 12, 15],
+            "weight": [75, 75, 75, 75]
+          }
+        ,
+
+          {
+            "name": "ez_bar_preacher_curls",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          }
+        ]
+      },
+
+      {
+        "target_muscles": ["Legs"],
+        "exercises": [
+          {
+            "name": "leg_press",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          },
+
+          {
+            "name": "lying_leg_curls",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          },
+
+          {
+            "name": "seated_leg_curls",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          },
+
+          {
+            "name": "barbell_deadlifts",
+            "reps": [8, 10, 12],
+            "weight": [65, 75, 85]
+          },
+
+          {
+            "name": "seated_calf_raises",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          }
+        ,
+
+          {
+            "name": "standing_dumbbell_calf_raises",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          }
+        ]
+      },  {
+      "target_muscles": ["Legs", "Back", "Chest"],
+      "exercises": [
+
+        {
+          "name": "incline_barbell_bench_chest_press",
+          "reps": [10, 10, 12, 15],
+          "weight": [75, 75, 75, 75]
+        },
+
+        {
+          "name": "incline_dumbbell_flyes",
+          "reps": [10, 10, 12, 15],
+          "weight": [75, 75, 75, 75]
+        },
+
+        {
+          "name": "dumbbell_shoulder_press",
+          "reps": [10, 10, 12, 15],
+          "weight": [75, 75, 75, 75]
+        },
+
+        {
+          "name": "lying_dumbbell_tricep_extensions",
+          "reps": [10, 12, 15],
+          "weight": [75, 75, 75]
+        }
+      ,
+
+        {
+          "name": "tricep_dumbbell_kickbacks",
+          "reps": [10, 12, 15],
+          "weight": [75, 75, 75]
+        }
+      ]
+    },
+
+      {
+        "target_muscles": ["Back", "Chest", "Biceps"],
+        "exercises": [
+
+          {
+            "name": "barbell_curls",
+            "reps": [10, 10, 12, 15],
+            "weight": [75, 75, 75, 75]
+          },
+
+          {
+            "name": "static_bicep_curls",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          },
+
+
+          {
+            "name": "one_arm_dumbbell_preacher_curl",
+            "reps": [10, 10, 12, 15],
+            "weight": [75, 75, 75, 75]
+          }
+        ,
+
+          {
+            "name": "ez_bar_preacher_curls",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          }
+        ]
+      },
+
+      {
+        "target_muscles": ["Legs"],
+        "exercises": [
+          {
+            "name": "leg_press",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          },
+
+          {
+            "name": "lying_leg_curls",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          },
+
+          {
+            "name": "seated_leg_curls",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          },
+
+          {
+            "name": "barbell_deadlifts",
+            "reps": [8, 10, 12],
+            "weight": [65, 75, 85]
+          },
+
+          {
+            "name": "seated_calf_raises",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          }
+        ,
+
+          {
+            "name": "standing_dumbbell_calf_raises",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          }
+        ]
+      }
+    ],
+
+    [
+      {
+        "target_muscles": ["Chest", "Triceps"],
+        "exercises": [
+          {
+            "name": "incline_barbell_bench_chest_press",
+            "reps": [5, 5, 5, 5, 5],
+            "weight": [75, 85, 75, 85, 95]
+          },
+
+          {
+            "name": "dumbbell_flat_bench_press",
+            "reps": [8, 8, 10, 10, 12],
+            "weight": [75, 85, 75, 85, 95]
+          },
+
+          {
+            "name": "incline_dumbbell_flyes",
+            "reps": [8, 8, 10, 10, 12],
+            "weight": [75, 85, 75, 85, 95]
+          }
+        ,
+          {
+            "name": "triceps_pushdowns",
+            "reps": [8, 8, 10, 10, 12],
+            "weight": [75, 85, 75, 85, 95]
+          }
+        ,
+          {
+            "name": "tricep_dumbbell_kickbacks",
+            "reps": [ 10, 10, 12],
+            "weight": [ 75, 85, 95]
+          }
+        ]
+      },
+
+      {
+        "target_muscles": ["Legs","ABS"],
+        "exercises": [
+          {
+            "name": "leg_press",
+            "reps": [8, 8, 10,10, 12],
+            "weight": [65, 75, 85, 85, 85]
+          },
+
+          {
+            "name": "barbell_squats",
+            "reps": [8, 8, 10,10, 12],
+            "weight": [65, 75, 85, 85, 85]
+          },
+
+          {
+            "name": "lying_leg_curls",
+            "reps": [8, 10, 12],
+            "weight": [75, 75, 75]
+          }
+        ,
+
+          {
+            "name": "barbell_deadlifts",
+            "reps": [8, 10, 12],
+            "weight": [65, 75, 85]
+          }
+        ,
+
+          {
+            "name": "seated_leg_curls",
+            "reps": [8, 10, 12],
+            "weight": [65, 75, 85]
+          }
+        ]
+      },
+
+      {
+        "target_muscles": ["Shoulder", "Legs"],
+        "exercises": [
+          {
+            "name": "dumbbell_shoulder_press",
+            "reps": [12, 12, 12, 12],
+            "weight": [75, 85, 95, 95]
+          },
+
+          {
+            "name": "seated_lateral_shoulder_dumbbell_raise",
+            "reps": [12, 12, 12, 12],
+            "weight": [75, 85, 95, 95]
+          },
+
+          {
+            "name": "standing_dumbbell_calf_raises",
+            "reps": [12, 12, 12, 12],
+            "weight": [75, 85, 95, 95]
+          }
+        ,
+          {
+            "name": "seated_calf_raises",
+            "reps": [12, 12, 12, 12],
+            "weight": [75, 85, 95, 95]
+          }
+        ]
+      },
+
+      {
+        "target_muscles": ["Back","Biceps","ABS"],
+        "exercises": [
+          {
+            "name": "wide_grip_lat_pulldowns",
+            "reps": [8, 8, 10,10, 12],
+            "weight": [65, 75, 85, 85, 85]
+          },
+
+          {
+            "name": "seated_dumbbell_bicep_curls",
+            "reps": [8, 10, 12],
+            "weight": [65, 75, 85]
+          },
+          {
+            "name": "barbell_deadlifts",
+            "reps": [8, 10, 12],
+            "weight": [65, 75, 85]
+          },
+
+          {
+            "name": "barbell_curls",
+            "reps": [8, 10, 12],
+            "weight": [65, 75, 85]
+          }
+        ,
+          {
+            "name": "ez_bar_preacher_curls",
+            "reps": [8, 10, 12],
+            "weight": [65, 75, 85]
+          }
+        ]
+      }
+
+    ]
+  ]
+
+}
