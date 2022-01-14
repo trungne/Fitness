@@ -1,6 +1,7 @@
 package com.main.fitness.ui.activities;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
@@ -124,6 +125,14 @@ public class WorkoutSessionActivity extends AppCompatActivity {
 
                         WorkoutSessionFragment fragment = WorkoutSessionFragment.newInstance(workoutProgramName, workoutProgramPath, sessionWeek, _day, isCurrentSession);
                         fragment.setOnFinishSessionListener((mWeek, mDay) -> {
+                            AlertDialog alertDialog = new MaterialAlertDialogBuilder(this)
+                                    .setCancelable(false)
+                                    .setTitle("Session Finished")
+                                    .setPositiveButton("Back To Home Screen", (dialog, which) -> {
+                                        dialog.dismiss();
+                                        setResult(Activity.RESULT_OK);
+                                        finish();
+                                    }).create();
                             int newWeek = mWeek;
                             int newDay = mDay;
 
@@ -132,14 +141,18 @@ public class WorkoutSessionActivity extends AppCompatActivity {
                                     && mWeek == schedule.getSchedule().length - 1) {
                                 newDay = 0;
                                 newWeek = 0;
+                                alertDialog.setMessage("You have finished the program!\n It's recommended that you start over but with an increased Training Max.");
                             }
 
                             // the last session of a week
                             else if (mDay == schedule.getSchedule()[mWeek].length - 1 ){
                                 newDay = 0;
                                 newWeek++;
+                                alertDialog.setMessage("You have finished all sessions for this week!\nRemember to rest well and eat healthily!");
                             }
                             else{
+                                alertDialog.setMessage("Well Done! You have finished today's session!\nRemember to rest well and eat healthily!");
+
                                 newDay++;
                             }
 
@@ -148,20 +161,8 @@ public class WorkoutSessionActivity extends AppCompatActivity {
                                     Toast.makeText(this, "Cannot record data!", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
-                                new MaterialAlertDialogBuilder(this)
-                                        .setTitle("Session Finished")
-                                        .setMessage("Well Done! You have finished today's session!")
-                                        .setCancelable(false)
-                                        .setPositiveButton("Back To Home Screen", (dialog, which) -> {
-                                            setResult(Activity.RESULT_OK);
-                                            dialog.dismiss();
-                                            finish();
-                                        })
-                                        .setNeutralButton("Cancel", (dialog, which) -> {
-                                            dialog.dismiss();
-                                            reload();
-                                        })
-                                        .show();
+
+                                alertDialog.show();
                             });
 
 
