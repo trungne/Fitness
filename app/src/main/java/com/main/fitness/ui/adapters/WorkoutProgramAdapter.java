@@ -47,6 +47,8 @@ public class WorkoutProgramAdapter extends RecyclerView.Adapter<WorkoutProgramAd
         holder.programBanner.setImageDrawable(workoutProgram.getBanner());
         if (workoutProgram.getName().equals(this.currentProgramName)){
             holder.programName.setTextColor(context.getResources().getColor(R.color.green_main, context.getTheme()));
+            holder.programName.setText("");
+            holder.programName.setBackgroundResource(R.drawable.custom_background2);
             holder.programBanner.setAlpha(0.8f);
         }
         else{
