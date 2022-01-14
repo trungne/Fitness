@@ -31,6 +31,7 @@ import com.main.fitness.ui.adapters.ViewPagerAdapterForFragments;
 import com.main.fitness.ui.fragments.WorkoutSessionFragment;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -95,8 +96,9 @@ public class WorkoutSessionActivity extends AppCompatActivity {
                     else{
                         day.set(task.getResult().getDay());
                         week.set(task.getResult().getWeek());
-
+                        Log.e(TAG, "Week: " + week.get());
                     }
+
 
                     return this.assetsViewModel.getWorkoutSchedule(workoutProgramPath);
                 })
@@ -110,7 +112,14 @@ public class WorkoutSessionActivity extends AppCompatActivity {
                     WorkoutSchedule schedule = task.getResult();
                     String workoutProgramName = schedule.getWorkoutProgramName();
                     List<WorkoutSessionFragment> fragments = new ArrayList<>();
-                    for (int _day = 0; _day < schedule.getSchedule()[week.get()].length; _day++){
+                    for(int i = 0; i < schedule.getSchedule().length; i++){
+                        System.out.println("week: " + (i + 1));
+                        for(int j = 0; j < schedule.getSchedule()[i].length; j++){
+                            System.out.println("Day " + (j+1) + ": " + Arrays.toString(schedule.getSchedule()[i][j].getTargetMuscles()));
+                        }
+                    }
+                    for (int _day = 0; _day < schedule.getSchedule()[sessionWeek].length; _day++){
+                        Log.e(TAG, "Create fragments number: " + _day);
                         boolean isCurrentSession = _day == day.get() &&  sessionWeek == week.get();
 
                         WorkoutSessionFragment fragment = WorkoutSessionFragment.newInstance(workoutProgramName, workoutProgramPath, sessionWeek, _day, isCurrentSession);
@@ -169,6 +178,7 @@ public class WorkoutSessionActivity extends AppCompatActivity {
                         });
 
                         fragments.add(fragment);
+                        Log.e(TAG, "========");
                     }
 
                     ViewPagerAdapterForFragments<WorkoutSessionFragment> viewPagerAdapterForFragments = new ViewPagerAdapterForFragments<>(this, fragments);

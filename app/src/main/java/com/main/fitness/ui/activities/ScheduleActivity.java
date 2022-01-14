@@ -86,6 +86,7 @@ public class ScheduleActivity extends AppCompatActivity {
             }
 
             WorkoutSchedule schedule = task.getResult();
+
             int totalNumberOfWeek = schedule.getSchedule().length;
 
             if (totalNumberOfWeek == 1){

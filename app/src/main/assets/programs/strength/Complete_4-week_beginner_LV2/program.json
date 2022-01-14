@@ -53,53 +53,54 @@
             "weight": [75, 75, 75]
           }
         ]
-      }, {
-      "target_muscles": ["Full body"],
-      "exercises": [
-        {
-          "name": "dumbbell_flat_bench_press",
-          "reps": [8, 10, 12],
-          "weight": [65, 75, 85]
-        },
+      },
+      {
+        "target_muscles": ["Full body"],
+        "exercises": [
+          {
+            "name": "dumbbell_flat_bench_press",
+            "reps": [8, 10, 12],
+            "weight": [65, 75, 85]
+          },
 
-        {
-          "name": "wide_grip_lat_pulldowns",
-          "reps": [8, 10, 12],
-          "weight": [75, 75, 75]
-        },
+          {
+            "name": "wide_grip_lat_pulldowns",
+            "reps": [8, 10, 12],
+            "weight": [75, 75, 75]
+          },
 
-        {
-          "name": "dumbbell_shoulder_press",
-          "reps": [8, 10, 12],
-          "weight": [65, 65, 65]
-        }
+          {
+            "name": "dumbbell_shoulder_press",
+            "reps": [8, 10, 12],
+            "weight": [65, 65, 65]
+          }
 
-      ,
-        {
-          "name": "leg_press",
-          "reps": [8, 10, 12],
-          "weight": [75, 75, 75]
-        }
-      ,
-        {
-          "name": "lying_leg_curls",
-          "reps": [8, 10, 12],
-          "weight": [75, 75, 75]
-        }
-      ,
-        {
-          "name": "triceps_pushdowns",
-          "reps": [8, 10, 12],
-          "weight": [75, 75, 75]
-        }
-      ,
-        {
-          "name": "static_bicep_curls",
-          "reps": [8, 10, 12],
-          "weight": [75, 75, 75]
-        }
-      ]
-    },
+        ,
+          {
+            "name": "leg_press",
+            "reps": [8, 10, 12],
+            "weight": [75, 75, 75]
+          }
+        ,
+          {
+            "name": "lying_leg_curls",
+            "reps": [8, 10, 12],
+            "weight": [75, 75, 75]
+          }
+        ,
+          {
+            "name": "triceps_pushdowns",
+            "reps": [8, 10, 12],
+            "weight": [75, 75, 75]
+          }
+        ,
+          {
+            "name": "static_bicep_curls",
+            "reps": [8, 10, 12],
+            "weight": [75, 75, 75]
+          }
+        ]
+      },
       {
         "target_muscles": ["Full body"],
         "exercises": [
@@ -208,7 +209,6 @@
           }
         ]
       },
-
       {
         "target_muscles": ["Lower Body"],
         "exercises": [
@@ -244,63 +244,64 @@
             "weight": [75, 75, 75]
           }
         ]
-      }, {
-      "target_muscles": ["Upper Body"],
-      "exercises": [
-        {
-          "name": "incline_dumbbell_flyes",
-          "reps": [10, 12, 15],
-          "weight": [75, 75, 75]
-        },
+      },
+      {
+        "target_muscles": ["Upper Body"],
+        "exercises": [
+          {
+            "name": "incline_dumbbell_flyes",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          },
 
-        {
-          "name": "barbell_bench_press",
-          "reps": [10, 12, 15],
-          "weight": [75, 75, 75]
-        },
+          {
+            "name": "barbell_bench_press",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          },
 
-        {
-          "name": "wide_grip_lat_pulldowns",
-          "reps": [10, 12, 15],
-          "weight": [75, 75, 75]
-        }
-      ,
+          {
+            "name": "wide_grip_lat_pulldowns",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          }
+        ,
 
-        {
-          "name": "dumbbell_shoulder_press",
-          "reps": [10, 12, 15],
-          "weight": [75, 75, 75]
-        }
-      ,
+          {
+            "name": "dumbbell_shoulder_press",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          }
+        ,
 
-        {
-          "name": "triceps_pushdowns",
-          "reps": [10, 12, 15],
-          "weight": [75, 75, 75]
-        }
-      ,
+          {
+            "name": "triceps_pushdowns",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          }
+        ,
 
-        {
-          "name": "barbell_curls",
-          "reps": [10, 12, 15],
-          "weight": [75, 75, 75]
-        }
-      ,
+          {
+            "name": "barbell_curls",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          }
+        ,
 
-        {
-          "name": "ez_bar_preacher_curls",
-          "reps": [10, 12, 15],
-          "weight": [75, 75, 75]
-        }
-      ,
+          {
+            "name": "ez_bar_preacher_curls",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          }
+        ,
 
-        {
-          "name": "seated_lateral_shoulder_dumbbell_raise",
-          "reps": [10, 12, 15],
-          "weight": [75, 75, 75]
-        }
-      ]
-    }
+          {
+            "name": "seated_lateral_shoulder_dumbbell_raise",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          }
+        ]
+      }
     ],
 
 
@@ -308,7 +309,6 @@
       {
         "target_muscles": ["Legs", "Back", "Chest"],
         "exercises": [
-
           {
             "name": "incline_barbell_bench_chest_press",
             "reps": [10, 10, 12, 15],
@@ -341,7 +341,6 @@
           }
         ]
       },
-
       {
         "target_muscles": ["Back", "Chest", "Biceps"],
         "exercises": [
@@ -373,7 +372,6 @@
           }
         ]
       },
-
       {
         "target_muscles": ["Legs"],
         "exercises": [
@@ -414,47 +412,46 @@
             "weight": [75, 75, 75]
           }
         ]
-      },  {
-      "target_muscles": ["Legs", "Back", "Chest"],
-      "exercises": [
+      },
+      {
+        "target_muscles": ["Legs", "Back", "Chest"],
+        "exercises": [
 
-        {
-          "name": "incline_barbell_bench_chest_press",
-          "reps": [10, 10, 12, 15],
-          "weight": [75, 75, 75, 75]
-        },
+          {
+            "name": "incline_barbell_bench_chest_press",
+            "reps": [10, 10, 12, 15],
+            "weight": [75, 75, 75, 75]
+          },
 
-        {
-          "name": "incline_dumbbell_flyes",
-          "reps": [10, 10, 12, 15],
-          "weight": [75, 75, 75, 75]
-        },
+          {
+            "name": "incline_dumbbell_flyes",
+            "reps": [10, 10, 12, 15],
+            "weight": [75, 75, 75, 75]
+          },
 
-        {
-          "name": "dumbbell_shoulder_press",
-          "reps": [10, 10, 12, 15],
-          "weight": [75, 75, 75, 75]
-        },
+          {
+            "name": "dumbbell_shoulder_press",
+            "reps": [10, 10, 12, 15],
+            "weight": [75, 75, 75, 75]
+          },
 
-        {
-          "name": "lying_dumbbell_tricep_extensions",
-          "reps": [10, 12, 15],
-          "weight": [75, 75, 75]
-        }
-      ,
+          {
+            "name": "lying_dumbbell_tricep_extensions",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          }
+        ,
 
-        {
-          "name": "tricep_dumbbell_kickbacks",
-          "reps": [10, 12, 15],
-          "weight": [75, 75, 75]
-        }
-      ]
-    },
-
+          {
+            "name": "tricep_dumbbell_kickbacks",
+            "reps": [10, 12, 15],
+            "weight": [75, 75, 75]
+          }
+        ]
+      },
       {
         "target_muscles": ["Back", "Chest", "Biceps"],
         "exercises": [
-
           {
             "name": "barbell_curls",
             "reps": [10, 10, 12, 15],
@@ -482,7 +479,6 @@
           }
         ]
       },
-
       {
         "target_muscles": ["Legs"],
         "exercises": [
@@ -561,7 +557,6 @@
           }
         ]
       },
-
       {
         "target_muscles": ["Legs","ABS"],
         "exercises": [
@@ -598,7 +593,6 @@
           }
         ]
       },
-
       {
         "target_muscles": ["Shoulder", "Legs"],
         "exercises": [
@@ -627,7 +621,6 @@
           }
         ]
       },
-
       {
         "target_muscles": ["Back","Biceps","ABS"],
         "exercises": [
@@ -661,7 +654,6 @@
           }
         ]
       }
-
     ]
   ]
 
