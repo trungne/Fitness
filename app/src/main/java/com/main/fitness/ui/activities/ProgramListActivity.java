@@ -1,5 +1,7 @@
 package com.main.fitness.ui.activities;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -38,6 +40,17 @@ public class ProgramListActivity extends AppCompatActivity {
 
     private UserViewModel userViewModel;
     private WorkoutRegistrationViewModel workoutRegistrationViewModel;
+
+    // You can do the assignment inside onAttach or onCreate, i.e, before the activity is displayed
+    private ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                // for some reason when Activity.Result_OK is sent back
+                // this listener doesn't catch it
+                finish();
+                startActivity(getIntent());
+            });
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,7 +130,7 @@ public class ProgramListActivity extends AppCompatActivity {
 
                     Intent i = new Intent(this, ProgramDetailActivity.class);
                     i.putExtra(ProgramDetailActivity.WORKOUT_PROGRAM_FOLDER_PATH_KEY, task1.getResult().getFolderPath());
-                    startActivity(i);
+                    activityResultLauncher.launch(i);
                 });
             });
         });
