@@ -358,7 +358,6 @@ public class RunningMapsActivity extends AppCompatActivity implements ActivityCo
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(lastLocation));
                     redrawCurrentLocationMarker(lastLocation);
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lastLocation, 17));
-                    Toast.makeText(RunningMapsActivity.this, "You are here", Toast.LENGTH_SHORT).show();
                 }
 
                 else {
