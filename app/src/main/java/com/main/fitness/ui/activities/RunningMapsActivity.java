@@ -30,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -42,6 +43,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.CancellationTokenSource;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -68,6 +72,8 @@ public class RunningMapsActivity extends AppCompatActivity implements ActivityCo
     private GoogleMap mMap;
     protected FusedLocationProviderClient client;
     private Intent backgroundUpdatesIntent;
+    private LocationRequest locationRequest;
+    private CancellationTokenSource cancellationTokenSource;
 
     private TextView distanceTextView, stepTextView, stepLabel;
     private Button runButton;
@@ -123,7 +129,7 @@ public class RunningMapsActivity extends AppCompatActivity implements ActivityCo
         setContentView(R.layout.activity_running_maps);
 
         this.backgroundUpdatesIntent = new Intent(this, MyLocationUpdateService.class);
-
+        this.cancellationTokenSource = new CancellationTokenSource();
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
         // init views
@@ -338,21 +344,28 @@ public class RunningMapsActivity extends AppCompatActivity implements ActivityCo
     public void getLocation(){
 
         if (checkLocationPermission()) {
-            LocationManager locationManager = (LocationManager)  getSystemService(Context.LOCATION_SERVICE);
-            Criteria criteria = new Criteria();
-            String bestProvider = String.valueOf(locationManager.getBestProvider(criteria, true)).toString();
+            // Main code
+            Task<Location> currentLocationTask = client.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY,
+                    cancellationTokenSource.getToken()
+            );
 
-            @SuppressLint("MissingPermission") Location location = locationManager.getLastKnownLocation(bestProvider);
-            if (location != null) {
-                double latitude = location.getLatitude();
-                double longitude = location.getLongitude();
-                LatLng latLng = new LatLng(latitude,longitude);
+            currentLocationTask.addOnCompleteListener((task -> {
 
-                //Adjust the camera
-                this.mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                this.mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17));
-                redrawCurrentLocationMarker(latLng);
-            }
+                if (task.isSuccessful()) {
+                    // Task completed successfully
+                    Location location = task.getResult();
+                    LatLng lastLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(lastLocation));
+                    redrawCurrentLocationMarker(lastLocation);
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lastLocation, 17));
+                    Toast.makeText(RunningMapsActivity.this, "You are here", Toast.LENGTH_SHORT).show();
+                }
+
+                else {
+                    // Task failed with an exception
+                    Toast.makeText(RunningMapsActivity.this, "Unable to retrieve user location !", Toast.LENGTH_SHORT).show();
+                }
+                }));
         }
         else{
             // handle location not enabled
